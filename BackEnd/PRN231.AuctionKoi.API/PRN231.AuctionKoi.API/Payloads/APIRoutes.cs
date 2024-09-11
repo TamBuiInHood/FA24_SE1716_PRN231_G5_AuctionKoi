@@ -32,6 +32,22 @@
             public const string GetNoPagin = Base + "/paymnets/";
 
         }
-       
+
+        public static class Proposal
+        {
+            public const string Get = Base + "/proposals/";
+
+            public const string Create = Base + "/proposals/create-proposal";
+
+            public const string GetByID = Base + "/proposals/{proposal-id}";
+
+            public const string Update = Base + "/proposals/{proposal-id}";
+
+            public const string Delete = Base + "/proposals/{proposal-id}";
+
+            public const string GetNoPagin = Base + "/proposals/";
+
+        }
+
     }
 }
