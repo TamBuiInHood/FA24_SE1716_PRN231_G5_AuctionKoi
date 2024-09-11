@@ -11,6 +11,7 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private  AuctionKoiOfficialContext _context;
 
         private PaymentRepository _paymentRepo;
+        private ProposalRepository _proposalRepo;
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(AuctionKoiOfficialContext context, IConfiguration configuration)
@@ -57,6 +58,18 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
                     this._paymentRepo = new PaymentRepository(_context);
                 }
                 return _paymentRepo;
+            }
+        }
+
+        public ProposalRepository ProposalRepository
+        {
+            get
+            {
+                if(_proposalRepo == null)
+                {
+                    this._proposalRepo = new ProposalRepository(_context);
+                }
+                return _proposalRepo;
             }
         }
 

@@ -102,9 +102,11 @@ builder.Services.AddSingleton(mapper.CreateMapper());
 // Register repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
+builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
 
 // Register servicies
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
+builder.Services.AddScoped<IProposalService, ProposalService>();
 
 var app = builder.Build();
 
