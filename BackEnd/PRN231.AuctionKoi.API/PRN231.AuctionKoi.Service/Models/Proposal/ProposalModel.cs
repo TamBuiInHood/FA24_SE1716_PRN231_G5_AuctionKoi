@@ -1,4 +1,5 @@
-﻿using PRN231.AuctionKoi.Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using PRN231.AuctionKoi.Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace KoiAuction.Service.Models.Proposal
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
 
-        public int UserFullName { get; set; }
+        public string? UserFullName { get; set; }
 
         public List<DetailProposal>? DetailProposals { get; set; }
     }

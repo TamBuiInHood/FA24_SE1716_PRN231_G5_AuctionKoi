@@ -1,4 +1,4 @@
-﻿namespace PRN231.AuctionKoi.Common.Utils.Common.Constants
+﻿namespace KoiAuction.Common.Constants
 {
     public static class UserRoles
     {
