@@ -8,8 +8,8 @@ namespace PRN231.AuctionKoi.Common.Utils.Common.Enums
 {
     public enum UserRole
     {
-        Admin = 1,
-        Brand = 2,
-        Store = 3,
+        ADMIN = 1,
+        FARM = 2,
+        AUCTIONER = 3,
     }
 }
