@@ -1,13 +1,12 @@
-﻿using PRN231.AuctionKoi.Service.Models;
-using PRN231.AuctionKoi.Service.Models.Pagination;
-using PRN231.AuctionKoi.Service.Services;
+﻿using KoiAuction.Service.Models;
+using KoiAuction.Service.Models.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN231.AuctionKoi.Service.ISerivice
+namespace KoiAuction.Service.ISerivice
 {
     public interface IPaymentService
     {

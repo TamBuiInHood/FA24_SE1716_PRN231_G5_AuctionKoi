@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.Json;
-namespace PRN231.AuctionKoi.API.Payloads.Responses
+namespace KoiAuction.Service.Responses
 {
     public class KebabCaseNamingPolicy : JsonNamingPolicy
     {

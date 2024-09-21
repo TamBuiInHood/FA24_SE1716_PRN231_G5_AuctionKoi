@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PRN231.AuctionKoi.API.Payloads.Responses;
 using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
-using PRN231.AuctionKoi.Service.Mappings;
 using System.Text.Json.Serialization;
 using System.Text;
 using PRN231.AuctionKoi.Repository.IRepositories;
-using PRN231.AuctionKoi.Service.Services;
 using PRN231.AuctionKoi.Repository.Repositories;
-using PRN231.AuctionKoi.Service.ISerivice;
+using KoiAuction.Service.ISerivice;
+using KoiAuction.Service.Mappings;
+using KoiAuction.Service.Services;
+using KoiAuction.Service.Responses;
+using KoiAuction.Service.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +104,7 @@ builder.Services.AddSingleton(mapper.CreateMapper());
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
 builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
+builder.Services.AddScoped<IBusinessResult,BusinessResult>();
 
 // Register servicies
 builder.Services.AddScoped<IPaymentService, PaymnetService>();

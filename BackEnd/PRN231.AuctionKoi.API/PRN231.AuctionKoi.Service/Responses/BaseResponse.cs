@@ -1,4 +1,4 @@
-﻿namespace PRN231.AuctionKoi.API.Payloads.Responses
+﻿namespace KoiAuction.Service.Responses
 {
     public class BaseResponse
     {

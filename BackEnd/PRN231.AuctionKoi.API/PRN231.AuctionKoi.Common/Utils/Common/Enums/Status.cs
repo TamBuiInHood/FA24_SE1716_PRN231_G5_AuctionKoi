@@ -1,4 +1,4 @@
-﻿namespace PRN231.AuctionKoi.Repository.Utils.Common.Enums
+﻿namespace PRN231.AuctionKoi.Common.Utils.Common.Enums
 {
     public enum Status
     {

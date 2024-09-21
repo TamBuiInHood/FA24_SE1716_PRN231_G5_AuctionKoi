@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN231.AuctionKoi.Service.Models.Pagination
+namespace KoiAuction.Service.Models.Pagination
 {
     public class PageEntity<T>
     {

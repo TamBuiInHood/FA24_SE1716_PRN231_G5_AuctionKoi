@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FSU.SmartMenuWithAI.Service.Common.Enums
+namespace PRN231.AuctionKoi.Common.Utils.Common.Enums
 {
     public enum UserRole
     {

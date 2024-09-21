@@ -2,7 +2,7 @@
 {
     public static class APIRoutes
     {
-        public const string Base = "aution-koi";
+        public const string Base = "auction-koi";
 
         public static class AuctionKoi
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN231.AuctionKoi.Service.Common.Constants
+namespace PRN231.AuctionKoi.Common.Utils.Common.Constants
 {
     public class FolderRootImg
     {

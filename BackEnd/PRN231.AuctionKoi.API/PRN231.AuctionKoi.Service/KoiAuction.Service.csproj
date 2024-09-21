@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PRN231.AuctionKoi.Repository\PRN231.AuctionKoi.Repository.csproj" />
+    <ProjectReference Include="..\PRN231.AuctionKoi.Common\KoiAuction.Common.csproj" />
+    <ProjectReference Include="..\PRN231.AuctionKoi.Repository\KoiAuction.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
