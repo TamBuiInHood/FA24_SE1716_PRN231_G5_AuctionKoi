@@ -32,7 +32,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
                 query = query.Where(filter);
             }
 
-            if (!includeProperties.IsNullOrEmpty())
+            if (!(includeProperties == null || includeProperties.Equals("")))
             {
                 foreach (var includeProperty in includeProperties.Split
                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

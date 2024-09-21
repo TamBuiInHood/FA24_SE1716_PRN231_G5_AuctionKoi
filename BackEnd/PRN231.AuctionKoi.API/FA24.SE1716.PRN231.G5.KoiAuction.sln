@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.API", "PRN231.AuctionKoi.API\KoiAuction.API.csproj", "{D1C3F3CC-AE75-498C-B988-43A8EF879DFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.Service", "PRN231.AuctionKoi.Service\KoiAuction.Service.csproj", "{C70D4488-82B0-41EF-A2E5-EBB362AB0A8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.Repository", "PRN231.AuctionKoi.Repository\KoiAuction.Repository.csproj", "{53184314-50D2-4571-8CE4-0A3BD2D79826}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.Common", "PRN231.AuctionKoi.Common\KoiAuction.Common.csproj", "{3C55B7F4-4978-4235-B640-A3418BF24DBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1C3F3CC-AE75-498C-B988-43A8EF879DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C3F3CC-AE75-498C-B988-43A8EF879DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C3F3CC-AE75-498C-B988-43A8EF879DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C3F3CC-AE75-498C-B988-43A8EF879DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70D4488-82B0-41EF-A2E5-EBB362AB0A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70D4488-82B0-41EF-A2E5-EBB362AB0A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70D4488-82B0-41EF-A2E5-EBB362AB0A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70D4488-82B0-41EF-A2E5-EBB362AB0A8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53184314-50D2-4571-8CE4-0A3BD2D79826}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53184314-50D2-4571-8CE4-0A3BD2D79826}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53184314-50D2-4571-8CE4-0A3BD2D79826}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53184314-50D2-4571-8CE4-0A3BD2D79826}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B81F7941-316D-4183-BD2C-E0B3F225B23D}
+	EndGlobalSection
+EndGlobal

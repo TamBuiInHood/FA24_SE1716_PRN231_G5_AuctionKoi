@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using KoiAuction.Service.Responses;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using PRN231.AuctionKoi.API.Payloads.Responses;
 
 namespace FSU.SmartMenuWithAI.API.Middlewares
 {

@@ -1,14 +1,14 @@
-﻿using PRN231.AuctionKoi.Repository.UnitOfWork;
-using PRN231.AuctionKoi.Service.ISerivice;
-using PRN231.AuctionKoi.Service.Models;
-using PRN231.AuctionKoi.Service.Models.Pagination;
+﻿using KoiAuction.Service.ISerivice;
+using KoiAuction.Service.Models;
+using KoiAuction.Service.Models.Pagination;
+using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN231.AuctionKoi.Service.Services
+namespace KoiAuction.Service.Services
 {
     public class PaymnetService : IPaymentService
     {
@@ -21,7 +21,7 @@ namespace PRN231.AuctionKoi.Service.Services
                 throw new Exception("This Payment not exist to delete");
             }
             _unitOfWork.PaymentRepository.Delete(paymnet);
-            var result = (await _unitOfWork.SaveAsync() > 0) ? true : false ;
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
             return result;
         }
 

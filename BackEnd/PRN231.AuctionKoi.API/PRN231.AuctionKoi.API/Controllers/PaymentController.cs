@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using KoiAuction.Service.ISerivice;
+using KoiAuction.Service.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PRN231.AuctionKoi.API.Payloads;
-using PRN231.AuctionKoi.API.Payloads.Responses;
-using PRN231.AuctionKoi.Service.ISerivice;
 
 namespace PRN231.AuctionKoi.API.Controllers
 {

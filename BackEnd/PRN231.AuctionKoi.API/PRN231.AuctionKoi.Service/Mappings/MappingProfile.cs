@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using KoiAuction.Service.Models.Proposal;
 using PRN231.AuctionKoi.Repository.Entities;
-using PRN231.AuctionKoi.Service.Models.Proposal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace PRN231.AuctionKoi.Service.Mappings
+namespace KoiAuction.Service.Mappings
 {
     public class MappingProfile : Profile
     {

@@ -1,23 +1,23 @@
-﻿using PRN231.AuctionKoi.Service.Models.Pagination;
-using PRN231.AuctionKoi.Service.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PRN231.AuctionKoi.Service.Models.Proposal;
-using PRN231.AuctionKoi.Service.Utils;
-using PRN231.AuctionKoi.Repository.Utils;
+using PRN231.AuctionKoi.Common.Utils;
+using KoiAuction.Service.Models.Pagination;
+using KoiAuction.Service.Models.Proposal;
+using KoiAuction.Service.Base;
 
-namespace PRN231.AuctionKoi.Service.ISerivice
+namespace KoiAuction.Service.ISerivice
 {
     public interface IProposalService
     {
-        Task<PageEntity<ProposalModel>> Get(PaginationParameter paginationParameter);
-        Task<ProposalModel> GetByID(int id);
+        Task<IBusinessResult> Get(PaginationParameter paginationParameter);
+        Task<IBusinessResult> GetByID(int id);
 
-        Task<ProposalModel> Insert(CreateProposalModel entityinsert);
-        Task<ProposalModel> Update(UpdateProposalModel entityUpdate);
-        Task<bool> Delete(int id);
+        Task<IBusinessResult> Insert(CreateProposalModel entityinsert);
+        Task<IBusinessResult> Update(UpdateProposalModel entityUpdate);
+        Task<IBusinessResult> Test(UpdateProposalModel entityUpdate);
+        Task<IBusinessResult> Delete(int id);
     }
 }

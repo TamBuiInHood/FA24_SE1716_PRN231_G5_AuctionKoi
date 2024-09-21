@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN231.AuctionKoi.Service.Utils
+namespace PRN231.AuctionKoi.Common.Utils
 {
     public class CodeHelper
     {
@@ -13,7 +13,7 @@ namespace PRN231.AuctionKoi.Service.Utils
         public static string GenerateCode()
         {
             // Lấy thời gian hiện tại
-            var dateTimePart = DateTime.Now.ToString("yyyyddMMHHmmss").Substring(5,9);
+            var dateTimePart = DateTime.Now.ToString("yyyyddMMHHmmss").Substring(5, 9);
 
             // Tạo phần ngẫu nhiên
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -24,7 +24,7 @@ namespace PRN231.AuctionKoi.Service.Utils
             var guidPart = Guid.NewGuid().ToString().ToUpper().Replace("-", "").Substring(0, 4);
 
             // Kết hợp tất cả
-            var productCode = randomPart + dateTimePart +  guidPart;
+            var productCode = randomPart + dateTimePart + guidPart;
 
             return productCode;
         }

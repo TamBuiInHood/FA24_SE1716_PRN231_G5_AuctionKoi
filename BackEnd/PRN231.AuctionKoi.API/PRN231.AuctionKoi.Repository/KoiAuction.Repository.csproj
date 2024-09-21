@@ -25,4 +25,8 @@
     <PackageReference Include="WebMotions.Fake.Authentication.JwtBearer" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PRN231.AuctionKoi.Common\KoiAuction.Common.csproj" />
+  </ItemGroup>
+
 </Project>
