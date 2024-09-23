@@ -1,4 +1,5 @@
-﻿using KoiAuction.Service.Models;
+﻿using KoiAuction.Service.Base;
+using KoiAuction.Service.Models;
 using KoiAuction.Service.Models.Pagination;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,10 @@ namespace KoiAuction.Service.ISerivice
 {
     public interface IPaymentService
     {
-        Task<PageEntity<PaymentModel>> Get(string? searchKey, string? orderBy, int? pageIndex = null, int? pageSize = null);
-        Task<PaymentModel> GetByID(int id);
-
-        Task<PaymentModel> Insert(PaymentModel entityinsert);
-        Task<PaymentModel> Update(PaymentModel entityUpdate);
-        Task<bool> Delete(int id);
+        Task<IBusinessResult> Get(string? searchKey, string? orderBy, int pageIndex, int pageSize );
+        Task<IBusinessResult> GetByID(string idKey);
+        Task<IBusinessResult> Insert(PaymentModel entityinsert);
+        Task<IBusinessResult> Update(PaymentModel entityUpdate);
+        Task<IBusinessResult> Delete(int id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KoiAuction.Service.Models;
 using KoiAuction.Service.Models.Proposal;
 using PRN231.AuctionKoi.Repository.Entities;
 using System;
@@ -17,6 +18,9 @@ namespace KoiAuction.Service.Mappings
             CreateMap<Proposal, ProposalModel>()
                 .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(x => x.User.FullName))
                 .ForMember(dest => dest.DetailProposals, opt => opt.MapFrom(x => x.DetailProposals))
+                .ReverseMap();
+            CreateMap<Payment, PaymentModel>()
+                //.ForMember(dest => dest.Order, opt => opt.MapFrom(x => x.Order))
                 .ReverseMap();
         }
     }
