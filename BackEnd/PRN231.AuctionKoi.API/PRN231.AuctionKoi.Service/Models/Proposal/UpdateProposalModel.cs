@@ -8,7 +8,6 @@ namespace KoiAuction.Service.Models.Proposal
 {
     public class UpdateProposalModel
     {
-        public int FarmId { get; set; }
         public string? FarmName { get; set; }
 
         public string? Location { get; set; }

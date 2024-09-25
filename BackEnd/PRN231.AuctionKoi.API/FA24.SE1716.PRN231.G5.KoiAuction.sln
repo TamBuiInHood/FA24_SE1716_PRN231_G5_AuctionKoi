@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.Repository", "PR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiAuction.Common", "PRN231.AuctionKoi.Common\KoiAuction.Common.csproj", "{3C55B7F4-4978-4235-B640-A3418BF24DBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoiAuction.MVCWebApp", "KoiAuction.MVCWebApp\KoiAuction.MVCWebApp.csproj", "{06EA9911-D456-4579-8285-8674C131F690}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C55B7F4-4978-4235-B640-A3418BF24DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06EA9911-D456-4579-8285-8674C131F690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06EA9911-D456-4579-8285-8674C131F690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06EA9911-D456-4579-8285-8674C131F690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06EA9911-D456-4579-8285-8674C131F690}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

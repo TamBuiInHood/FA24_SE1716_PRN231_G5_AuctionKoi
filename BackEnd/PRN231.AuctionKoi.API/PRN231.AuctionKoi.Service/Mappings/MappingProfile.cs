@@ -18,6 +18,7 @@ namespace KoiAuction.Service.Mappings
                 .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(x => x.User.FullName))
                 .ForMember(dest => dest.DetailProposals, opt => opt.MapFrom(x => x.DetailProposals))
                 .ReverseMap();
+            CreateMap<Proposal, CreateProposalModel>().ReverseMap();
         }
     }
 }

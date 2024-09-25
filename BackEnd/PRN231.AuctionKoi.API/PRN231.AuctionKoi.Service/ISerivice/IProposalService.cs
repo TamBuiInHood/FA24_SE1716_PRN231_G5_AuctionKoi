@@ -16,8 +16,7 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> GetByID(int id);
 
         Task<IBusinessResult> Insert(CreateProposalModel entityinsert);
-        Task<IBusinessResult> Update(UpdateProposalModel entityUpdate);
-        Task<IBusinessResult> Test(UpdateProposalModel entityUpdate);
+        Task<IBusinessResult> Update(int id, UpdateProposalModel entityUpdate);
         Task<IBusinessResult> Delete(int id);
     }
 }

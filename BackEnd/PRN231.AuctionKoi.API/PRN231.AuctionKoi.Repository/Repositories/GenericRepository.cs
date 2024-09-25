@@ -72,7 +72,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
             {
                 query = query.Where(filter);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split

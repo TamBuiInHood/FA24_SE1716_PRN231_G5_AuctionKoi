@@ -8,6 +8,8 @@ namespace KoiAuction.Service.Models.Proposal
 {
     public class CreateProposalModel
     {
+        public string? FarmCode { get; set; }
+
         public string? FarmName { get; set; }
 
         public string? Location { get; set; }
@@ -21,6 +23,7 @@ namespace KoiAuction.Service.Models.Proposal
         public string? Description { get; set; }
 
         public string? Owner { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public DateTime? UpdateDate { get; set; }
 

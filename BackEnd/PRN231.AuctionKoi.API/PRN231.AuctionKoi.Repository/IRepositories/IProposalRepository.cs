@@ -10,6 +10,6 @@ namespace PRN231.AuctionKoi.Repository.IRepositories
 {
     public interface IProposalRepository
     {
-      
+      public Task<bool> DeleteProposal(int id);
     }
 }

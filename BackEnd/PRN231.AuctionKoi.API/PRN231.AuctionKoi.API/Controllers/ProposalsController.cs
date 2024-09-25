@@ -39,45 +39,15 @@ namespace KoiAuction.API.Controllers
         public async Task<IBusinessResult> GetProposal(int id)
         {
             var proposal = await _proposalService.GetByID(id);
-
-            //if (proposal == null)
-            //{
-            //    return NotFound();
-            //}
-
             return proposal;
         }
 
         // PUT: api/Proposals/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IBusinessResult> PutProposal(UpdateProposalModel updateProposalModel)
+        public async Task<IBusinessResult> PutProposal([FromRoute] int id, UpdateProposalModel updateProposalModel)
         {
-            //if (id != proposal.FarmId)
-            //{
-            //    return new BusinessResult();
-            //}
-
-            //_context.Entry(proposal).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!ProposalExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            //return NoContent();
-            return await _proposalService.Update(updateProposalModel);
+            return await _proposalService.Update(id,updateProposalModel);
         }
 
         // POST: api/Proposals
@@ -85,10 +55,6 @@ namespace KoiAuction.API.Controllers
         [HttpPost]
         public async Task<IBusinessResult> PostProposal(CreateProposalModel createProposalModel)
         {
-            //_context.Proposals.Add(proposal);
-            //await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetProposal", new { id = proposal.FarmId }, proposal);
             return  await _proposalService.Insert(createProposalModel);
         }
 
@@ -96,22 +62,7 @@ namespace KoiAuction.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IBusinessResult> DeleteProposal(int id)
         {
-            //var proposal = await _context.Proposals.FindAsync(id);
-            //if (proposal == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //_context.Proposals.Remove(proposal);
-            //await _context.SaveChangesAsync();
-
-            //return NoContent();
             return await (_proposalService.Delete(id));
         }
-
-        //private bool ProposalExists(int id)
-        //{
-        //    return _context.Proposals.Any(e => e.FarmId == id);
-        //}
     }
 }
