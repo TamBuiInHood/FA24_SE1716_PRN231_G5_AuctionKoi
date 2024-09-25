@@ -27,11 +27,7 @@ builder.Services.AddDbContext<AuctionKoiOfficialContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 });
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNamingPolicy = new KebabCaseNamingPolicy();
-    options.JsonSerializerOptions.DictionaryKeyPolicy = new KebabCaseNamingPolicy();
-});
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Auction Koi API", Version = "v1" });
