@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
-using KoiAuction.Service.Models.Pagination;
-using KoiAuction.Service.Models.Proposal;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PRN231.AuctionKoi.Common.Utils;
-using PRN231.AuctionKoi.Repository.Entities;
 
 namespace KoiAuction.API.Controllers
 {

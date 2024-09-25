@@ -23,11 +23,13 @@
         {
             public const string Get = Base + "/paymnets/";
 
-            public const string GetByID = Base + "/paymnets/{payment-id}";
+            public const string GetByID = Base + "/paymnets/{search-id}";
 
             public const string Update = Base + "/paymnets/{payment-id}";
 
             public const string Delete = Base + "/paymnets/{payment-id}";
+
+            public const string Create = Base + "/paymnets/";
 
             public const string GetNoPagin = Base + "/paymnets/";
 

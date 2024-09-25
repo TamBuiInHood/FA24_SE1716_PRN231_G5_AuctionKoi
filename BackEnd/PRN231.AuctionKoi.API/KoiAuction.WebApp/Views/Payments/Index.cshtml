@@ -1,0 +1,65 @@
+﻿@model KoiAuction.BussinessModels.Pagination.PageEntity<KoiAuction.BussinessModels.PaymentModels.PaymentModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.List.FirstOrDefault().PaymentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.List.FirstOrDefault().PaymentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.List.FirstOrDefault().Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.List.FirstOrDefault().PaymentMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.List.FirstOrDefault().TransactionId)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.List) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentMethod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionId)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.Order.OrderId)
+            </td> *@
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PaymentId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PaymentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PaymentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

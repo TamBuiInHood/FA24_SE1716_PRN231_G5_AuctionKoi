@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
-using KoiAuction.Service.Models.Proposal;
+using KoiAuction.BussinessModels.PaymentModels;
+using KoiAuction.BussinessModels.Proposal;
 using PRN231.AuctionKoi.Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KoiAuction.Service.Mappings
 {
@@ -16,7 +11,10 @@ namespace KoiAuction.Service.Mappings
         {
             CreateMap<Proposal, ProposalModel>()
                 .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(x => x.User.FullName))
-                .ForMember(dest => dest.DetailProposals, opt => opt.MapFrom(x => x.DetailProposals))
+                //.ForMember(dest => dest.DetailProposals, opt => opt.MapFrom(x => x.DetailProposals))
+                .ReverseMap();
+            CreateMap<Payment, PaymentModel>()
+                //.ForMember(dest => dest.Order, opt => opt.MapFrom(x => x.Order))
                 .ReverseMap();
             CreateMap<Proposal, CreateProposalModel>().ReverseMap();
         }

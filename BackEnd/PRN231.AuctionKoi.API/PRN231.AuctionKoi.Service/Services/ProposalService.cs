@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
+using KoiAuction.BussinessModels.Pagination;
+using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Common;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
-using KoiAuction.Service.Models.Pagination;
-using KoiAuction.Service.Models.Proposal;
 using Microsoft.AspNetCore.Routing.Tree;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Common.Utils.Common.Enums;
 using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KoiAuction.Service.Services
 {
