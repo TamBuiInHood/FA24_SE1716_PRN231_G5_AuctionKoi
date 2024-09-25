@@ -1,11 +1,8 @@
 ﻿using KoiAuction.API.Payloads.Requests.PaymentRequest;
+using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Common.Constants;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
-using KoiAuction.Service.Models;
-using KoiAuction.Service.Responses;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PRN231.AuctionKoi.API.Payloads;
 
@@ -16,6 +13,11 @@ namespace PRN231.AuctionKoi.API.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+
+        public PaymentController(IPaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
 
         //[Authorize(Roles = )]
         [HttpDelete(APIRoutes.Paymnet.Delete, Name = "DeletePaymentAsync")]
@@ -34,20 +36,20 @@ namespace PRN231.AuctionKoi.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpGet(APIRoutes.Paymnet.Get, Name = "GetPaymentAsync")]
-        public async Task<IActionResult> GetAsync([FromQuery(Name = "order-by")] string orderBy
+        public async Task<IBusinessResult> GetAsync([FromQuery(Name = "order-by")] string? orderBy
            , [FromQuery(Name = "search-key")] string? searchKey
            , [FromQuery(Name = "page-index")] int pageIndex = PageDefault.PAGE_INDEX
            , [FromQuery(Name = "page-size")] int pageSize = PageDefault.PAGE_SIZE)
         {
-            try
-            {
-                var result = await _paymentService.Get(searchKey, orderBy, pageIndex, pageSize);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            //try
+            //{
+            var result = await _paymentService.Get(searchKey, orderBy, pageIndex, pageSize);
+            return result;
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
         }
 
         //[Authorize(Roles = )]
@@ -94,7 +96,7 @@ namespace PRN231.AuctionKoi.API.Controllers
         {
             try
             {
-                var insertEntity = new PaymentModel();
+                var insertEntity = new KoiAuction.BussinessModels.PaymentModels.PaymentModel();
                 insertEntity.PaymentDate = reqObj.PaymentDate;
                 insertEntity.PaymentMethod = reqObj.PaymentMethod;
                 insertEntity.PaymentAmount = reqObj.PaymentAmount;

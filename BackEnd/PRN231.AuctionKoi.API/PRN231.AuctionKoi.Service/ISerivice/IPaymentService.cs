@@ -1,6 +1,5 @@
-﻿using KoiAuction.Service.Base;
-using KoiAuction.Service.Models;
-using KoiAuction.Service.Models.Pagination;
+﻿using KoiAuction.BussinessModels.PaymentModels;
+using KoiAuction.Service.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,9 +3,9 @@ using KoiAuction.Common;
 using KoiAuction.Common.Constants;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
-using KoiAuction.Service.Models;
-using KoiAuction.Service.Models.Pagination;
-using KoiAuction.Service.Models.Proposal;
+using KoiAuction.BussinessModels;
+using KoiAuction.BussinessModels.Pagination;
+using KoiAuction.BussinessModels.Proposal;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Repository.Entities;
@@ -16,6 +16,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using KoiAuction.BussinessModels.PaymentModels;
 
 namespace KoiAuction.Service.Services
 {
@@ -58,7 +59,7 @@ namespace KoiAuction.Service.Services
                 {
                     filter = x => x.PaymentDate == validDate;
                 }
-                else if (!searchKey.IsNullOrEmpty())
+                else if (!string.IsNullOrEmpty(searchKey))
                 {
                     filter = x => x.Status!.ToLower().Contains(searchKey!.ToLower());
                 }
@@ -78,6 +79,9 @@ namespace KoiAuction.Service.Services
                     case "Status":
                         sortBy = x => x.OrderByDescending(x => x.Status);
                         break;
+                    default:
+                        sortBy = x => x.OrderByDescending(a => a.PaymentId);
+                        break;
                 }
 
                 string includeProperties = "Order";
@@ -90,7 +94,7 @@ namespace KoiAuction.Service.Services
             }
             catch (Exception ex)
             {
-                return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_DELETE_MSG, ex.ToString());
+                return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG, ex.ToString());
             }
         }
 

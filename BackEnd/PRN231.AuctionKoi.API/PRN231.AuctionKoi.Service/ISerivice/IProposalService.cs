@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PRN231.AuctionKoi.Common.Utils;
-using KoiAuction.Service.Models.Pagination;
-using KoiAuction.Service.Models.Proposal;
+﻿using PRN231.AuctionKoi.Common.Utils;
 using KoiAuction.Service.Base;
+using KoiAuction.BussinessModels.Proposal;
 
 namespace KoiAuction.Service.ISerivice
 {
