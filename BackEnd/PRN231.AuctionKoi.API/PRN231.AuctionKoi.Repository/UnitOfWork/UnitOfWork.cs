@@ -1,6 +1,7 @@
-﻿using PRN231.AuctionKoi.Repository.Entities;
-using PRN231.AuctionKoi.Repository.Repositories;
+﻿using PRN231.AuctionKoi.Repository.Repositories;
 using Microsoft.Extensions.Configuration;
+using KoiAuction.Repository.Entities;
+using KoiAuction.Repository.Repositories;
 
 
 namespace PRN231.AuctionKoi.Repository.UnitOfWork
@@ -8,13 +9,15 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IConfiguration _configuration;
-        private  AuctionKoiOfficialContext _context;
+        private Fa24Se1716Prn231G5KoiauctionContext _context;
 
         private PaymentRepository _paymentRepo;
         private ProposalRepository _proposalRepo;
+        private UserAuctionRepository _userAuctionRepo;
+
         //private GenericRepository<Category> _categoryRepo;
 
-        public UnitOfWork(AuctionKoiOfficialContext context, IConfiguration configuration)
+        public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -70,6 +73,18 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
                     this._proposalRepo = new ProposalRepository(_context);
                 }
                 return _proposalRepo;
+            }
+        }
+
+        public UserAuctionRepository UserAuctionRepository
+        {
+            get
+            {
+                if (_userAuctionRepo == null)
+                {
+                    this._userAuctionRepo = new UserAuctionRepository(_context);
+                }
+                return _userAuctionRepo;
             }
         }
 

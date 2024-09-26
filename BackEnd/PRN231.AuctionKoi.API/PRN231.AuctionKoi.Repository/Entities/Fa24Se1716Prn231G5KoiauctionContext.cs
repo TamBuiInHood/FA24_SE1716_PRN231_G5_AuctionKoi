@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
-public partial class AuctionKoiOfficialContext : DbContext
+public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
 {
-    public AuctionKoiOfficialContext()
+    public Fa24Se1716Prn231G5KoiauctionContext()
     {
     }
 
-    public AuctionKoiOfficialContext(DbContextOptions<AuctionKoiOfficialContext> options)
+    public Fa24Se1716Prn231G5KoiauctionContext(DbContextOptions<Fa24Se1716Prn231G5KoiauctionContext> options)
         : base(options)
     {
     }
@@ -51,6 +51,7 @@ public partial class AuctionKoiOfficialContext : DbContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         optionsBuilder.UseSqlServer(connectionString);
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Auction>(entity =>
@@ -122,7 +123,6 @@ public partial class AuctionKoiOfficialContext : DbContext
 
             entity.HasOne(d => d.Auction).WithMany(p => p.DetailProposals)
                 .HasForeignKey(d => d.AuctionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__DetailPro__Aucti__49C3F6B7");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.DetailProposals)
@@ -163,22 +163,22 @@ public partial class AuctionKoiOfficialContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.UserId, e.FishId }).HasName("PK__OrderDet__CA10FD3ED0A9FC98");
+            entity.HasKey(e => new { e.OrderId, e.BidId }).HasName("PK__OrderDet__CA10FD3ED0A9FC98");
 
             entity.ToTable("OrderDetail");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.BidId).HasColumnName("BidID");
+
+            entity.HasOne(d => d.Bid).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.BidId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__OrderDetail__5441852A");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__OrderDeta__Order__534D60F1");
-
-            entity.HasOne(d => d.UserAuction).WithMany(p => p.OrderDetails)
-                .HasForeignKey(d => new { d.UserId, d.FishId })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDetail__5441852A");
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -261,6 +261,7 @@ public partial class AuctionKoiOfficialContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Birthday).HasColumnType("datetime");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.FullName).HasMaxLength(256);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.UserCode).HasMaxLength(256);
@@ -274,12 +275,14 @@ public partial class AuctionKoiOfficialContext : DbContext
 
         modelBuilder.Entity<UserAuction>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.FishId }).HasName("PK__UserAuct__980A691197F1DA72");
+            entity.HasKey(e => e.BidId).HasName("PK__UserAuct__980A691197F1DA72");
 
             entity.ToTable("UserAuction");
 
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.BidId).HasColumnName("BidID");
+            entity.Property(e => e.BidCode).HasMaxLength(256);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Fish).WithMany(p => p.UserAuctions)
                 .HasForeignKey(d => d.FishId)

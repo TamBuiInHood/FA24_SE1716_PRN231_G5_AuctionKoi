@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using PRN231.AuctionKoi.Repository.Entities;
 using Microsoft.IdentityModel.Tokens;
+using KoiAuction.Repository.Entities;
 
 namespace PRN231.AuctionKoi.Repository.Repositories
 {
     public class GenericRepository<TEntity> where TEntity : class
     {
-        internal AuctionKoiOfficialContext context;
+        internal Fa24Se1716Prn231G5KoiauctionContext context;
         internal DbSet<TEntity> dbSet;
 
-        public GenericRepository(AuctionKoiOfficialContext context)
+        public GenericRepository(Fa24Se1716Prn231G5KoiauctionContext context)
         {
             this.context = context;
             this.dbSet = context.Set<TEntity>();
@@ -72,7 +72,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
             {
                 query = query.Where(filter);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
