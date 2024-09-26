@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
 public partial class OrderDetail
 {
@@ -9,11 +9,9 @@ public partial class OrderDetail
 
     public int OrderId { get; set; }
 
-    public int UserId { get; set; }
+    public int BidId { get; set; }
 
-    public int FishId { get; set; }
+    public virtual UserAuction Bid { get; set; } = null!;
 
     public virtual Order Order { get; set; } = null!;
-
-    public virtual UserAuction UserAuction { get; set; } = null!;
 }

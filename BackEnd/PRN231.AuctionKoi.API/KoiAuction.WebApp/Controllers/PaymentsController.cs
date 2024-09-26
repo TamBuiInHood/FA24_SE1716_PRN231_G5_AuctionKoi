@@ -1,20 +1,20 @@
 ﻿using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Common;
+using KoiAuction.Repository.Entities;
 using KoiAuction.Service.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using PRN231.AuctionKoi.Repository.Entities;
 
 namespace KoiAuction.WebApp.Controllers
 {
     public class PaymentsController : Controller
     {
-        private readonly AuctionKoiOfficialContext _context;
+        private readonly Fa24Se1716Prn231G5KoiauctionContext _context;
 
-        public PaymentsController(AuctionKoiOfficialContext context)
+        public PaymentsController(Fa24Se1716Prn231G5KoiauctionContext context)
         {
             _context = context;
         }

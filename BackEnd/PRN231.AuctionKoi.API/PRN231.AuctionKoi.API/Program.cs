@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System.Text.Json.Serialization;
 using System.Text;
@@ -14,6 +13,9 @@ using KoiAuction.Service.Mappings;
 using KoiAuction.Service.Services;
 using KoiAuction.Service.Responses;
 using KoiAuction.Service.Base;
+using KoiAuction.Repository.Entities;
+using KoiAuction.Repository.IRepositories;
+using KoiAuction.Repository.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<AuctionKoiOfficialContext>(options =>
+builder.Services.AddDbContext<Fa24Se1716Prn231G5KoiauctionContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
@@ -97,14 +99,16 @@ var mapper = new MapperConfiguration(mc =>
 builder.Services.AddSingleton(mapper.CreateMapper());
 
 // Register repositories
+builder.Services.AddScoped<IBusinessResult,BusinessResult>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
 builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
-builder.Services.AddScoped<IBusinessResult,BusinessResult>();
+builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 
 // Register servicies
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
 builder.Services.AddScoped<IProposalService, ProposalService>();
+builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
 
 var app = builder.Build();
 

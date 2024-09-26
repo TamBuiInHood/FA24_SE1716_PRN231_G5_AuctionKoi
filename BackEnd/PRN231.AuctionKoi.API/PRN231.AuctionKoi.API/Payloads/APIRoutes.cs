@@ -51,5 +51,13 @@
 
         }
 
+        public static class UserAuction
+        {
+            public const string Get = Base + "/user-auctions/";
+
+            public const string GetByID = Base + "/user-auctions/{bid-id}";
+
+        }
+
     }
 }

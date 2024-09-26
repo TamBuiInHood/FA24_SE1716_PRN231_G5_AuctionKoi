@@ -1,4 +1,5 @@
-﻿using KoiAuction.BussinessModels.Proposal;
+﻿using KoiAuction.API.Payloads.Requests.Filters;
+using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using Microsoft.AspNetCore.Mvc;

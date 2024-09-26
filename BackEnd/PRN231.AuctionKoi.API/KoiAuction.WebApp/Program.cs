@@ -1,11 +1,11 @@
+using KoiAuction.Repository.Entities;
 using PRN231.AuctionKoi.API.Controllers;
-using PRN231.AuctionKoi.Repository.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<AuctionKoiOfficialContext>();
+builder.Services.AddScoped<Fa24Se1716Prn231G5KoiauctionContext>();
 //builder.Services.AddScoped<PaymentController>();
 var app = builder.Build();
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
 public partial class DetailProposal
 {
@@ -45,11 +45,11 @@ public partial class DetailProposal
 
     public int FarmId { get; set; }
 
-    public int AuctionId { get; set; }
+    public int? AuctionId { get; set; }
 
     public double? AuctionFee { get; set; }
 
-    public virtual Auction Auction { get; set; } = null!;
+    public virtual Auction? Auction { get; set; }
 
     public virtual ICollection<CheckingProposal> CheckingProposals { get; set; } = new List<CheckingProposal>();
 
