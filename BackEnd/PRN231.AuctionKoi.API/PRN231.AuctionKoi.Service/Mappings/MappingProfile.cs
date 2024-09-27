@@ -21,11 +21,14 @@ namespace KoiAuction.Service.Mappings
                .ForMember(dest => dest.FishCode, opt => opt.MapFrom(x => x.Fish.FishCode))
                .ForMember(dest => dest.FishName, opt => opt.MapFrom(x => x.Fish.FishName))
                .ForMember(dest => dest.FishTypeName, opt => opt.MapFrom(x => x.Fish.FishType.FishTypeName))
-               .ForMember(dest => dest.FarmName, opt => opt.MapFrom(x => x.Fish.Auction!.AuctionName))
+               .ForMember(dest => dest.FarmName, opt => opt.MapFrom(x => x.Fish.Farm!.FarmName))
                .ForMember(dest => dest.UserCode, opt => opt.MapFrom(x => x.User.UserCode))
                .ForMember(dest => dest.FullName, opt => opt.MapFrom(x => x.User.FullName))
-               .ForMember(dest => dest.Mail, opt => opt.MapFrom(x => x.User.Mail))
-               .ReverseMap();
+               .ForMember(dest => dest.Mail, opt => opt.MapFrom(x => x.User.Mail));
+            CreateMap<UserAuctionModel, UserAuction>()
+                .ForMember(dest => dest.Fish, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
         }
     }
 }
