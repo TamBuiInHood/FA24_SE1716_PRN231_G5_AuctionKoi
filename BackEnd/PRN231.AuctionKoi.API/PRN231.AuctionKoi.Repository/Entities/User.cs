@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
 public partial class User
 {
@@ -24,6 +24,8 @@ public partial class User
     public string? AvavarUrl { get; set; }
 
     public string? Password { get; set; }
+
+    public DateTime CreateDate { get; set; }
 
     public int RoleId { get; set; }
 

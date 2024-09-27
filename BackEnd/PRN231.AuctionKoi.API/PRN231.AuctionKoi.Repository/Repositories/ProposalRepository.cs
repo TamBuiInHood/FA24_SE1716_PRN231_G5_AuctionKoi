@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.IRepositories;
 using System;
@@ -12,8 +12,8 @@ namespace PRN231.AuctionKoi.Repository.Repositories
 {
     public class ProposalRepository : GenericRepository<Proposal>, IProposalRepository
     {
-        private readonly AuctionKoiOfficialContext _context;
-        public ProposalRepository(AuctionKoiOfficialContext context) : base(context)
+        private readonly Fa24Se1716Prn231G5KoiauctionContext _context;
+        public ProposalRepository(Fa24Se1716Prn231G5KoiauctionContext context) : base(context)
         {
             _context = context;
         }

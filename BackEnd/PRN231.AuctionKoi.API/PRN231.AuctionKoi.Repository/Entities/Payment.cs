@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
 public partial class Payment
 {

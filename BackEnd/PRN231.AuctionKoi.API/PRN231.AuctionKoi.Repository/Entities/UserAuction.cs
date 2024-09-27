@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN231.AuctionKoi.Repository.Entities;
+namespace KoiAuction.Repository.Entities;
 
 public partial class UserAuction
 {
+    public int BidId { get; set; }
+
+    public string? BidCode { get; set; }
+
     public double? Price { get; set; }
 
     public DateTime? CreateDate { get; set; }

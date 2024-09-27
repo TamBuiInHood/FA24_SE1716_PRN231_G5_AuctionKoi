@@ -1,4 +1,4 @@
-﻿using PRN231.AuctionKoi.Repository.Entities;
+﻿using KoiAuction.Repository.Repositories;
 using PRN231.AuctionKoi.Repository.Repositories;
 
 
@@ -11,6 +11,8 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         //public GenericRepository<Category> CategoryRepository { get; }
         public PaymentRepository PaymentRepository{ get; }
         public ProposalRepository ProposalRepository{ get; }
+        public UserAuctionRepository UserAuctionRepository { get; }
+
 
 
     }
