@@ -51,6 +51,10 @@ namespace KoiAuction.Common
 
         public static int WARNING_NO_DATA_CODE = 4;
         public static string WARNING_NO_DATA_MSG = "No data";
+        public static int WARNING_INVALID_ID_CODE = 4;
+        public static string WARNING_INVALID_ID_MSG = "Invalid ID format";
+        public static int WARNING_INVALID_DATE_FILTER_CODE = 4;
+        public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
 
         #endregion
     }
