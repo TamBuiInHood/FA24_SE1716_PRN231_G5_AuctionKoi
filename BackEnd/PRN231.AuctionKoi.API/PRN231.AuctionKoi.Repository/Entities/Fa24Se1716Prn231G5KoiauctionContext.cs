@@ -49,7 +49,7 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
             .AddJsonFile("appsettings.json")
             .Build();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

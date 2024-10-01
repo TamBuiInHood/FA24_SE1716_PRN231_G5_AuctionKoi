@@ -1,35 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Common;
+using KoiAuction.Repository.Entities;
 using KoiAuction.Service.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using PRN231.AuctionKoi.Repository.Entities;
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
     public class ProposalsController : Controller
     {
-        private readonly AuctionKoiOfficialContext _context;
+        //private readonly AuctionKoiOfficialContext _context;
 
-        public ProposalsController(AuctionKoiOfficialContext context)
-        {
-            _context = context;
-        }
+        //public ProposalsController(AuctionKoiOfficialContext context)
+        //{
+        //    _context = context;
+        //}
 
         // GET: Proposals
         public async Task<IActionResult> Index()
         {
             //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
             //return View(await auctionKoiOfficialContext.ToListAsync());
-            var proposals = new List<Proposal>();
+            
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals"))
@@ -70,7 +71,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             //return View(proposal);
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "Proposals/" + id))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -90,9 +91,9 @@ namespace KoiAuction.MVCWebApp.Controllers
         }
 
         // GET: Proposals/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
             return View();
         }
 
@@ -101,33 +102,89 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FarmId,FarmCode,FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,UpdateDate,IsDeleted,UserId")] Proposal proposal)
+        public async Task<IActionResult> Create([Bind("FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,UpdateDate,UserId")] ProposalModel proposal)
         {
-            if (ModelState.IsValid)
+
+            bool saveStatus = false;
+            if(proposal.UpdateDate > proposal.CreateDate)
             {
-                _context.Add(proposal);
-                await _context.SaveChangesAsync();
+                ModelState.AddModelError("UpdateDate", "Update Date must be greater than Create Date");
+            }
+            if(ModelState.IsValid)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "proposals/create-proposal", proposal))
+                    {
+                        if(response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync ();
+                            var result = JsonConvert.DeserializeObject<BusinessResult> (content);
+                            if(result != null && result.Status == Const.SUCCESS_CREATE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
+            if(saveStatus)
+            {
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
-            return View(proposal);
+            else
+            {
+                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+                return View();
+            }
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(proposal);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
+            //return View(proposal);
         }
 
         // GET: Proposals/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            var proposal = new ProposalModel();
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
-            }
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
+                {
+                    if(response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
 
-            var proposal = await _context.Proposals.FindAsync(id);
-            if (proposal == null)
-            {
-                return NotFound();
+                        if(result != null && result.Data != null)
+                        {
+                            proposal = JsonConvert.DeserializeObject<ProposalModel>(result.Data.ToString());
+                        }
+                    }
+                }
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
+            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", proposal.UserId);
             return View(proposal);
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var proposal = await _context.Proposals.FindAsync(id);
+            //if (proposal == null)
+            //{
+            //    return NotFound();
+            //}
+            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
+            //return View(proposal);
         }
 
         // POST: Proposals/Edit/5
@@ -135,54 +192,108 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FarmId,FarmCode,FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,UpdateDate,IsDeleted,UserId")] Proposal proposal)
+        public async Task<IActionResult> Edit(int id, [Bind("FarmId,FarmCode,FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,IsDeleted,UpdateDate,UserId")] ProposalModel proposal)
         {
-            if (id != proposal.FarmId)
+            bool saveStatus = false;
+            if(ModelState.IsValid)
             {
-                return NotFound();
+                using (var httpClient = new  HttpClient())
+                {
+                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "proposals/" + proposal.FarmId, proposal))
+                    {
+                        if(response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult> (content);
+
+                            if(result != null && result.Status == Const.SUCCESS_UPDATE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
             }
 
-            if (ModelState.IsValid)
+            if(saveStatus)
             {
-                try
-                {
-                    _context.Update(proposal);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProposalExists(proposal.FarmId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
-            return View(proposal);
+            else
+            {
+                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", proposal.UserId);
+                return View(proposal);
+            }
+
+            //if (id != proposal.FarmId)
+            //{
+            //    return NotFound();
+            //}
+
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        _context.Update(proposal);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!ProposalExists(proposal.FarmId))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", proposal.UserId);
+            //return View(proposal);
         }
 
         // GET: Proposals/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            var proposal = new ProposalModel();
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
-            }
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
 
-            var proposal = await _context.Proposals
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.FarmId == id);
-            if (proposal == null)
-            {
-                return NotFound();
+                        if (result != null && result.Data != null)
+                        {
+                            proposal = JsonConvert.DeserializeObject<ProposalModel>(result.Data.ToString());
+                        }
+                    }
+                }
             }
-
+            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "UserFullName", proposal.UserId);
             return View(proposal);
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var proposal = await _context.Proposals
+            //    .Include(p => p.User)
+            //    .FirstOrDefaultAsync(m => m.FarmId == id);
+            //if (proposal == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(proposal);
         }
 
         // POST: Proposals/Delete/5
@@ -190,19 +301,76 @@ namespace KoiAuction.MVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var proposal = await _context.Proposals.FindAsync(id);
-            if (proposal != null)
+            bool saveStatus = false;
+            if (ModelState.IsValid)
             {
-                _context.Proposals.Remove(proposal);
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "proposals/" + id))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Status == Const.SUCCESS_DELETE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (saveStatus)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View();
+            }
+
+            //var proposal = await _context.Proposals.FindAsync(id);
+            //if (proposal != null)
+            //{
+            //    _context.Proposals.Remove(proposal);
+            //}
+
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
         }
 
-        private bool ProposalExists(int id)
+        //private bool ProposalExists(int id)
+        //{
+        //    return _context.Proposals.Any(e => e.FarmId == id);
+        //}
+
+        public async Task<List<User>> GetUsers()
         {
-            return _context.Proposals.Any(e => e.FarmId == id);
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/user"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+                        if (result != null && result.Data != null)
+                        {
+                            var data = JsonConvert.DeserializeObject<List<User>>
+                                (result.Data.ToString());
+                            return data;
+                        }
+                    }
+                    return new List<User>();
+                }
+
+            }
         }
     }
 }

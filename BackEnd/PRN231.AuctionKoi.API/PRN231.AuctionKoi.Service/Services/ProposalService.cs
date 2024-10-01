@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Routing.Tree;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Common.Utils.Common.Enums;
-using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System.Linq.Expressions;
 using KoiAuction.Repository.Entities;
@@ -64,9 +63,15 @@ namespace KoiAuction.Service.Services
                 {
                     int validInt = 0;
                     var checkInt = int.TryParse(paginationParameter.Search, out validInt);
+                    var validDate = DateTime.Now;
                     if (checkInt)
                     {
                         filter = x => x.FarmId == validInt;
+                    }
+                    else if (DateTime.TryParse(paginationParameter.Search, out validDate))
+                    {
+                        filter = x => x.CreateDate == validDate
+                                      || x.UpdateDate == validDate;
                     }
                     else
                     {
@@ -161,20 +166,42 @@ namespace KoiAuction.Service.Services
 
         }
 
+        public async Task<IBusinessResult> GetAllUser()
+        {
+            try
+            {
+                var listUser = await _unitOfWork.UserRepository.GetAllNoPaging();
+                if(listUser != null && listUser.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, listUser);
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new List<User>());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
+
         public async Task<IBusinessResult> GetByID(int id)
         {
             try
             {
                 string includeProperties = "User,DetailProposals";
                 var result = await _unitOfWork.ProposalRepository.GetByCondition(x => x.FarmId == id, includeProperties: includeProperties);
-                if (result != null)
+                var finalResult =  _mappper.Map<ProposalModel>(result);
+                if (finalResult != null)
                 {
-                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, finalResult);
 
                 }
                 else
                 {
-                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new Proposal());
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new ProposalModel());
                 }
             }
             catch (Exception ex)
@@ -189,6 +216,8 @@ namespace KoiAuction.Service.Services
             try
             {
                 var data = _mappper.Map<Proposal>(entityinsert);
+                data.FarmCode = "Farm" + Guid.NewGuid().ToString();
+                data.IsDeleted = false;
                 await _unitOfWork.ProposalRepository.Insert(data);
                 var result = await _unitOfWork.SaveAsync();
                 if(result > 0)
@@ -215,17 +244,47 @@ namespace KoiAuction.Service.Services
                 var checkExist = await _unitOfWork.ProposalRepository.GetByID(id);
                 if(checkExist != null)
                 {
-
-                    checkExist.FarmName = entityUpdate.FarmName;
-                    checkExist.Location = entityUpdate.Location;
-                    checkExist.AvatarUrl = entityUpdate.AvatarUrl;
-                    checkExist.CreateDate = entityUpdate.CreateDate;
-                    checkExist.Status = entityUpdate.Status;
-                    checkExist.Description = entityUpdate.Description;
-                    checkExist.Owner = entityUpdate.Owner;
-                    checkExist.UpdateDate = entityUpdate.UpdateDate;
-                    checkExist.UserId = entityUpdate.UserId;
-
+                    if (!string.IsNullOrEmpty(entityUpdate.FarmName))
+                    {
+                        checkExist.FarmName = entityUpdate.FarmName;
+                    }
+                    if (!string.IsNullOrEmpty(entityUpdate.Location))
+                    {
+                        checkExist.Location = entityUpdate.Location;
+                    }
+                    if (!string.IsNullOrEmpty(entityUpdate.AvatarUrl))
+                    {
+                        checkExist.AvatarUrl = entityUpdate.AvatarUrl;
+                    }
+                    if (entityUpdate.CreateDate.HasValue)
+                    {
+                        checkExist.CreateDate = entityUpdate.CreateDate;
+                    }
+                    if (!string.IsNullOrEmpty(entityUpdate.Status))
+                    {
+                        checkExist.Status = entityUpdate.Status;
+                    }
+                    if (!string.IsNullOrEmpty(entityUpdate.Description))
+                    { 
+                        checkExist.Description = entityUpdate.Description;
+                    }
+                    if(!string.IsNullOrEmpty(entityUpdate.Owner))
+                    {
+                        checkExist.Owner = entityUpdate.Owner;
+                    }
+                    if (entityUpdate.UpdateDate.HasValue)
+                    {
+                        checkExist.UpdateDate = entityUpdate.UpdateDate;
+                    }
+                    if(entityUpdate.IsDeleted.HasValue)
+                    {
+                        checkExist.IsDeleted = entityUpdate.IsDeleted;
+                    }
+                    if (entityUpdate.UserId > 0)
+                    {
+                        checkExist.UserId = entityUpdate.UserId;
+                    }
+                    _unitOfWork.ProposalRepository.Update(checkExist);
                     var result = await _unitOfWork.SaveAsync();
                     if(result > 0)
                     {

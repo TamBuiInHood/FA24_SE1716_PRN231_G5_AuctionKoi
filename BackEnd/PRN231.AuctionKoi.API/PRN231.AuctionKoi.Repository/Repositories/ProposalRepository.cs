@@ -1,5 +1,5 @@
+using KoiAuction.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
-using PRN231.AuctionKoi.Repository.Entities;
 using PRN231.AuctionKoi.Repository.IRepositories;
 using System;
 using System.Collections.Generic;

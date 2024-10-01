@@ -1,4 +1,4 @@
-using PRN231.AuctionKoi.Repository.Entities;
+using KoiAuction.Repository.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Dependency Injection
-builder.Services.AddScoped<AuctionKoiOfficialContext>();
+builder.Services.AddScoped<Fa24Se1716Prn231G5KoiauctionContext>();
 
 var app = builder.Build();
 

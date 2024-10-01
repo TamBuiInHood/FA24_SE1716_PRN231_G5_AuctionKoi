@@ -58,5 +58,12 @@ namespace KoiAuction.API.Controllers
         {
             return await (_proposalService.Delete(id));
         }
+
+        // GET: api/Proposals
+        [HttpGet(APIRoutes.Proposal.GetUser, Name = "Get All User")]
+        public async Task<IBusinessResult> GetAllUserProposals()
+        {
+            return await _proposalService.GetAllUser();
+        }
     }
 }

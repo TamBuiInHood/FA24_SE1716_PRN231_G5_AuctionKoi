@@ -23,6 +23,8 @@ namespace KoiAuction.BussinessModels.Proposal
 
         public string? Owner { get; set; }
 
+        public bool? IsDeleted { get; set; }
+
         public DateTime? UpdateDate { get; set; }
 
         public int UserId { get; set; }

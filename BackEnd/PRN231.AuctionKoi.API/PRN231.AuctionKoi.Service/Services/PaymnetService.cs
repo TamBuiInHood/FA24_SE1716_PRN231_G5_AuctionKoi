@@ -52,7 +52,7 @@ namespace KoiAuction.Service.Services
                 var validDate = DateTime.Now;
                 if (int.TryParse(searchKey, out validInt))
                 {
-                    filter = x => x.OrderId == validInt || x.TransactionId == validInt;
+                    //filter = x => x.OrderId == validInt || x.TransactionId == validInt;
                 }
                 else if (DateTime.TryParse(searchKey, out validDate))
                 {
@@ -107,7 +107,7 @@ namespace KoiAuction.Service.Services
             }
             else
             {
-                filter = x => x.TransactionId == id;
+                //filter = x => x.TransactionId == id;
             }
             string includeProperties = "Order";
             var payment = await _unitOfWork.PaymentRepository.GetByCondition(filter, includeProperties);

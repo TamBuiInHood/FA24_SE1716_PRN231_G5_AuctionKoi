@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
@@ -28,6 +29,13 @@ namespace KoiAuction.Service.Mappings
                .ForMember(dest => dest.FullName, opt => opt.MapFrom(x => x.User.FullName))
                .ForMember(dest => dest.Mail, opt => opt.MapFrom(x => x.User.Mail))
                .ReverseMap();
+
+            CreateMap<DetailProposal, DetailProposalModel>()
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(x => x.Farm.FarmName))
+                .ForMember(dest => dest.AuctionName, opt => opt.MapFrom(x => x.Auction.AuctionName))
+                .ForMember(dest => dest.FishTypeName, opt => opt.MapFrom(x => x.FishType.FishTypeName))
+                .ReverseMap();
+            CreateMap<DetailProposal, CreateDetailProposalModel>().ReverseMap();
         }
     }
 }

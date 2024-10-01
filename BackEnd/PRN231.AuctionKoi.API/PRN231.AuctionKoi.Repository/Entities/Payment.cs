@@ -15,7 +15,7 @@ public partial class Payment
 
     public string? PaymentMethod { get; set; }
 
-    public int TransactionId { get; set; }
+    public string TransactionId { get; set; }
 
     public int OrderId { get; set; }
 

@@ -1,0 +1,168 @@
+﻿@model IEnumerable<KoiAuction.BussinessModels.DetailProposalModel.DetailProposalModel>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FishCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FishName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Length)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VideoUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InitialPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Index)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeSpan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinIncrement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FarmName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FishTypeName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FishCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FishName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Length)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VideoUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FinalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Index)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeSpan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinIncrement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuctionFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuctionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FarmName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FishName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FishId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FishId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FishId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
