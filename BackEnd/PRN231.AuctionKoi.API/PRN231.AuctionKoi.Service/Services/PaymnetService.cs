@@ -175,7 +175,7 @@ namespace KoiAuction.Service.Services
             }
             else
             {
-                filter = x => x.TransactionId == id;
+                //filter = x => x.TransactionId == id;
             }
             string includeProperties = "Order";
             var payment = await _unitOfWork.PaymentRepository.GetByCondition(filter, includeProperties);
