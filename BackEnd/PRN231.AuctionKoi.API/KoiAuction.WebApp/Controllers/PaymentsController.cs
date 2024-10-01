@@ -82,14 +82,48 @@ namespace KoiAuction.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,PaymentAmount,PaymentDate,Status,PaymentMethod,TransactionId,OrderId")] Payment payment)
         {
+            //if (ModelState.IsValid)
+            //{
+            //_context.Add(payment);
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
+            //}
+
+            //ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
+            //return View(payment);
+            bool saveStatus = false;
             if (ModelState.IsValid)
             {
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "paymnets/", payment))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Status == Const.SUCCESS_DELETE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
+            if (saveStatus)
+            {
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
-            return View(payment);
+            else
+            {
+                ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
+                return View(payment);
+            }
         }
 
         // GET: Payments/Edit/5
@@ -182,6 +216,33 @@ namespace KoiAuction.WebApp.Controllers
         private bool PaymentExists(int id)
         {
             return _context.Payments.Any(e => e.PaymentId == id);
+        }
+
+        public async Task<List<Order>> GetOrder()
+        {
+            var orders = new List<Order>();
+            using (var httpClient = new HttpClient())
+            {
+                // endpoint nay dang sai
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        if (content != null)
+                        {
+
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Data != null)
+                            {
+                                orders = JsonConvert.DeserializeObject<PageEntity<Order>>(result.Data.ToString()!).List.ToList();
+                            }
+                        }
+                    }
+                }
+            }
+            return orders;
         }
     }
 }

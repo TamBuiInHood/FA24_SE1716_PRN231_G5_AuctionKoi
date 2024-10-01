@@ -1,8 +1,6 @@
 ﻿using PRN231.AuctionKoi.Common.Utils;
 using KoiAuction.Service.Base;
 using KoiAuction.BussinessModels.Proposal;
-using KoiAuction.BussinessModels.Filters;
-using KoiAuction.API.Payloads.Requests.Filters;
 
 namespace KoiAuction.Service.ISerivice
 {

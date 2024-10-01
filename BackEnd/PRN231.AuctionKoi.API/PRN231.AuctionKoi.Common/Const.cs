@@ -43,7 +43,8 @@ namespace KoiAuction.Common
         public static string FAIL_CHECK_ID_MSG = "Invalid ID format";
         public static int FAIL_CHECK_DATE_FILTER_CODE = -1;
         public static string FAIL_CHECK_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
-
+        public static int FAIL_CHECK_NUMBER_FILTER_CODE = -1;
+        public static string FAIL_CHECK_NUMBER_FILTER_MSG = "Number 'To' must greater than Number 'From'";
         #endregion
 
         #region Warning Code

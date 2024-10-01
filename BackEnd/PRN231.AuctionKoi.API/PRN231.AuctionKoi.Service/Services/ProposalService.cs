@@ -8,7 +8,6 @@ using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System.Linq.Expressions;
 using KoiAuction.Repository.Entities;
-using KoiAuction.API.Payloads.Requests.Filters;
 
 namespace KoiAuction.Service.Services
 {

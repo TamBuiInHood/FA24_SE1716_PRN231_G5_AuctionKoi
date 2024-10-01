@@ -4,7 +4,6 @@ using PRN231.AuctionKoi.Common.Utils;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Responses;
 using KoiAuction.BussinessModels.Proposal;
-using KoiAuction.API.Payloads.Requests.Filters;
 
 namespace PRN231.AuctionKoi.API.Controllers
 {
