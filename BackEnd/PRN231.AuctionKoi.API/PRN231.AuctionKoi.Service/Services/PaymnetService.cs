@@ -61,7 +61,7 @@ namespace KoiAuction.Service.Services
 
                     if (int.TryParse(paginationParameter.Search, out validInt))
                     {
-                        filter = filter.And(x => x.PaymentId == validInt || x.OrderId == validInt || x.TransactionId == validInt);
+                        filter = filter.And(x => x.PaymentId == validInt || x.OrderId == validInt);
                     }
                     else if (double.TryParse(paginationParameter.Search, out validDouble))
                     {
@@ -70,8 +70,8 @@ namespace KoiAuction.Service.Services
                     else
                     {
                         filter = filter.And(x => x.Order.OrderCode!.ToLower().Contains(paginationParameter.Search.ToLower())
-                                      || x.Order.ShippingMethod!.ToLower().Contains(paginationParameter.Search.ToLower()));
-                                      //|| x.TransactionId!.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Order.ShippingMethod!.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.TransactionId!.ToLower().Contains(paginationParameter.Search.ToLower()));
                     }
                 }
 
