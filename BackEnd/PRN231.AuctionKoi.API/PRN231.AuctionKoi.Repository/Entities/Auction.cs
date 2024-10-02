@@ -15,7 +15,6 @@ public partial class Auction
 
     public DateTime? EndTime { get; set; }
 
-    public int? MinIncrement { get; set; }
 
     public string? Status { get; set; }
 
@@ -27,7 +26,7 @@ public partial class Auction
 
     public string? AuctionCode { get; set; }
 
-    public int? TimeSpan { get; set; }
+  
 
     public int TypeId { get; set; }
 

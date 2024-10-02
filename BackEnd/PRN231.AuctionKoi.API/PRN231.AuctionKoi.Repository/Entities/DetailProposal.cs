@@ -40,6 +40,9 @@ public partial class DetailProposal
     public double? FinalPrice { get; set; }
 
     public int? Index { get; set; }
+    public int? TimeSpan { get; set; }
+    public int? MinIncrement { get; set; }
+
 
     public int FishTypeId { get; set; }
 
