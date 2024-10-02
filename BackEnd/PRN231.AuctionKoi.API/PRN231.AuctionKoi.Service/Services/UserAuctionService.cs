@@ -13,6 +13,7 @@ using KoiAuction.Service.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
+using PRN231.AuctionKoi.Common.Utils.Common.Enums;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -205,9 +206,44 @@ namespace KoiAuction.Service.Services
         public async Task<IBusinessResult> Insert(UserAuctionModel entityInsert)
         {
             //check userid exist
+            var userEntity = await _unitOfWork.UserRepository.GetByID(entityInsert.UserId);
+            if (userEntity == null)
+            {
+                return new BusinessResult(Const.WARNING_INVALID_USER_ID_CODE, Const.WARNING_INVALID_USER_ID_MSG);
+            }
+
+            //check role is customer
+            if (userEntity.RoleId != (int)UserRole.AUCTIONER)
+            {
+                return new BusinessResult(Const.WARNING_INVALID_USER_ID_CODE, Const.WARNING_INVALID_USER_ID_MSG);
+            }
+
             //check fishid exist
-            //check iswinner if already have true in 1 fishid
-            //check price must be = finalPriceCurrent + minPirceBid
+            var detailProposalEntity = await _unitOfWork.ProposalRepository.GetByID(entityInsert.FishId);
+            if (detailProposalEntity == null)
+            {
+                return new BusinessResult(Const.WARNING_WRONG_ROLE_CODE, Const.WARNING_WRONG_ROLE_MSG);
+            }
+
+            //check auction is still biding
+            //if (detailProposalEntity)
+            //{
+
+            //}
+
+            //check price must be >= finalPriceCurrent + minPirceBid
+
+            //check iswinner if already have true in 1 auction
+            if (entityInsert.IsWinner == true)
+            {
+                var userAuctionEntity = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.IsWinner == true && x.FishId == entityInsert.FishId);
+                if (userAuctionEntity != null)
+                {
+                    return new BusinessResult(Const.WARNING_EXIST_WINNER_CODE, Const.WARNING_EXIST_WINNER_MSG);
+                }
+            }
+
+
             var mapEntity = _mapper.Map<UserAuction>(entityInsert);
             await _unitOfWork.UserAuctionRepository.Insert(mapEntity);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
@@ -226,8 +262,7 @@ namespace KoiAuction.Service.Services
             //check fishid exist
             //check iswinner if already have true in 1 fishid
             //check price must be = finalPriceCurrent + minPirceBid
-            Expression<Func<UserAuction, bool>> filter = x => x.BidId == entityUpdate.BidId;
-            var entity = await _unitOfWork.UserAuctionRepository.GetByCondition(filter);
+            var entity = await _unitOfWork.UserAuctionRepository.GetByID(entityUpdate.BidId);
             if (entity == null)
             {
                 return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
@@ -266,7 +301,7 @@ namespace KoiAuction.Service.Services
 
         public async Task<IBusinessResult> Delete(int bidid)
         {
-            var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == bidid);
+            var userAuction = await _unitOfWork.UserAuctionRepository.GetByID(bidid);
             if (userAuction == null)
             {
                 return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);

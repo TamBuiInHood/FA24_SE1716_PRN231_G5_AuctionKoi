@@ -55,15 +55,16 @@
 
         public static class UserAuction
         {
-            public const string Get = Base + "/user-auctions/";
+            public const string Get = Base + "/userAuctions/";
 
-            public const string GetByID = Base + "/user-auctions/{bid-id}";
+            public const string GetByID = Base + "/userAuctions/{bidId}";
 
-            public const string Update = Base + "/user-auctions/{bid-id}";
+            public const string Create = Base + "/userAuctions/";
 
-            public const string Delete = Base + "/user-auctions/{bid-id}";
+            public const string Update = Base + "/userAuctions/{bidId}";
 
-            public const string Create = Base + "/user-auctions/";
+            public const string Delete = Base + "/userAuctions/{bidId}";
+
         }
 
         public static class DetailProposal

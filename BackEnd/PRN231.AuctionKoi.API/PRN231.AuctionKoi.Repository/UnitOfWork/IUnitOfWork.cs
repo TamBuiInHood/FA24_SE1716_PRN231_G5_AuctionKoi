@@ -8,7 +8,6 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
     {
         void Save();
         Task<int> SaveAsync();
-        //public GenericRepository<Category> CategoryRepository { get; }
         public PaymentRepository PaymentRepository{ get; }
         public ProposalRepository ProposalRepository{ get; }
         public UserAuctionRepository UserAuctionRepository { get; }
