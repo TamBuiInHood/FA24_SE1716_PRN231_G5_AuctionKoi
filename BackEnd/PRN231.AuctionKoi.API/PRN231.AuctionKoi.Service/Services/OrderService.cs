@@ -169,7 +169,6 @@ namespace KoiAuction.Service.Services
             }
 
 
-            orderModel.OrderId = order.OrderId;
             order.Status = orderModel.Status;
             order.TaxCode = orderModel.TaxCode;
             order.ShippingAddress = orderModel.ShippingAddress;
