@@ -100,7 +100,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
             {
                 query = orderBy(query);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
@@ -109,7 +109,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
                     query = query.Include(includeProperty);
                 }
             }
-            if (!thenIncludeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(thenIncludeProperties))
             {
 
                 foreach (var thenIncludeProperty in thenIncludeProperties.Split

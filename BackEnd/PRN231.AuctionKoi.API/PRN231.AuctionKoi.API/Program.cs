@@ -30,6 +30,7 @@ builder.Services.AddDbContext<Fa24Se1716Prn231G5KoiauctionContext>(options =>
 
 });
 
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Auction Koi API", Version = "v1" });
@@ -104,11 +105,14 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
 builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
 builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 
 // Register servicies
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
 builder.Services.AddScoped<IProposalService, ProposalService>();
 builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
+builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 
 var app = builder.Build();
 

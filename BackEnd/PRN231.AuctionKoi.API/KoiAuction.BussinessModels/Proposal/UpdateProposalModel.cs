@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +22,8 @@ namespace KoiAuction.BussinessModels.Proposal
         public string? Description { get; set; }
 
         public string? Owner { get; set; }
+
+        public bool? IsDeleted { get; set; }
 
         public DateTime? UpdateDate { get; set; }
 
