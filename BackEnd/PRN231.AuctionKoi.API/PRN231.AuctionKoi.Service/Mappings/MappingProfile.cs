@@ -36,7 +36,7 @@ namespace KoiAuction.Service.Mappings
                 .ForMember(dest => dest.FishTypeName, opt => opt.MapFrom(x => x.FishType.FishTypeName))
                 .ReverseMap();
             CreateMap<DetailProposal, CreateDetailProposalModel>().ReverseMap();
-               //.ForMember(dest => dest.Mail, opt => opt.MapFrom(x => x.User.Mail));
+
             CreateMap<UserAuctionModel, UserAuction>()
                 .ForMember(dest => dest.Fish, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
