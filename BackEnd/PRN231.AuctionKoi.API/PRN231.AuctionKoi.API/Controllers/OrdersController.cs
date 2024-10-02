@@ -28,9 +28,13 @@ namespace KoiAuction.API.Controllers
         {
             try
             {
-                var result = await _orderService.Get(searchKey, orderBy, pageIndex, pageSize);        
-                return Ok(result);
-         
+                var result = await _orderService.Get(searchKey, orderBy, pageIndex, pageSize);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("Order not found.");
+
             }
             catch (Exception ex)
             {
@@ -47,7 +51,11 @@ namespace KoiAuction.API.Controllers
             try
             {
                 var result = await _orderService.GetByID(searchId);
-                return Ok(result);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("Order not found.");
             }
             catch (Exception ex)
             {
@@ -56,13 +64,17 @@ namespace KoiAuction.API.Controllers
         }
 
         [HttpPut(APIRoutes.Order.Update, Name = "UpdateOrderAsync")]
-        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "order-id")] int OrderId,
-             [FromBody] UpdateOrder updateOrder)
+        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "order-id")] int orderId,
+                                               [FromBody] UpdateOrder updateOrder)
         {
             try
-            {
-                var result = await _orderService.Update(updateOrder);
-                return Ok(result);
+            {                
+                var result = await _orderService.Update(orderId, updateOrder);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("Order not found.");
             }
             catch (Exception ex)
             {
@@ -70,40 +82,40 @@ namespace KoiAuction.API.Controllers
             }
         }
 
-        //// POST: api/Orders
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost(APIRoutes.Order.Create, Name = "Create Order")]
+
+            //// POST: api/Orders
+            //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPost(APIRoutes.Order.Create, Name = "Create Order")]
         public async Task<ActionResult> PostOrder(CreateOrder order)
         {
             try
             {
-                var result = await _orderService.Insert(order);
-                if (result != null)
-                {
-                    return Ok(new BaseResponse()
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Create Order Success",
-                        Data = result,
-                        IsSuccess = true
-                    });
-                }
-                return NotFound(new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Message = "Can Not Create Order",
-                    IsSuccess = false
-                });
+                var result = await _orderService.Insert(order);           
+                  return Ok(result);
+              
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete(APIRoutes.Order.Delete, Name = "Delete Order")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int orderId)
+        {
+            try
+            {
+           
+                var result = await _orderService.Delete(orderId);
 
-                return BadRequest(new BaseResponse()
+                if (result != null)
                 {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message,
-                    IsSuccess = false
-                });
+                    return Ok(result);
+                }
+                return NotFound("Order not found.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

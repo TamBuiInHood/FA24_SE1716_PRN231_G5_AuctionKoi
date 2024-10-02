@@ -14,7 +14,7 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> GetByID(int id);
 
         Task<IBusinessResult> Insert(CreateOrder orderModel);
-        Task<IBusinessResult> Update(UpdateOrder orderModel);
+        Task<IBusinessResult> Update(int orderId, UpdateOrder orderModel);
         Task<IBusinessResult> Delete(int id);
     }
 }

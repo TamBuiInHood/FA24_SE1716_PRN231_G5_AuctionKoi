@@ -25,9 +25,33 @@ namespace KoiAuction.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mappper;
         }
-        public Task<IBusinessResult> Delete(int id)
+        public async Task<IBusinessResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var order = await _unitOfWork.OrderRepository.GetByID(id);
+
+                if (order == null)
+                {
+                    return new BusinessResult(Const.FAIL_DELETE_CODE, "Order not found.");
+                }
+
+                _unitOfWork.OrderRepository.Delete(order);
+
+                var result = await _unitOfWork.SaveAsync() > 0;
+
+                if (result)
+                {
+                    return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                }
+
+                return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+            
         }
 
         public async Task<IBusinessResult> Get(string? searchKey, string? orderBy, int? pageIndex = null, int? pageSize = null)
@@ -102,38 +126,32 @@ namespace KoiAuction.Service.Services
         {
             try
             {
-
                 if (orderModel.UserId == null)
                 {
-                    return new BusinessResult(Const.FAIL_CREATE_CODE, "User ID  must be valid.");
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, "User ID must be valid.");
                 }
+
                 var mapEntity = _mapper.Map<Order>(orderModel);
                 mapEntity.OrderCode = Guid.NewGuid().ToString();
                 mapEntity.ShippingTrackingCode = Guid.NewGuid().ToString();
                 mapEntity.TotalProduct = 1;
                 mapEntity.Vat = 0.1;
 
-                if (mapEntity.OrderDetails != null && mapEntity.OrderDetails.Any())
-                {
-                    double ProductPrice = 0;
-                    foreach (var orderDetail in mapEntity.OrderDetails)
-                    {
-                        ProductPrice = orderDetail.Price;
-                    }
+                double totalProductPrice = 0;
+                var auPrice = await _unitOfWork.OrderRepository.GetPriceByBidIdAsync(orderModel.BidId, orderModel.UserId);
 
-                    mapEntity.TotalPrice = ProductPrice * mapEntity.TotalProduct
-                                          + (mapEntity.Vat.Value * ProductPrice)
-                                          + (mapEntity.ShippingCost ?? 0)
-                                          + (mapEntity.ParticipationFee ?? 0)
-                                          - (orderModel.Discount ?? 0);
-                }
-                else
-                {
 
-                    mapEntity.TotalPrice = 0;
-                }
+                mapEntity.TotalPrice = auPrice * mapEntity.TotalProduct
+                                       + (mapEntity.Vat.Value * totalProductPrice)
+                                       + (mapEntity.ShippingCost ?? 0)
+                                       + (mapEntity.ParticipationFee ?? 0)
+                                       - (orderModel.Discount ?? 0);
+
                 mapEntity.OrderDate = DateTime.Now;
                 mapEntity.Status = (int)OrderStatus.processing;
+
+
+
                 if (string.IsNullOrEmpty(orderModel.ShippingAddress))
                 {
                     return new BusinessResult(Const.FAIL_CREATE_CODE, "Shipping address is required.");
@@ -142,6 +160,15 @@ namespace KoiAuction.Service.Services
                 await _unitOfWork.OrderRepository.Insert(mapEntity);
                 var result = await _unitOfWork.SaveAsync();
 
+
+                var orderDetail = new OrderDetail
+                {
+                    Price = auPrice.Value,
+                    BidId = orderModel.BidId,
+                    OrderId = mapEntity.OrderId
+                };
+                await _unitOfWork.OrderDetailRepository.Insert(orderDetail);
+                 await _unitOfWork.SaveAsync();
 
                 if (result > 0)
                 {
@@ -159,9 +186,10 @@ namespace KoiAuction.Service.Services
         }
 
 
-        public async Task<IBusinessResult> Update(UpdateOrder orderModel)
+
+        public async Task<IBusinessResult> Update(int orderId, UpdateOrder orderModel)
         {
-            var order = await _unitOfWork.OrderRepository.GetByID(orderModel.OrderId);
+            var order = await _unitOfWork.OrderRepository.GetByID(orderId);
 
             if (order == null)
             {

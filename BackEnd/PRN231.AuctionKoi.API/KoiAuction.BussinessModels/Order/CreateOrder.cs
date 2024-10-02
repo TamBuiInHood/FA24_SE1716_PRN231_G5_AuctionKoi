@@ -9,13 +9,17 @@ namespace KoiAuction.BussinessModels.Order
     public class CreateOrder
     {
         
-        public string? ShippingAddress { get; set; }
+       
+        public int BidId { get; set; }
         public int UserId { get; set; }
+        public string? ShippingAddress { get; set; }
         public string? Note { get; set; }
         public string? TaxCode { get; set; }
         public double? ShippingCost { get; set; }
         public string? ShippingMethod { get; set; }
         public double? Discount { get; set; }
        
+
+
     }
 }

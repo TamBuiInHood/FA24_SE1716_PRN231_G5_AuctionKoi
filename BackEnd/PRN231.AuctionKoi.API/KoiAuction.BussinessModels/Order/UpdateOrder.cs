@@ -8,7 +8,7 @@ namespace KoiAuction.BussinessModels.Order
 {
     public class UpdateOrder
     {
-        public int OrderId { get; set; }
+        
         public string? ShippingAddress { get; set; }
         public string? Note { get; set; }
         public int? Status { get; set; }
