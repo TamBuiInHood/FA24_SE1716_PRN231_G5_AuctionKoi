@@ -59,6 +59,11 @@
 
             public const string GetByID = Base + "/user-auctions/{bid-id}";
 
+            public const string Update = Base + "/user-auctions/{bid-id}";
+
+            public const string Delete = Base + "/user-auctions/{bid-id}";
+
+            public const string Create = Base + "/user-auctions/";
         }
 
         public static class DetailProposal

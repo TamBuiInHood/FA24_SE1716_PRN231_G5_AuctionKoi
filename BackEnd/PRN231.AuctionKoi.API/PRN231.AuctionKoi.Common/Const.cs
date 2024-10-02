@@ -39,10 +39,7 @@ namespace KoiAuction.Common
         public static string FAIL_UPDATE_MSG = "Update data fail";
         public static int FAIL_DELETE_CODE = -1;
         public static string FAIL_DELETE_MSG = "Delete data fail";
-        public static int FAIL_CHECK_ID_CODE = -1;
-        public static string FAIL_CHECK_ID_MSG = "Invalid ID format";
-        public static int FAIL_CHECK_DATE_FILTER_CODE = -1;
-        public static string FAIL_CHECK_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
+      
 
         #endregion
 
@@ -50,6 +47,10 @@ namespace KoiAuction.Common
 
         public static int WARNING_NO_DATA_CODE = 4;
         public static string WARNING_NO_DATA_MSG = "No data";
+        public static int WARNING_INVALID_ID_CODE = 4;
+        public static string WARNING_INVALID_ID_MSG = "Invalid ID format";
+        public static int WARNING_INVALID_DATE_FILTER_CODE = 4;
+        public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
 
         #endregion
     }

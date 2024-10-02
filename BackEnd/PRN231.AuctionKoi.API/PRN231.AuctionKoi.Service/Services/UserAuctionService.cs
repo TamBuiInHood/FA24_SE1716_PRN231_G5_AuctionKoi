@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KoiAuction.BussinessModels.Filters;
 using KoiAuction.BussinessModels.Pagination;
+using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
 using KoiAuction.Common;
@@ -10,6 +11,7 @@ using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Responses;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
@@ -25,12 +27,12 @@ namespace KoiAuction.Service.Services
     public class UserAuctionService : IUserAuctionService
     {
         public IUnitOfWork _unitOfWork;
-        public IMapper _mappper;
+        public IMapper _mapper;
 
-        public UserAuctionService(IUnitOfWork unitOfWork, IMapper mappper)
+        public UserAuctionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _mappper = mappper;
+            _mapper = mapper;
         }
 
         public async Task<IBusinessResult> Get(PaginationParameter paginationParameter, UserAuctionFilters userAuctionFilters)
@@ -71,7 +73,7 @@ namespace KoiAuction.Service.Services
             {
                 if (userAuctionFilters.createDateFrom.Value > userAuctionFilters.createDateTo.Value)
                 {
-                    return new BusinessResult(Const.FAIL_CHECK_DATE_FILTER_CODE, Const.FAIL_CHECK_DATE_FILTER_MSG);
+                    return new BusinessResult(Const.WARNING_INVALID_DATE_FILTER_CODE, Const.WARNING_INVALID_DATE_FILTER_MSG);
                 }
                 filter = filter.And(x => x.CreateDate >= userAuctionFilters.createDateFrom &&
                             x.CreateDate <= userAuctionFilters.createDateTo);
@@ -166,13 +168,13 @@ namespace KoiAuction.Service.Services
                                : x => x.OrderBy(x => x.CreateDate) : x => x.OrderBy(x => x.CreateDate);
                     break;
                 default:
-                    orderBy = x => x.OrderBy(x => x.BidId);
+                    orderBy = x => x.OrderByDescending(x => x.CreateDate);
                     break;
             }
-            string includeProperties = "User,Fish";
+            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
             var result = await _unitOfWork.UserAuctionRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
             var pagin = new PageEntity<UserAuctionModel>();
-            pagin.List = _mappper.Map<IEnumerable<UserAuctionModel>>(result);
+            pagin.List = _mapper.Map<IEnumerable<UserAuctionModel>>(result);
             pagin.TotalRecord = await _unitOfWork.UserAuctionRepository.Count(filter);
             pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, pagin);
@@ -188,16 +190,94 @@ namespace KoiAuction.Service.Services
             }
             else
             {
-                return new BusinessResult(Const.FAIL_CHECK_ID_CODE, Const.FAIL_CHECK_ID_MSG);
+                return new BusinessResult(Const.WARNING_INVALID_ID_CODE, Const.WARNING_INVALID_ID_MSG);
             }
-            string includeProperties = "User,Fish";
+            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
             var userAuctionEntity = await _unitOfWork.UserAuctionRepository.GetByCondition(filter, includeProperties);
             if (userAuctionEntity == null)
             {
                 return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
             }
-            var userAuctionModel = _mappper.Map<UserAuctionModel>(userAuctionEntity);
+            var userAuctionModel = _mapper.Map<UserAuctionModel>(userAuctionEntity);
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, userAuctionModel);
+        }
+
+        public async Task<IBusinessResult> Insert(UserAuctionModel entityInsert)
+        {
+            //check userid exist
+            //check fishid exist
+            //check iswinner if already have true in 1 fishid
+            //check price must be = finalPriceCurrent + minPirceBid
+            var mapEntity = _mapper.Map<UserAuction>(entityInsert);
+            await _unitOfWork.UserAuctionRepository.Insert(mapEntity);
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
+            if (result)
+            {
+                string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
+                var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == entityInsert.BidId, includeProperties);
+                return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, _mapper.Map<IEnumerable<UserAuctionModel>>(userAuction));
+            }
+            return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+        }
+
+        public async Task<IBusinessResult> Update(UserAuctionModel entityUpdate)
+        {
+            //check userid exist
+            //check fishid exist
+            //check iswinner if already have true in 1 fishid
+            //check price must be = finalPriceCurrent + minPirceBid
+            Expression<Func<UserAuction, bool>> filter = x => x.BidId == entityUpdate.BidId;
+            var entity = await _unitOfWork.UserAuctionRepository.GetByCondition(filter);
+            if (entity == null)
+            {
+                return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
+            }
+            if (entityUpdate.Price.HasValue)
+            {
+                entity.Price = entityUpdate.Price.Value;
+            }
+            if (entityUpdate.IsWinner.HasValue)
+            {
+                entity.IsWinner = entityUpdate.IsWinner.Value;
+            }
+            if (entityUpdate.CreateDate.HasValue)
+            {
+                entity.CreateDate = entityUpdate.CreateDate.Value;
+            }
+            if (entityUpdate.UserId != entity.UserId)
+            {
+                entity.UserId = entityUpdate.UserId;
+            }
+
+            if (entityUpdate.FishId != entity.FishId)
+            {
+                entity.FishId = entityUpdate.FishId;
+            }
+            _unitOfWork.UserAuctionRepository.Update(entity);
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
+            if (result)
+            {
+                string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
+                var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == entityUpdate.BidId, includeProperties);
+                return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, _mapper.Map<IEnumerable<UserAuctionModel>>(userAuction));
+            }
+            return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+        }
+
+        public async Task<IBusinessResult> Delete(int bidid)
+        {
+            var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == bidid);
+            if (userAuction == null)
+            {
+                return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
+            }
+            _unitOfWork.UserAuctionRepository.Delete(userAuction);
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
+            if (result)
+            {
+                return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG, true);
+            }
+            return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
         }
 
     }
