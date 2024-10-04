@@ -149,8 +149,16 @@ namespace KoiAuction.Service.Services
 
                 mapEntity.OrderDate = DateTime.Now;
                 mapEntity.Status = (int)OrderStatus.processing;
-
-
+                mapEntity.OrderDetails = new List<OrderDetail>()
+                {
+                    new OrderDetail() 
+                    {
+                        Price = auPrice.Value,
+                        BidId = orderModel.BidId,
+                        OrderId = mapEntity.OrderId,
+                    }
+                 
+                };
 
                 if (string.IsNullOrEmpty(orderModel.ShippingAddress))
                 {
@@ -161,14 +169,7 @@ namespace KoiAuction.Service.Services
                 var result = await _unitOfWork.SaveAsync();
 
 
-                var orderDetail = new OrderDetail
-                {
-                    Price = auPrice.Value,
-                    BidId = orderModel.BidId,
-                    OrderId = mapEntity.OrderId
-                };
-                await _unitOfWork.OrderDetailRepository.Insert(orderDetail);
-                 await _unitOfWork.SaveAsync();
+            
 
                 if (result > 0)
                 {
@@ -189,7 +190,7 @@ namespace KoiAuction.Service.Services
 
         public async Task<IBusinessResult> Update(int orderId, UpdateOrder orderModel)
         {
-            var order = await _unitOfWork.OrderRepository.GetByID(orderId);
+            var order = await _unitOfWork.OrderRepository.GetOrderWithDetailsByIdAsync(orderId);
 
             if (order == null)
             {
@@ -207,11 +208,8 @@ namespace KoiAuction.Service.Services
             order.Discount = orderModel.Discount;
             order.ParticipationFee = orderModel.ParticipationFee;
 
-            double ProductPrice = 0;
-            foreach (var orderDetail in order.OrderDetails)
-            {
-                ProductPrice = orderDetail.Price;
-            }
+            double? ProductPrice = order.OrderDetails.FirstOrDefault()?.Price;
+
             order.TotalPrice = ProductPrice * order.TotalProduct
                                           + (order.Vat * ProductPrice)
                                           + (orderModel.ShippingCost ?? 0)

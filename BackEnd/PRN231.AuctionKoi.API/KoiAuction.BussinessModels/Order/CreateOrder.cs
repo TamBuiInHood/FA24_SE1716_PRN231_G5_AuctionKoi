@@ -18,7 +18,7 @@ namespace KoiAuction.BussinessModels.Order
         public double? ShippingCost { get; set; }
         public string? ShippingMethod { get; set; }
         public double? Discount { get; set; }
-       
+        public double? ParticipationFee { get; set; }
 
 
     }

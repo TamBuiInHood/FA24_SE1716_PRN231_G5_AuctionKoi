@@ -10,5 +10,6 @@ namespace KoiAuction.Repository.IRepositories
     public interface IOrderRepository
     {
         Task<double?> GetPriceByBidIdAsync(int bidId, int userId);
+        Task<Order> GetOrderWithDetailsByIdAsync(int id);
     }
 }

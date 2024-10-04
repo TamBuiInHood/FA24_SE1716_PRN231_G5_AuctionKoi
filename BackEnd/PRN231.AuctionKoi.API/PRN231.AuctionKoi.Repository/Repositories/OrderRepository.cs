@@ -24,5 +24,10 @@ namespace KoiAuction.Repository.Repositories
 
             return userAuction?.Price;
         }
+        public async Task<Order?> GetOrderWithDetailsByIdAsync(int id)
+        {
+            return await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.OrderId == id);
+               
+        }
     }
 }
