@@ -18,8 +18,8 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private DetailProposalRepository _detailProposalRepo;
 
         private OrderRepository _orderRepo;
-        private OrderDetailRepository _orderDetailRepo;
-
+        private OrderDetailRepository _orderDetailRepo; 
+>>>>>>>>> Temporary merge branch 2
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
