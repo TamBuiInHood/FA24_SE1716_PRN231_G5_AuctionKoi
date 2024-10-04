@@ -17,6 +17,9 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private UserRepository _userRepo;
         private DetailProposalRepository _detailProposalRepo;
 
+        private OrderRepository _orderRepo;
+        private OrderDetailRepository _orderDetailRepo; 
+>>>>>>>>> Temporary merge branch 2
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
@@ -89,6 +92,32 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
                 return _userAuctionRepo;
             }
         }
+        public OrderRepository OrderRepository
+        {
+            get
+            {
+                if (_orderRepo == null)
+                {
+                    _orderRepo = new OrderRepository(_context);
+                }
+                return _orderRepo;
+            }
+
+        }
+        public OrderDetailRepository OrderDetailRepository
+        {
+            get
+            {
+                if (_orderDetailRepo == null)
+                {
+                    _orderDetailRepo = new OrderDetailRepository(_context);
+                }
+                return _orderDetailRepo;
+            }
+
+        }
+
+
 
         public UserRepository UserRepository
         {

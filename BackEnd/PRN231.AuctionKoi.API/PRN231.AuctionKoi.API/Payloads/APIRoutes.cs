@@ -88,6 +88,14 @@
             public const string GetProposal = Base + "/detailProposal/proposal";
 
         }
+        public static class Order
+        {
+            public const string Get = Base + "/orders/";
+            public const string Create = Base + "/orders/create-order";
+            public const string GetByID = Base + "/orders/{search-id}";
+            public const string Update = Base + "/orders/{update-order}";
+            public const string Delete = Base + "/orders/{order-id}";
+        }
 
 
     }
