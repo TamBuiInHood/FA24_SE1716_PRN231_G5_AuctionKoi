@@ -14,8 +14,9 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private PaymentRepository _paymentRepo;
         private ProposalRepository _proposalRepo;
         private UserAuctionRepository _userAuctionRepo;
-        private DetailProposalRepository _detailProposalRepo;
         private UserRepository _userRepo;
+        private DetailProposalRepository _detailProposalRepo;
+
         private OrderRepository _orderRepo;
         private OrderDetailRepository _orderDetailRepo; 
         //private GenericRepository<Category> _categoryRepo;
@@ -71,7 +72,7 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         {
             get
             {
-                if(_proposalRepo == null)
+                if (_proposalRepo == null)
                 {
                     this._proposalRepo = new ProposalRepository(_context);
                 }
@@ -118,6 +119,30 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         public UserRepository UserRepository => throw new NotImplementedException();
 
         public DetailProposalRepository DetailProposalRepository => throw new NotImplementedException();
+
+        public UserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepo == null)
+                {
+                    this._userRepo = new UserRepository(_context);
+                }
+                return _userRepo;
+            }
+        }
+
+        public DetailProposalRepository DetailProposalRepository
+        {
+            get
+            {
+                if (_detailProposalRepo == null)
+                {
+                    this._detailProposalRepo = new DetailProposalRepository(_context);
+                }
+                return _detailProposalRepo;
+            }
+        }
 
         //GenericRepository<Category> IUnitOfWork.CategoryRepository
         //{
