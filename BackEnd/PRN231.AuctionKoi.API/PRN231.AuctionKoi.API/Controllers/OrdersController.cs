@@ -123,7 +123,7 @@ namespace KoiAuction.API.Controllers
             }
         }
         [HttpDelete(APIRoutes.Order.Delete, Name = "Delete Order")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] int orderId)
+        public async Task<IActionResult> DeleteAsync([FromRoute(Name = "order-id")] int orderId)
         {
             try
             {

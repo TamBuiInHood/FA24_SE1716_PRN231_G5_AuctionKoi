@@ -203,19 +203,28 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            var order  = new OrderModel();
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
-            }
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
 
-            var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+                        if (result != null && result.Data != null)
+                        {
+                            order = JsonConvert.DeserializeObject<OrderModel>(result.Data.ToString());
+                        }
+                    }
+                }
+            }
+            var users = await this.GetUsers();
+            if (users != null && users.Any())
             {
-                return NotFound();
+                ViewData["UserId"] = new SelectList(users, "UserId", "FullName", order.UserId);
             }
-
             return View(order);
         }
 
@@ -224,14 +233,40 @@ namespace KoiAuction.MVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            bool saveStatus = false;
+            if (ModelState.IsValid)
             {
-                _context.Orders.Remove(order);
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "orders/" + id))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Status == Const.SUCCESS_DELETE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (saveStatus)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View();
+            }
+
         }
 
         private bool OrderExists(int id)

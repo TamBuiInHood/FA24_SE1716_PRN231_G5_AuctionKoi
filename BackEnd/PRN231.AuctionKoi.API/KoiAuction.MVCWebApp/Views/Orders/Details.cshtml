@@ -100,12 +100,21 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ParticipationFee)
         </dd>
-    @*     <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
+        <dt class="col-sm-2">
+            User Name
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd> *@
+            @{
+                var userList = ViewData["UserId"] as SelectList;
+                var userName = string.Empty;
+
+                if (userList != null && Model.UserId != null)
+                {
+                    userName = userList.FirstOrDefault(x => x.Value == Model.UserId.ToString())?.Text ?? "User not found";
+                }
+            }
+            @userName
+        </dd>
     </dl>
 </div>
 <div>
