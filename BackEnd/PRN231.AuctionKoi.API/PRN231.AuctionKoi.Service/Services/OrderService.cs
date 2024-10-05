@@ -25,6 +25,16 @@ namespace KoiAuction.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mappper;
         }
+        public async Task<IBusinessResult> GetUser()
+        {
+            var User = await _unitOfWork.UserRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, "User not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG,User);
+        }
         public async Task<IBusinessResult> Delete(int id)
         {
             try
@@ -121,6 +131,8 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+      
 
         public async Task<IBusinessResult> Insert(CreateOrder orderModel)
         {
@@ -225,6 +237,7 @@ namespace KoiAuction.Service.Services
 
             return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
         }
+
 
     }
 }

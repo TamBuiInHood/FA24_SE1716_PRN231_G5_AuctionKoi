@@ -10,6 +10,7 @@ using KoiAuction.BussinessModels.Order;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Responses;
 using PRN231.AuctionKoi.API.Payloads;
+using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
 
 namespace KoiAuction.API.Controllers
 {
@@ -41,8 +42,24 @@ namespace KoiAuction.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(APIRoutes.Order.GetUser, Name = "GetUserAsync")]
+        public async Task<IActionResult> GetUser()
+        {
+            try
+            {
+                var result = await _orderService.GetUser();
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("User not found.");
 
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
 
         [HttpGet(APIRoutes.Order.GetByID, Name = "GetByIdAsync")]
@@ -63,12 +80,17 @@ namespace KoiAuction.API.Controllers
             }
         }
 
+
         [HttpPut(APIRoutes.Order.Update, Name = "UpdateOrderAsync")]
         public async Task<IActionResult> UpdateAsync([FromRoute(Name = "order-id")] int orderId,
                                                [FromBody] UpdateOrder updateOrder)
         {
+            if (orderId != updateOrder.OrderId)
+            {
+                return BadRequest("OrderId in URL and body do not match.");
+            }
             try
-            {                
+            {
                 var result = await _orderService.Update(orderId, updateOrder);
                 if (result != null)
                 {
@@ -83,9 +105,10 @@ namespace KoiAuction.API.Controllers
         }
 
 
-            //// POST: api/Orders
-            //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPost(APIRoutes.Order.Create, Name = "Create Order")]
+
+        //// POST: api/Orders
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost(APIRoutes.Order.Create, Name = "Create Order")]
         public async Task<ActionResult> PostOrder(CreateOrder order)
         {
             try

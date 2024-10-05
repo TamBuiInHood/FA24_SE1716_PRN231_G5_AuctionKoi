@@ -41,7 +41,7 @@ namespace KoiAuction.BussinessModels.Order
         public string? ShippingTrackingCode { get; set; }
 
         public double? ParticipationFee { get; set; }
-        public string FullName { get; set; } = null!;
+    
 
     }
 }

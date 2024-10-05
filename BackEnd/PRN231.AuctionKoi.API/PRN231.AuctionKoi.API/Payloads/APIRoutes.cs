@@ -93,8 +93,9 @@
             public const string Get = Base + "/orders/";
             public const string Create = Base + "/orders/create-order";
             public const string GetByID = Base + "/orders/{search-id}";
-            public const string Update = Base + "/orders/{update-order}";
+            public const string Update = Base + "/orders/update/{order-id}";
             public const string Delete = Base + "/orders/{order-id}";
+            public const string GetUser = Base + "/orders/user";
         }
 
 

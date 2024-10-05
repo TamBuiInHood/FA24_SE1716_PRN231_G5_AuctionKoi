@@ -52,6 +52,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 }
 
             }
+
         }
 
 
@@ -162,7 +163,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] OrderModel order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] UpdateOrder order)
         {
             bool saveStatus = false;
 
@@ -170,7 +171,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "orders/update-order", order))
+                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + $"orders/update/{id}", order))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -241,7 +242,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/user"))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/user"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
