@@ -1,0 +1,67 @@
+﻿:root {
+    --color-primary-500: 212 22 60;
+    --color-background: 213, 213, 217;
+    --color-secondary-400: 126 170 199;
+    --color-secondary-500: 70 133 175;
+    --color-secondary-700: 53 100 131;
+    --on-secondary: 255 255 255;
+    --theme-rounded-base: 24px;
+    --theme-border-base: 1px;
+    --color-surface-50: 223 224 226;
+    --color-surface-100: 213 213 217;
+    --color-surface-200: 202 203 207;
+    --color-surface-300: 170 171 179;
+    --color-surface-400: 107 109 121;
+    --color-surface-500: 43 46 64;
+    --color-surface-700: 32 35 48;
+    --color-surface-800: 26 28 38;
+    --color-selection: #d59ca9;
+    --theme-rounded-base: 24px;
+    --theme-rounded-sub: 1rem;
+}
+
+::selection {
+    background-color: var(--color-selection);
+}
+
+h1 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.h5 {
+    font-size: 1.4rem !important;
+}
+
+.text-color-black {
+    color: #000 !important;
+}
+
+.divider {
+    display: block;
+    border-top-width: 1px;
+    border-style: solid;
+    border-color: rgb(var(--color-surface-300));
+    opacity: 0.9;
+}
+
+.mt-7 {
+    margin-top: 7rem;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.mr4 {
+    margin-right: 0.4rem;
+}
+
+.mp-0 {
+    margin: 0;
+    padding: 0;
+}
+
+.transparent-border {
+    border-color: transparent !important;
+}

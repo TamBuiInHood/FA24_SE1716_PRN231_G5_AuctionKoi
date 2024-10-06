@@ -102,15 +102,16 @@ builder.Services.AddSingleton(mapper.CreateMapper());
 // Register repositories
 builder.Services.AddScoped<IBusinessResult,BusinessResult>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
 builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
 builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>(); 
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
 // Register servicies
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
 builder.Services.AddScoped<IProposalService, ProposalService>();
 builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();

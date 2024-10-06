@@ -4,6 +4,7 @@ using KoiAuction.BussinessModels.Order;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
+using KoiAuction.BussinessModels.UserModels;
 using KoiAuction.Repository.Entities;
 
 namespace KoiAuction.Service.Mappings
@@ -12,6 +13,7 @@ namespace KoiAuction.Service.Mappings
     {
         public MappingProfile()
         {
+            CreateMap<User, UserModel>().ReverseMap();
             CreateMap<Proposal, ProposalModel>()
                 .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(x => x.User.FullName))
                 //.ForMember(dest => dest.DetailProposals, opt => opt.MapFrom(x => x.DetailProposals))
@@ -54,6 +56,7 @@ namespace KoiAuction.Service.Mappings
                  .ForMember(dest => dest.OrderDetails, opt => opt.Ignore())
                  .ForMember(dest => dest.TotalProduct, opt => opt.Ignore())
                  .ForMember(dest => dest.ShippingCost, opt => opt.Ignore());
+
         }
     }
 }
