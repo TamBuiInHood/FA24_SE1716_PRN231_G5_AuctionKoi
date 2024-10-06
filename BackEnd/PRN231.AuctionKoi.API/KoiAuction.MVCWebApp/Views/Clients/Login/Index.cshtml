@@ -1,0 +1,114 @@
+﻿@using PRN231.AuctionKoi.Common.Utils.Common.Enums
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewData["Title"] = "Login";
+    var userRoles = new
+    {
+        Admin = (int)UserRole.ADMIN,
+        User = (int)UserRole.AUCTIONER
+    };
+}
+
+<div class="login-container">
+    <h2>Welcome Back!</h2>
+    <div id="loginMessage"></div>
+    <form id="loginForm">
+        <label for="email">Email Address*:</label>
+        <input type="email"
+               id="email"
+               name="email"
+               placeholder="Email Address"
+               required
+               class="mb-4" />
+
+        <label for="password">Password*:</label>
+        <div class="password-container">
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Password"
+                   required />
+            <span class="password-toggle" onclick="togglePassword()">
+                <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Feye.svg?alt=media&token=051072bb-988e-4371-97e6-cc53c82efa62"
+                     alt="Toggle Password Visibility"
+                     id="password-icon" />
+            </span>
+        </div>
+
+        <div class="forgot-password">
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <button class="btn-login" type="submit">Login</button>
+    </form>
+    <div class="register">
+        Need an account? <a href="/Clients/Register">Register</a>
+    </div>
+</div>
+
+<script>
+    function togglePassword() {
+        var passwordInput = document.getElementById("password");
+        var passwordIcon = document.getElementById("password-icon");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordIcon.src =
+                "https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fclose-eye.svg?alt=media&token=34f17a31-9c6a-44b1-8c1f-ff5c104f3d94";
+        } else {
+            passwordInput.type = "password";
+            passwordIcon.src =
+                "https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Feye.svg?alt=media&token=051072bb-988e-4371-97e6-cc53c82efa62";
+        }
+    }
+
+    // const UserRole = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(userRoles));
+    $(document).ready(function () {
+        $('#loginForm').submit(function (event) {
+            event.preventDefault(); // Ngăn việc submit form và tải lại trang
+
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            $.ajax({
+                url: 'https://localhost:7094/auction-koi/authentication/login', // Địa chỉ API của bạn
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+                success: function (response) {
+                    if (response.status === 1) {
+                        // Lấy dữ liệu người dùng từ response
+                        var userData = response.data;
+
+                        // Hiển thị thông báo đăng nhập thành công
+                        $('#loginMessage').html('<p style="color: green;">Login successful! Welcome, ' + userData.fullName + '.</p>');
+
+                        // Lưu thông tin người dùng vào sessionStorage/localStorage (nếu cần)
+                        localStorage.setItem('userId', userData.userId);
+                        localStorage.setItem('userName', userData.userName);
+                        localStorage.setItem('roleId', userData.roleId);
+
+                        // Điều hướng tới trang chủ hoặc trang khác
+                        if (userData.roleId == UserRole.Admin) {
+                            window.location.href = '/Home/Index';
+                        } else {
+                            window.location.href = '/';
+                        }
+
+                    } else {
+                        // Hiển thị thông báo lỗi nếu status không phải là 1
+                        $('#loginMessage').html('<p style="color: red;">' + response.message + '</p>');
+                    }
+                },
+                error: function (xhr) {
+                    // Xử lý lỗi
+                    $('#loginMessage').html('<p style="color: red;">Error: ' + xhr.responseJSON.message + '</p>');
+                }
+            });
+        });
+    });
+
+</script>

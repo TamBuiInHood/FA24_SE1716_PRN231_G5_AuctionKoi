@@ -59,6 +59,8 @@ namespace KoiAuction.Common
         public static string WARNING_WRONG_ROLE_MSG = "Users are not authorized to make bids";
         public static int WARNING_INVALID_DATE_FILTER_CODE = 4;
         public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
+        public static int WARNING_INVALID_LOGIN_CODE = 4;
+        public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wromg";
 
         #endregion
     }
