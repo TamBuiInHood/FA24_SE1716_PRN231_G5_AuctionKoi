@@ -12,6 +12,7 @@ using KoiAuction.Common;
 using KoiAuction.Service.Base;
 using Newtonsoft.Json;
 using KoiAuction.BussinessModels.DetailProposalModel;
+using KoiAuction.MVCWebApp.Models;
 
 
 namespace KoiAuction.MVCWebApp.Controllers
@@ -26,13 +27,15 @@ namespace KoiAuction.MVCWebApp.Controllers
         //}
 
         // GET: DetailProposals
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 2, string search = "", string sortBy = "", string direction = "")
         {
             //var fa24Se1716Prn231G5KoiauctionContext = _context.DetailProposals.Include(d => d.Auction).Include(d => d.Farm).Include(d => d.FishType);
             //return View(await fa24Se1716Prn231G5KoiauctionContext.ToListAsync());
+            string apiUrl = $"detailProposal?page-index={pageIndex}&page-size={pageSize}&search-key={search}&sort-by={sortBy}&direction={direction}";
+
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "detailProposal"))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + apiUrl))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -42,7 +45,19 @@ namespace KoiAuction.MVCWebApp.Controllers
                         {
                             var data = JsonConvert.DeserializeObject<PageEntity<DetailProposalModel>>
                                 (result.Data.ToString());
-                            return View(data.List.ToList());
+                            var paginatedViewModel = new PaginatedViewModel<DetailProposalModel>
+                            {
+                                Items = data.List.ToList(),
+                                PageIndex = pageIndex,
+                                PageSize = pageSize,
+                                TotalPages = data.TotalPage,
+                                SortBy = sortBy,
+                                SortDirection = direction
+                            };
+
+                            // Pass the full view model to the view
+                            return View(paginatedViewModel);
+                            //return View(data.List.ToList());
                         }
                     }
                     return View();
@@ -106,7 +121,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FishId,FishCode,FishName,Gender,Age,Length,Weight,Rating,Status,CreateDate,UpdateDate,Description,ImageUrl,VideoUrl,Color,InitialPrice,FinalPrice,Index,TimeSpan,MinIncrement,FishTypeId,FarmId,AuctionId,AuctionFee")] DetailProposalModel detailProposal)
+        public async Task<IActionResult> Create([Bind("FishId,FishCode,FishName,Gender,Age,Length,Weight,Rating,Status,CreateDate,UpdateDate,Description,ImageUrl,VideoUrl,Color,InitialPrice,FinalPrice,Index,TimeSpan,MinIncrement,FishTypeId,FarmId,AuctionId,AuctionFee")] DetailProposalModel detailProposal, IFormFile imageFile, IFormFile videoFile)
         {
             //    if (ModelState.IsValid)
             //    {
@@ -121,6 +136,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
+                    var uploadImageToFirebase = await UploadToFirebase(1, -1,imageFile);
+                    var uploadVideoToFirebase = await UploadToFirebase(2, -1,videoFile);
+                    detailProposal.ImageUrl = uploadImageToFirebase;
+                    detailProposal.VideoUrl = uploadVideoToFirebase;
                     using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "detailProposal/create-detail-proposal", detailProposal))
                     {
                         if (response.IsSuccessStatusCode)
@@ -183,7 +202,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FishId,FishCode,FishName,Gender,Age,Length,Weight,Rating,Status,CreateDate,UpdateDate,Description,ImageUrl,VideoUrl,Color,InitialPrice,FinalPrice,Index,TimeSpan,MinIncrement,FishTypeId,FarmId,AuctionId,AuctionFee")] DetailProposalModel detailProposal)
+        public async Task<IActionResult> Edit(int id, [Bind("FishId,FishCode,FishName,Gender,Age,Length,Weight,Rating,Status,CreateDate,UpdateDate,Description,ImageUrl,VideoUrl,Color,InitialPrice,FinalPrice,Index,TimeSpan,MinIncrement,FishTypeId,FarmId,AuctionId,AuctionFee")] DetailProposalModel detailProposal, IFormFile imageFile, IFormFile videoFile)
         {
             bool saveStatus = false;
             if (detailProposal.UpdateDate < detailProposal.CreateDate)
@@ -195,6 +214,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
+                    var uploadImageToFirebase = await UploadToFirebase(1, id, imageFile);
+                    var uploadVideoToFirebase = await UploadToFirebase(2, id, videoFile);
+                    detailProposal.ImageUrl = uploadImageToFirebase;
+                    detailProposal.VideoUrl = uploadVideoToFirebase;
                     using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "detailProposal/" + detailProposal.FishId, detailProposal))
                     {
                         if (response.IsSuccessStatusCode)
@@ -358,6 +381,44 @@ namespace KoiAuction.MVCWebApp.Controllers
                         }
                     }
                     return new List<Proposal>();
+                }
+
+            }
+        }
+
+        public async Task<string> UploadToFirebase(int type, int detailProposalId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return "";
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                var contentOfFile = new MultipartFormDataContent();
+                var stream = new MemoryStream();
+
+                await file.CopyToAsync(stream);
+                stream.Position = 0; // Reset the stream position to the beginning
+
+                var fileContent = new StreamContent(stream);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+                // Add the file content to the multipart form data
+                contentOfFile.Add(fileContent, "file", file.FileName);
+                using (var response = await httpClient.PostAsync(Const.APIEndPoint + "detailProposals/upload?detailProposalId=" + detailProposalId +"&type=" + type, contentOfFile))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+                        if (result != null && result.Data != null)
+                        {
+                            var data = result.Data.ToString();
+                            return data;
+                        }
+                    }
+                    return "";
                 }
 
             }
