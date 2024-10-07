@@ -16,5 +16,9 @@ namespace KoiAuction.API.Payloads.Requests.UserAuctionRequest
 
         [Required(ErrorMessage = "FishId is required.")]
         public int FishId { get; set; }
+
+        [Required(ErrorMessage = "AuctionId is required.")]
+        public int AuctionId { get; set; }
+
     }
 }

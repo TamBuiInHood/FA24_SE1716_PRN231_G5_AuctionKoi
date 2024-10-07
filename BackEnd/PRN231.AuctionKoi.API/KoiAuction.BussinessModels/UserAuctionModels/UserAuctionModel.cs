@@ -33,6 +33,9 @@ namespace KoiAuction.BussinessModels.UserAuctionModels
         public string FishName { get; set; } = null!;
 
         public string FishTypeName { get; set; } = null!;
+        public int AuctionId { get; set; }
+
+        public string AuctionCode { get; set; } = null!;
 
         public string FarmName { get; set; } = null!;
     }
