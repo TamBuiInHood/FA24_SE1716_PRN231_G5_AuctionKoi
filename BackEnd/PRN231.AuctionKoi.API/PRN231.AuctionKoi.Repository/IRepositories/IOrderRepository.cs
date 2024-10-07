@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace KoiAuction.Repository.IRepositories
 {
-    public interface IUserAuctionRepository
+    public interface IOrderRepository
     {
+        Task<double?> GetPriceByBidIdAsync(int bidId, int userId);
+        Task<Order> GetOrderWithDetailsByIdAsync(int id);
     }
 }

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewData["Title"] = "Index";
+}
+
+<div class="login-container mt-7 mb-5">
+    <h2>Register</h2>
+    <form>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="first-name">First Name*:</label>
+                <input type="text"
+                       id="first-name"
+                       name="first-name"
+                       placeholder="First Name"
+                       required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="last-name">Last Name *:</label>
+                <input type="text"
+                       id="last-name"
+                       name="last-name"
+                       placeholder="Last Name"
+                       required />
+            </div>
+        </div>
+
+        <label for="phone-number">Phone Number*:</label>
+        <input type="text"
+               id="phone-number"
+               name="phone-number"
+               placeholder="Phone Number"
+               required
+               class="mb-4" />
+
+        <label for="email">Email Address*:</label>
+        <input type="email"
+               id="email"
+               name="email"
+               placeholder="Email Address"
+               required
+               class="mb-4" />
+
+        <label for="password">Password*:</label>
+        <div class="password-container">
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Password"
+                   required />
+            <span class="password-toggle" onclick="togglePassword()">
+                <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Feye.svg?alt=media&token=051072bb-988e-4371-97e6-cc53c82efa62"
+                     alt="Toggle Password Visibility"
+                     id="password-icon" />
+            </span>
+        </div>
+
+        <button class="btn-login mt-5" type="submit">Register</button>
+    </form>
+    <div class="register">
+        Already have an account? <a href="/Clients/Login">Login</a>
+    </div>
+</div>
+

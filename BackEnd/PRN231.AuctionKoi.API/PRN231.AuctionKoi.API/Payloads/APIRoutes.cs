@@ -59,15 +59,16 @@
 
         public static class UserAuction
         {
-            public const string Get = Base + "/user-auctions/";
+            public const string Get = Base + "/userAuctions/";
 
-            public const string GetByID = Base + "/user-auctions/{bid-id}";
+            public const string GetByID = Base + "/userAuctions/{bidId}";
 
-            public const string Update = Base + "/user-auctions/{bid-id}";
+            public const string Create = Base + "/userAuctions/";
 
-            public const string Delete = Base + "/user-auctions/{bid-id}";
+            public const string Update = Base + "/userAuctions/{bidId}";
 
-            public const string Create = Base + "/user-auctions/";
+            public const string Delete = Base + "/userAuctions/{bidId}";
+
         }
 
         public static class DetailProposal
@@ -95,6 +96,14 @@
             public const string UploadToFirebase = Base + "/detailProposals/upload";
 
 
+        }
+        public static class Order
+        {
+            public const string Get = Base + "/orders/";
+            public const string Create = Base + "/orders/create-order";
+            public const string GetByID = Base + "/orders/{search-id}";
+            public const string Update = Base + "/orders/{update-order}";
+            public const string Delete = Base + "/orders/{order-id}";
         }
 
 
