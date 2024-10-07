@@ -42,7 +42,7 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpGet(APIRoutes.UserAuction.GetByID, Name = "GetUserAuctionByIdAsync")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute(Name = "bid-id")] string bidId)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] string bidId)
         {
             try
             {
@@ -72,7 +72,8 @@ namespace KoiAuction.API.Controllers
                     IsWinner = reqObj.IsWinner,
                     Price = reqObj.Price,
                     UserId = reqObj.UserId,
-                    FishId = reqObj.FishId
+                    FishId = reqObj.FishId,
+                    AuctionId = reqObj.AuctionId
                 };
 
                 var result = await _userAuctionService.Insert(insertEntity);
@@ -86,7 +87,7 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpPut(APIRoutes.UserAuction.Update, Name = "UpdateUserAuctionAsync")]
-        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "bid-id")] int bidId,
+        public async Task<IActionResult> UpdateAsync([FromRoute] int bidId,
             [FromBody] UserAuctionRequest reqObj)
         {
             try
@@ -102,6 +103,7 @@ namespace KoiAuction.API.Controllers
                     Price = reqObj.Price,
                     UserId = reqObj.UserId,
                     FishId = reqObj.FishId,
+                    AuctionId = reqObj.AuctionId
                 };
 
                 var result = await _userAuctionService.Update(updateEntity);
@@ -115,7 +117,7 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpDelete(APIRoutes.UserAuction.Delete, Name = "DeleteUserAuctionAsync")]
-        public async Task<IActionResult> DeleteAsync([FromRoute(Name = "bid-id")] int bidId)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int bidId)
         {
             try
             {

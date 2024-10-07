@@ -25,6 +25,8 @@ namespace KoiAuction.Common
         public static string SUCCESS_UPDATE_MSG = "Update data success";
         public static int SUCCESS_DELETE_CODE = 1;
         public static string SUCCESS_DELETE_MSG = "Delete data success";
+        public static int SUCCESS_CHECK_CODE = 1;
+        public static string SUCCESS_CHECK_MSG = "Check data is valid";
 
 
         #endregion
@@ -39,7 +41,7 @@ namespace KoiAuction.Common
         public static string FAIL_UPDATE_MSG = "Update data fail";
         public static int FAIL_DELETE_CODE = -1;
         public static string FAIL_DELETE_MSG = "Delete data fail";
-      
+
 
         #endregion
 
@@ -61,7 +63,12 @@ namespace KoiAuction.Common
         public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
         public static int WARNING_INVALID_LOGIN_CODE = 4;
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wromg";
-
+        public static int WARNING_INVALID_USER_AUCTION_CODE = 4;
+        public static string WARNING_INVALID_USER_AUCTION_MSG = "Fish or Auction does not exist";
+        public static int WARNING_AUCTION_IN_ACTIVE_CODE = 4;
+        public static string WARNING_AUCTION_IN_ACTIVE_MSG = "The auction is not active";
+        public static int WARNING_INVALID_AUCTION_PRICE_CODE = 4;
+        public static string WARNING_INVALID_AUCTION_PRICE_MSG = "Your bid is below the minimum required.";
         #endregion
     }
 }
