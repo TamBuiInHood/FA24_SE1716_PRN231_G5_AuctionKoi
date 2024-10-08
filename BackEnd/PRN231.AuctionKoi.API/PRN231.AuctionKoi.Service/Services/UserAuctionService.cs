@@ -5,6 +5,7 @@ using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
 using KoiAuction.Common;
+using KoiAuction.Common.Enums;
 using KoiAuction.Common.Utils;
 using KoiAuction.Repository.Entities;
 using KoiAuction.Service.Base;
@@ -13,6 +14,7 @@ using KoiAuction.Service.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Common.Utils;
+using PRN231.AuctionKoi.Common.Utils.Common.Enums;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -146,8 +148,8 @@ namespace KoiAuction.Service.Services
                 case "farmname":
                     orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
-                               ? x => x.OrderByDescending(x => x.Fish.Auction!.AuctionName)
-                               : x => x.OrderBy(x => x.Fish.Auction!.AuctionName) : x => x.OrderBy(x => x.Fish.Auction!.AuctionName);
+                               ? x => x.OrderByDescending(x => x.Fish.Farm.FarmName)
+                               : x => x.OrderBy(x => x.Fish.Farm.FarmName) : x => x.OrderBy(x => x.Fish.Farm.FarmName);
                     break;
                 case "price":
                     orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
@@ -171,7 +173,7 @@ namespace KoiAuction.Service.Services
                     orderBy = x => x.OrderByDescending(x => x.CreateDate);
                     break;
             }
-            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
+            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm,Fish.Auction";
             var result = await _unitOfWork.UserAuctionRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
             var pagin = new PageEntity<UserAuctionModel>();
             pagin.List = _mapper.Map<IEnumerable<UserAuctionModel>>(result);
@@ -192,7 +194,7 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.WARNING_INVALID_ID_CODE, Const.WARNING_INVALID_ID_MSG);
             }
-            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
+            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm,Fish.Auction";
             var userAuctionEntity = await _unitOfWork.UserAuctionRepository.GetByCondition(filter, includeProperties);
             if (userAuctionEntity == null)
             {
@@ -204,17 +206,19 @@ namespace KoiAuction.Service.Services
 
         public async Task<IBusinessResult> Insert(UserAuctionModel entityInsert)
         {
-            //check userid exist
-            //check fishid exist
-            //check iswinner if already have true in 1 fishid
-            //check price must be = finalPriceCurrent + minPirceBid
+            var validationResult = await ValidateAuctionConditions(entityInsert);
+            if (validationResult.Status != Const.SUCCESS_CHECK_CODE)
+            {
+                return validationResult;
+            }
+
             var mapEntity = _mapper.Map<UserAuction>(entityInsert);
             await _unitOfWork.UserAuctionRepository.Insert(mapEntity);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
             if (result)
             {
-                string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
-                var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == entityInsert.BidId, includeProperties);
+                string includeUserAuctionProperties = "User,Fish,Fish.FishType,Fish.Farm,Fish.Auction";
+                var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidCode == entityInsert.BidCode, includeUserAuctionProperties);
                 return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, _mapper.Map<IEnumerable<UserAuctionModel>>(userAuction));
             }
             return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -222,12 +226,13 @@ namespace KoiAuction.Service.Services
 
         public async Task<IBusinessResult> Update(UserAuctionModel entityUpdate)
         {
-            //check userid exist
-            //check fishid exist
-            //check iswinner if already have true in 1 fishid
-            //check price must be = finalPriceCurrent + minPirceBid
-            Expression<Func<UserAuction, bool>> filter = x => x.BidId == entityUpdate.BidId;
-            var entity = await _unitOfWork.UserAuctionRepository.GetByCondition(filter);
+            var validationResult = await ValidateAuctionConditions(entityUpdate);
+            if (validationResult.Status != Const.SUCCESS_CHECK_CODE)
+            {
+                return validationResult;
+            }
+
+            var entity = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == entityUpdate.BidId);
             if (entity == null)
             {
                 return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
@@ -240,24 +245,24 @@ namespace KoiAuction.Service.Services
             {
                 entity.IsWinner = entityUpdate.IsWinner.Value;
             }
-            if (entityUpdate.CreateDate.HasValue)
-            {
-                entity.CreateDate = entityUpdate.CreateDate.Value;
-            }
-            if (entityUpdate.UserId != entity.UserId)
-            {
-                entity.UserId = entityUpdate.UserId;
-            }
+            //if (entityUpdate.CreateDate.HasValue)
+            //{
+            //    entity.CreateDate = entityUpdate.CreateDate.Value;
+            //}
+            //if (entityUpdate.UserId != entity.UserId)
+            //{
+            //    entity.UserId = entityUpdate.UserId;
+            //}
 
-            if (entityUpdate.FishId != entity.FishId)
-            {
-                entity.FishId = entityUpdate.FishId;
-            }
+            //if (entityUpdate.FishId != entity.FishId)
+            //{
+            //    entity.FishId = entityUpdate.FishId;
+            //}
             _unitOfWork.UserAuctionRepository.Update(entity);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
             if (result)
             {
-                string includeProperties = "User,Fish,Fish.FishType,Fish.Farm";
+                string includeProperties = "User,Fish,Fish.FishType,Fish.Farm,Fish.Auction";
                 var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == entityUpdate.BidId, includeProperties);
                 return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, _mapper.Map<IEnumerable<UserAuctionModel>>(userAuction));
             }
@@ -266,7 +271,7 @@ namespace KoiAuction.Service.Services
 
         public async Task<IBusinessResult> Delete(int bidid)
         {
-            var userAuction = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.BidId == bidid);
+            var userAuction = await _unitOfWork.UserAuctionRepository.GetByID(bidid);
             if (userAuction == null)
             {
                 return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
@@ -280,5 +285,55 @@ namespace KoiAuction.Service.Services
             return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
         }
 
+        private async Task<IBusinessResult> ValidateAuctionConditions(UserAuctionModel entity)
+        {
+            // check userid exist
+            var userEntity = await _unitOfWork.UserRepository.GetByID(entity.UserId);
+            if (userEntity == null)
+            {
+                return new BusinessResult(Const.WARNING_INVALID_USER_ID_CODE, Const.WARNING_INVALID_USER_ID_MSG);
+            }
+
+            // check role is customer
+            if (userEntity.RoleId != (int)UserRole.AUCTIONER)
+            {
+                return new BusinessResult(Const.WARNING_WRONG_ROLE_CODE, Const.WARNING_WRONG_ROLE_MSG);
+            }
+
+            // check fishId and auctionId exist
+            Expression<Func<DetailProposal, bool>> filter = null!;
+            filter = x => x.FishId == entity.FishId && x.AuctionId == entity.AuctionId;
+            string includeProperties = "Auction";
+            var detailProposalEntity = await _unitOfWork.DetailProposalRepository.GetByCondition(filter, includeProperties);
+            if (detailProposalEntity == null)
+            {
+                return new BusinessResult(Const.WARNING_INVALID_USER_AUCTION_CODE, Const.WARNING_INVALID_USER_AUCTION_MSG);
+            }
+
+            // check auction is still active
+            if (detailProposalEntity.Auction!.Status != AuctionStatus.Active.ToString())
+            {
+                return new BusinessResult(Const.WARNING_AUCTION_IN_ACTIVE_CODE, Const.WARNING_AUCTION_IN_ACTIVE_MSG);
+            }
+
+            // check price must be >= finalPriceCurrent + minPirceBid
+            if (entity.Price < detailProposalEntity.FinalPrice + detailProposalEntity.MinIncrement)
+            {
+                return new BusinessResult(Const.WARNING_INVALID_AUCTION_PRICE_CODE, Const.WARNING_INVALID_AUCTION_PRICE_MSG);
+            }
+
+            // check iswinner if already have true in 1 auction
+            if (entity.IsWinner == true)
+            {
+                var userAuctionEntity = await _unitOfWork.UserAuctionRepository.GetByCondition(x => x.IsWinner == true && x.FishId == entity.FishId);
+                if (userAuctionEntity != null)
+                {
+                    return new BusinessResult(Const.WARNING_EXIST_WINNER_CODE, Const.WARNING_EXIST_WINNER_MSG);
+                }
+            }
+
+            // Nếu không có lỗi trả về kết quả thành công
+            return new BusinessResult(Const.SUCCESS_CHECK_CODE, Const.SUCCESS_CHECK_MSG);
+        }
     }
 }

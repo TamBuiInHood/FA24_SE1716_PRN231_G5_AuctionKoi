@@ -1,0 +1,114 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row">
+    <div class="col-md-10">
+        <h3 class="display-8">Proposal List</h3>
+    </div>
+    <div class="col-md-2 text-end">
+        <button type="button" class="btn btn-primary" onclick="add();">
+            Add
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">FarmId</th>
+                    <th class="card-title text-center">FarmCode</th>
+                    <th class="card-title text-center">FarmName</th>
+                    <th class="card-title text-center">Location</th>
+                    <th class="card-title text-center">AvatarUrl</th>
+                    <th class="card-title text-center">CreateDate</th>
+                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">Description</th>
+                    <th class="card-title text-center">Owner</th>
+                    <th class="card-title text-center">UpdateDate</th>
+                    <th class="card-title text-center">IsDeleted</th>
+                    <th class="card-title text-center">UserFullName</th>
+                    <th class="card-title text-center"></th>
+                </tr>
+            </thead>
+            <tbody class="tblProposal">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="proposalModal" tabindex="-1" aria-labelledby="proposalModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proposalModalLabel">Bank</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadData();
+
+        });
+        function loadData() {
+            alert("Load data progressing ...");
+
+            $.ajax({
+                url: 'http://localhost:5155/auction-koi/proposals',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    alert('Server response: ' + result.message);
+                    console.log(result);
+                    var html = '';
+                    $.each(result.data.list, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.farmId + '</td>';
+                        html += '<td>' + item.farmCode + '</td>';
+                        html += '<td>' + item.farmName + '</td>';
+                        html += '<td>' + item.location + '</td>';
+                        html += '<td>' + item.avatarUrl + '</td>';
+                        html += '<td>' + item.createDate + '</td>';
+                        html += '<td>' + item.status + '</td>';
+                        html += '<td>' + item.description + '</td>';
+                        html += '<td>' + item.owner + '</td>';
+                        html += '<td>' + item.updateDate + '</td>';
+                        html += '<td>' + item.isDeleted + '</td>';
+                        html += '<td>' + item.userFullName + '</td>';
+                        html += '<td></td>';
+                        html += '</tr>';
+                    });
+                    $('.tblProposal').html(html);
+                },
+                error: function (xhr, error) {
+                    alert(xhr.statusText);
+                }
+            });
+        }
+
+        function add() {
+            $("#proposalModalContent").html("");
+            $("#proposalModalLabel").html("Add New");
+
+            $('#proposalModal').modal('show');
+        }
+
+    </script>
+}
