@@ -537,9 +537,7 @@ namespace KoiAuction.Service.Services
                     {
                         existDetailProposal.VideoUrl = downloadUrl;
                     }
-                    _unitOfWork.DetailProposalRepository.Update(existDetailProposal);
                 }
-                await _unitOfWork.SaveAsync();
                 if (downloadUrl != null)
                 {
                     return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, downloadUrl);

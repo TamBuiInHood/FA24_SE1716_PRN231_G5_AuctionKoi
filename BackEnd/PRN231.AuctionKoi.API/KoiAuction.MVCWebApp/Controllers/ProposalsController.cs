@@ -34,7 +34,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             //return View(await auctionKoiOfficialContext.ToListAsync());
             string apiUrl = $"proposals?page-index={pageIndex}&page-size={pageSize}&search-key={search}&sort-by={sortBy}&direction={direction}";
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + apiUrl))
                 {
@@ -85,7 +88,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             //}
 
             //return View(proposal);
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
                 {
@@ -118,17 +124,20 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,UpdateDate,UserId")] ProposalModel proposal, IFormFile avatarFile)
+        public async Task<IActionResult> Create([Bind("FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,UpdateDate,UserId")] ProposalModel proposal, IFormFile? avatarFile)
         {
 
             bool saveStatus = false;
-            if(proposal.UpdateDate > proposal.CreateDate)
+            if(proposal.UpdateDate < proposal.CreateDate)
             {
                 ModelState.AddModelError("UpdateDate", "Update Date must be greater than Create Date");
             }
             if(ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+                }))
                 {
                     var uploadFirebase = await UploadToFirebase(-1,avatarFile);
                     proposal.AvatarUrl = uploadFirebase;
@@ -173,7 +182,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var proposal = new ProposalModel();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
                 {
@@ -210,12 +222,15 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FarmId,FarmCode,FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,IsDeleted,UpdateDate,UserId")] ProposalModel proposal, IFormFile avatarFile)
+        public async Task<IActionResult> Edit(int id, [Bind("FarmId,FarmCode,FarmName,Location,AvatarUrl,CreateDate,Status,Description,Owner,IsDeleted,UpdateDate,UserId")] ProposalModel proposal, IFormFile? avatarFile)
         {
             bool saveStatus = false;
             if(ModelState.IsValid)
             {
-                using (var httpClient = new  HttpClient())
+                using (var httpClient = new  HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+                }))
                 {
                     var uploadFirebase = await UploadToFirebase(id, avatarFile);
                     proposal.AvatarUrl = uploadFirebase;
@@ -282,7 +297,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var proposal = new ProposalModel();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/" + id))
                 {
@@ -324,7 +342,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             bool saveStatus = false;
             if (ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+                }))
                 {
                     using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "proposals/" + id))
                     {
@@ -372,7 +393,10 @@ namespace KoiAuction.MVCWebApp.Controllers
 
         public async Task<List<User>> GetUsers()
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/user"))
                 {
@@ -400,7 +424,10 @@ namespace KoiAuction.MVCWebApp.Controllers
                 return "";
             }
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 var contentOfFile = new MultipartFormDataContent();
                 var stream = new MemoryStream();

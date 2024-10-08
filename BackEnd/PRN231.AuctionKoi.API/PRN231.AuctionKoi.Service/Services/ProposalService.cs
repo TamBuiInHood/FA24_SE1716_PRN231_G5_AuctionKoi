@@ -329,9 +329,7 @@ namespace KoiAuction.Service.Services
                         await fileRef.DeleteAsync();
                     }
                     existProposal.AvatarUrl = downloadUrl;
-                    _unitOfWork.ProposalRepository.Update(existProposal);
                 }
-                   await _unitOfWork.SaveAsync();
                     if (downloadUrl != null)
                     {
                         return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, downloadUrl);
