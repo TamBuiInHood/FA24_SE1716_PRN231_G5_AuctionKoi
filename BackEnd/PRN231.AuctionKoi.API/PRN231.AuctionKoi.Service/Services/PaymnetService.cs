@@ -165,6 +165,26 @@ namespace KoiAuction.Service.Services
             }
         }
 
+        public async Task<IBusinessResult> GetAllOrder()
+        {
+            try { 
+            var orders = await _unitOfWork.OrderRepository.GetAllNoPaging();
+                if (orders != null && orders.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders.ToList());
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new List<Order>());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
+
         public async Task<IBusinessResult> GetByID(string? idKey)
         {
             var id = 0;
@@ -214,7 +234,7 @@ namespace KoiAuction.Service.Services
             {
                 entity.PaymentAmount = entityUpdate.PaymentAmount.Value;
             }
-            if (!entityUpdate.Status.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(entityUpdate.Status))
             {
                 entity.Status = entityUpdate.Status;
             }
@@ -222,9 +242,13 @@ namespace KoiAuction.Service.Services
             {
                 entity.PaymentDate = entityUpdate.PaymentDate.Value;
             }
-            if (!entityUpdate.PaymentMethod.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(entityUpdate.PaymentMethod))
             {
                 entity.PaymentMethod = entityUpdate.PaymentMethod;
+            }
+            if (!string.IsNullOrEmpty(entityUpdate.TransactionId))
+            {
+                entity.TransactionId = entityUpdate.TransactionId;
             }
             _unitOfWork.PaymentRepository.Update(entity);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;

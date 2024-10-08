@@ -66,6 +66,20 @@ namespace PRN231.AuctionKoi.API.Controllers
             }
         }
 
+        [HttpGet(APIRoutes.Paymnet.GetAllOrder, Name = "GetAllOrder")]
+        public async Task<IActionResult> GetAllOrderAsync()
+        {
+            try
+            {
+                var result = await _paymentService.GetAllOrder();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //[Authorize(Roles = )]
         [HttpPut(APIRoutes.Paymnet.Update, Name = "UpdatePaymentAsync")]
         public async Task<IActionResult> UpdateAsync([FromRoute(Name = "payment-id")] int PaymentId,
@@ -79,7 +93,7 @@ namespace PRN231.AuctionKoi.API.Controllers
                 updateEntity.PaymentMethod = reqObj.PaymentMethod;
                 updateEntity.PaymentAmount = reqObj.PaymentAmount;
                 updateEntity.TransactionId = reqObj.TransactionId;
-
+                updateEntity.Status = reqObj.Status;
                 var result = await _paymentService.Update(updateEntity);
                 return Ok(result);
             }
@@ -101,7 +115,7 @@ namespace PRN231.AuctionKoi.API.Controllers
                 insertEntity.PaymentAmount = reqObj.PaymentAmount;
                 insertEntity.TransactionId = reqObj.TransactionId;
                 insertEntity.OrderId = reqObj.OrderId;
-
+                insertEntity.Status = reqObj.Status;
                 var result = await _paymentService.Insert(insertEntity);
                 return Ok(result);
             }

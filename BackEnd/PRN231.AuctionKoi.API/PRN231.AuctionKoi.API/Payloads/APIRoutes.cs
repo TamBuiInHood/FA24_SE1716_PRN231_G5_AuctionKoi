@@ -21,17 +21,19 @@
 
         public static class Paymnet
         {
-            public const string Get = Base + "/paymnets/";
+            public const string Get = Base + "/payments/";
 
-            public const string GetByID = Base + "/paymnets/{search-id}";
+            public const string GetByID = Base + "/payments/{search-id}";
 
-            public const string Update = Base + "/paymnets/{payment-id}";
+            public const string Update = Base + "/payments/{payment-id}";
 
-            public const string Delete = Base + "/paymnets/{payment-id}";
+            public const string Delete = Base + "/payments/{payment-id}";
 
-            public const string Create = Base + "/paymnets/";
+            public const string Create = Base + "/payments/";
 
-            public const string GetNoPagin = Base + "/paymnets/";
+            public const string GetNoPagin = Base + "/payments/";
+
+            public const string GetAllOrder = Base + "/payments/orders";
 
         }
 

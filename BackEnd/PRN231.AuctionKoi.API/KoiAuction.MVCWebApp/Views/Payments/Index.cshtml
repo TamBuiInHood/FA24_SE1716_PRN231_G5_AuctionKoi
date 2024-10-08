@@ -1,0 +1,104 @@
+﻿@model KoiAuction.BussinessModels.Pagination.PageEntity<KoiAuction.BussinessModels.PaymentModels.PaymentModel>
+
+@{
+    ViewData["Title"] = "Payment List";
+    // ViewData["SearchKey"] = "";
+    // ViewData["PaymentAmountFrom"] = 0;
+    // ViewData["PaymentAmountTo"] = int.MaxValue;
+    // ViewData["CreateDateFrom"] = DateTime.MinValue;
+    // ViewData["CreateDateTo"] = DateTime.MaxValue;
+    // ViewData["Status"] = "";
+    // ViewData["CurrentPage"] = 1;
+}
+
+<h1>Payment List</h1>
+
+<form method="get">
+    <div>
+        <label for="search-key">Search:</label>
+        <input type="text" name="search-key" value="@ViewData["SearchKey"]" placeholder="Search payments..." />
+    </div>
+
+    <div>
+        <label for="payment-amount-from">Amount From:</label>
+        <input type="number" name="payment-amount-from" value="@ViewData["PaymentAmountFrom"]" />
+    </div>
+
+    <div>
+        <label for="payment-amount-to">Amount To:</label>
+        <input type="number" name="payment-amount-to" value="@ViewData["PaymentAmountTo"]" />
+    </div>
+
+    <div>
+        <label for="payment-date-from">Date From:</label>
+        <input type="date" name="payment-date-from" value="@ViewData["CreateDateFrom"]" />
+    </div>
+
+    <div>
+        <label for="payment-date-to">Date To:</label>
+        <input type="date" name="payment-date-to" value="@ViewData["CreateDateTo"]" />
+    </div>
+
+    <div>
+        <label for="status">Status:</label>
+        <input type="text" name="status" value="@ViewData["Status"]" />
+    </div>
+
+    <div>
+        <input type="submit" value="Filter" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>Payment ID</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Transaction Id</th>
+            <th>
+                @Html.ActionLink("OrderCode", "Index", new
+                    {
+                        sortBy = "OrderCode",
+                        direction = ViewBag.PaginationParameter.Direction == "desc" ? "asc" : "desc",
+                        searchKey = ViewData["SearchKey"],
+                        paymentAmountFrom = ViewData["PaymentAmountFrom"],
+                        paymentAmountTo = ViewData["PaymentAmountTo"],
+                        paymentDateFrom = ViewData["CreateDateFrom"],
+                        paymentDateTo = ViewData["CreateDateTo"],
+                        status = ViewData["Status"],
+                        pageIndex = ViewData["CurrentPage"],
+                        pageSize = ViewData["PageSize"]
+                    })
+            </th>
+            </th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model.List)
+        {
+            <tr>
+                <td>@payment.PaymentId</td>
+                <td>@payment.PaymentAmount</td>
+                <td>@payment.PaymentDate</td>
+                <td>@payment.Status</td>
+                <td>@payment.TransactionId</td>
+                <td>@payment.OrderId</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* <nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPage; i++)
+        {
+            int.TryParse(, out var pageInt);
+            <li class="page-item @(i == ViewData["CurrentPage"] ? "active" : "")">
+                <a class="page-link" href="?page-index=@i&search-key=@ViewData["SearchKey"]&payment-amount-from=@ViewData["PaymentAmountFrom"]&payment-amount-to=@ViewData["PaymentAmountTo"]&payment-date-from=@ViewData["CreateDateFrom"]&payment-date-to=@ViewData["CreateDateTo"]&status=@ViewData["Status"]">Page @i</a>
+            </li>
+        }
+    </ul>
+</nav>  *@

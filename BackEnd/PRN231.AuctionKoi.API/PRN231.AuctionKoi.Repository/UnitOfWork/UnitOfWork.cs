@@ -16,7 +16,7 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private UserAuctionRepository _userAuctionRepo;
         private UserRepository _userRepo;
         private DetailProposalRepository _detailProposalRepo;
-
+        private OrderRepository _orderRepo;
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
@@ -114,6 +114,17 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
             }
         }
 
+        public OrderRepository OrderRepository
+        {
+            get
+            {
+                if (_orderRepo == null)
+                {
+                    this._orderRepo= new OrderRepository(_context);
+                }
+                return _orderRepo;
+            }
+        }
         //GenericRepository<Category> IUnitOfWork.CategoryRepository
         //{
         //    get

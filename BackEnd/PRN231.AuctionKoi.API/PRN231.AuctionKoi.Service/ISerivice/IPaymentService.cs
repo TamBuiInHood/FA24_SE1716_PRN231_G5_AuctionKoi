@@ -14,6 +14,7 @@ namespace KoiAuction.Service.ISerivice
     {
         Task<IBusinessResult> Get(PaginationParameter paginationParameter, PaymentFilters paymentFilters );
         Task<IBusinessResult> GetByID(string idKey);
+        Task<IBusinessResult> GetAllOrder();
         Task<IBusinessResult> Insert(PaymentModel entityinsert);
         Task<IBusinessResult> Update(PaymentModel entityUpdate);
         Task<IBusinessResult> Delete(int id);

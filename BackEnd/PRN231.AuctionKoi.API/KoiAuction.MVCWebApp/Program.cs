@@ -8,6 +8,12 @@ builder.Services.AddControllersWithViews();
 // Dependency Injection
 builder.Services.AddScoped<Fa24Se1716Prn231G5KoiauctionContext>();
 
+builder.Services.AddCors(p => p.AddPolicy("Cors", policy =>
+{
+    policy.WithOrigins("*")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+}));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -17,6 +23,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
