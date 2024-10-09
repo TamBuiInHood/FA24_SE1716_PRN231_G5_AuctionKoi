@@ -1,4 +1,5 @@
-﻿@using PRN231.AuctionKoi.Common.Utils.Common.Enums
+﻿@using PRN231.AuctionKoi.API.Payloads
+@using PRN231.AuctionKoi.Common.Utils.Common.Enums
 @{
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
     ViewData["Title"] = "Login";
@@ -7,6 +8,7 @@
         Admin = (int)UserRole.ADMIN,
         User = (int)UserRole.AUCTIONER
     };
+    var baseUrl = APIRoutes.Host.ToString() + APIRoutes.Base.ToString();
 }
 
 <div class="login-container">
@@ -62,7 +64,7 @@
         }
     }
 
-    // const UserRole = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(userRoles));
+    var baseUrl = '@baseUrl';
     $(document).ready(function () {
         $('#loginForm').submit(function (event) {
             event.preventDefault(); // Ngăn việc submit form và tải lại trang
@@ -71,7 +73,7 @@
             var password = $('#password').val();
 
             $.ajax({
-                url: 'https://localhost:7094/auction-koi/authentication/login', // Địa chỉ API của bạn
+                url: baseUrl + '/authentication/login', // Địa chỉ API của bạn
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
