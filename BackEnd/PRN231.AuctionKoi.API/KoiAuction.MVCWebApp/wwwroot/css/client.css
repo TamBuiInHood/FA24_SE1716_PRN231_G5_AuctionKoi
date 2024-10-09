@@ -804,9 +804,25 @@ button[type="submit"] {
 }
 
 .card-past-bids-list-item {
-    background-color: rgb(74 222 128 / 1);
+    background-color: rgb(74, 222, 128);
     color: #fff;
     border-radius: var(--theme-rounded-base);
+    animation: bounce 2s ease; /* Thay đổi thời gian thành 1 giây */
+}
+
+/* Định nghĩa keyframes cho bounce effect */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0); /* Về vị trí ban đầu */
+    }
+
+    40% {
+        transform: translateY(-20px); /* Nhảy lên 20px */
+    }
+
+    60% {
+        transform: translateY(-10px); /* Nhảy lên 10px */
+    }
 }
 
 .input-box {
