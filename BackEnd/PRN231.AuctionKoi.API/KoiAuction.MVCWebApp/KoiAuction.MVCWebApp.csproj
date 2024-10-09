@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\userAuctions.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\client.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\userAuctions.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\userAuctions.js" />
   </ItemGroup>
 
   <ItemGroup>
