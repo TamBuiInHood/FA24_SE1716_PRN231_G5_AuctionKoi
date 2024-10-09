@@ -1,0 +1,217 @@
+﻿@using PRN231.AuctionKoi.Common.Utils.Common.Enums
+@{
+    var userRoles = new
+    {
+        Admin = (int)UserRole.ADMIN,
+        User = (int)UserRole.AUCTIONER
+    };
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Auction Koi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/client.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/share.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/KoiAuction.MVCWebApp.styles.css" asp-append-version="true" />
+    <link rel="icon"
+          type="image/svg+xml"
+          href="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-1.svg?alt=media&token=17b0a232-791f-41cc-9810-b29162e79cc5" />
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap"
+          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-wrapper">
+            <div class="header-content">
+                <!-- Logo và tên thương hiệu -->
+                <div class="header-left">
+                    <a class="header-logo" href="/">
+                        <div class="logo-image">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-1.svg?alt=media&token=17b0a232-791f-41cc-9810-b29162e79cc5"
+                                 alt="Logo" />
+                        </div>
+                        <h1 class="brand-title">AUCTIONKOI</h1>
+                    </a>
+                </div>
+
+                <!-- Menu ở giữa -->
+                <nav class="navbar">
+                    <div class="navbar-menu">
+                        <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clients" && ViewContext.RouteData.Values["action"]?.ToString() == "HomePage" ? "active" : "")" href="/">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-2.svg?alt=media&token=287dcbb7-f43e-4199-9cc8-fd1c8b95b3d8"
+                                 alt="Home Icon"
+                                 class="nav-icon-home" />
+                            <span>Home</span>
+                        </a>
+
+                        @{
+                            var actionsToCheck = new[] { "Auctions", "PastAuctions", "DetailProposal", "AuctionDetail" };
+                            var isActiveAuctionsHeader = actionsToCheck.Contains(ViewContext.RouteData.Values["action"]?.ToString());
+                        }
+
+                        <a class="nav-item  @(isActiveAuctionsHeader ? "active" : "")" href="/Clients/Auctions">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-3.svg?alt=media&token=a8ff32cd-eb60-4dc5-b46e-033167064e9b"
+                                 alt="Home Icon"
+                                 class="nav-icon" />
+                            <span>Auctions</span>
+                        </a>
+                        @*         <a class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")" href="/">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-4.svg?alt=media&token=87e760ff-0b40-4bd0-9d33-0a467a87bd53"
+                        alt="Home Icon"
+                        class="nav-icon" />
+                        <span>About</span>
+                        </a> *@
+                    </div>
+                </nav>
+
+                <!-- Đăng nhập và đăng ký bên phải -->
+                <div class="header-right">
+                    <nav class="navbar">
+                        <div class="header-auth">
+                            <script>
+                                const UserRole = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(userRoles));
+                                // Kiểm tra nếu người dùng đã đăng nhập
+                                var userId = localStorage.getItem('userId');
+                                var userName = localStorage.getItem('userName');
+                                var roleId = localStorage.getItem('roleId');
+
+                                if (roleId == UserRole.Admin) {
+                                    window.location.href = '/Home/Index'; Chuyển hướng nếu là Admin
+                                }
+
+                                if (userId && userName) {
+                                    document.write(`
+                                                        <div class="dropdown">
+                                                            <button class="header-right-auth-success dropdown-toggle" id="accountDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                ${userName} <!-- Hiển thị tên người dùng -->
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                                                                <li>
+                                                                    <a class="dropdown-item p-2" href="/account">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1.25rem" height="1.25rem" viewBox="0 0 24 24" class="iconify iconify--majesticons">
+                                                                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                                                <circle cx="12" cy="8" r="5"></circle>
+                                                                                <path d="M20 21a8 8 0 1 0-16 0m16 0a8 8 0 1 0-16 0"></path>
+                                                                            </g>
+                                                                        </svg>
+                                                                        Account
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item p-2" href="#" onclick="logout()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1.25rem" height="1.25rem" viewBox="0 0 24 24" class="iconify iconify--majesticons">
+                                                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 12l-4-4m4 4l-4 4m4-4H9m5 9a9 9 0 1 1 0-18"></path>
+                                                                        </svg>
+                                                                        Log Out
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    `);
+                                } else {
+                                    document.write(`
+                                                        <a class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Clients" && ViewContext.RouteData.Values["action"].ToString() == "Login" ? "active" : "")" href="/Clients/Login">Login</a>
+                                                        <a class="nav-item btn-register-header @(ViewContext.RouteData.Values["controller"].ToString() == "Clients" && ViewContext.RouteData.Values["action"].ToString() == "Register" ? "active" : "")" href="/Clients/Register">Register</a>
+                                                    `);
+                                }
+
+                                // Hàm đăng xuất
+                                function logout() {
+                                    // Xóa thông tin người dùng từ localStorage
+                                    localStorage.removeItem('userId');
+                                    localStorage.removeItem('userName');
+                                    localStorage.removeItem('roleId');
+
+                                    // Điều hướng đến hoặc trang chủ
+                                    window.location.href = '/';
+                                }
+                            </script>
+                        </div>
+                    </nav>
+                </div>
+
+
+            </div>
+        </div>
+    </header>
+    <div class="main-content">
+        @RenderBody()
+    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo-column">
+                <div class="logo-image-footer">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-1.svg?alt=media&token=17b0a232-791f-41cc-9810-b29162e79cc5"
+                         alt="Logo" />
+                </div>
+            </div>
+            <div class="footer-column">
+                <h1 class="column-title">Navigation</h1>
+                <a href="" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Clients" && ViewContext.RouteData.Values["action"]?.ToString() == "HomePage" ? "active" : "")">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-2.svg?alt=media&token=287dcbb7-f43e-4199-9cc8-fd1c8b95b3d8"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Home</span>
+                </a>
+                <a href="/Clients/Auctions" class=" @(isActiveAuctionsHeader ? "active" : "")">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-3.svg?alt=media&token=a8ff32cd-eb60-4dc5-b46e-033167064e9b"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Auctions</span>
+                </a>
+                <a href="">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-4.svg?alt=media&token=87e760ff-0b40-4bd0-9d33-0a467a87bd53"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="footer-column">
+                <h1 class="column-title">Policy</h1>
+                <a href="">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-9.svg?alt=media&token=f10ca9f5-cff3-463e-9481-98389e7086d8"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Privacy Policy</span>
+                </a>
+                <a href="">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-10.svg?alt=media&token=3c9fb9b2-53ed-4fb7-aa82-f1ad863512d6"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Terms and Conditions</span>
+                </a>
+            </div>
+            <div class="footer-column">
+                <h1 class="column-title">Account</h1>
+                <a href="/Clients/Login" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Clients" && ViewContext.RouteData.Values["action"].ToString() == "Login" ? "active" : "")">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-11.svg?alt=media&token=be5df260-8222-4878-a299-74037df24f65"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Login</span>
+                </a>
+                <a href="/Clients/Register" @(ViewContext.RouteData.Values["controller"].ToString() == "Clients" && ViewContext.RouteData.Values["action"].ToString() == "Register" ? "active" : "")>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/prn231-koiauction.appspot.com/o/resources%2Fsvgexport-12.svg?alt=media&token=f4625ccf-0060-4a52-bcb1-b627e03800e8"
+                         alt="Home Icon"
+                         class="nav-icon" />
+                    <span>Register</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-copy">
+            &copy; 2024 AuctionKoi. Tất cả các quyền được bảo lưu.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
