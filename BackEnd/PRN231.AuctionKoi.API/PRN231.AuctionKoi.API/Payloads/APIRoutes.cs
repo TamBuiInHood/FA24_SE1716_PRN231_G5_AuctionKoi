@@ -2,7 +2,12 @@
 {
     public static class APIRoutes
     {
+        public const string Host = "https://localhost:7094/";
+        public const string WSHost = "wss://localhost:7094/";
+
         public const string Base = "auction-koi";
+        public const string WS_Url = "api/ws";
+
 
         public static class AuctionKoi
         {
@@ -13,9 +18,9 @@
         {
             public const string Login = Base + "/authentication/login";
 
-            public const string LoginMobile = Base + "/authentication/login-mobile";
+            //public const string LoginMobile = Base + "/authentication/login-mobile";
 
-            public const string RefreshToken = Base + "/authentication/refresh-token";
+            public const string RefreshToken = Base + "/authentication/refreshToken";
 
         }
 
@@ -61,12 +66,19 @@
 
             public const string GetByID = Base + "/userAuctions/{bidId}";
 
+            public const string GetByAuctionIdAndFishId = Base + "/userAuctions/{auctionId}/{fishId}";
+
             public const string Create = Base + "/userAuctions/";
 
             public const string Update = Base + "/userAuctions/{bidId}";
 
             public const string Delete = Base + "/userAuctions/{bidId}";
 
+        }
+
+        public static class WebSocket
+        {
+            public const string GetWsByAuctionIdAndFishId = WS_Url + "/userAuctions/{auctionId}/{fishId}";
         }
 
         public static class DetailProposal

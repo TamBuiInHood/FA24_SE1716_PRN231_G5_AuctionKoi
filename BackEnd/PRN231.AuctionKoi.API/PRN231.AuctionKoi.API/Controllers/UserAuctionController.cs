@@ -56,6 +56,21 @@ namespace KoiAuction.API.Controllers
         }
 
         //[Authorize(Roles = )]
+        [HttpGet(APIRoutes.UserAuction.GetByAuctionIdAndFishId, Name = "GetByAuctionIdAndFishIdAsync")]
+        public async Task<IActionResult> GetByAuctionIdAndFishIdAsync([FromRoute] string auctionId, [FromRoute] string fishId)
+        {
+            try
+            {
+                var result = await _userAuctionService.GetByAuctionIdAndFishId(auctionId, fishId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[Authorize(Roles = )]
         [HttpPost(APIRoutes.UserAuction.Create, Name = "CreateUserAuctionAsync")]
         public async Task<IActionResult> CreateAsync([FromBody] UserAuctionRequest reqObj)
         {
@@ -65,7 +80,7 @@ namespace KoiAuction.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var insertEntity = new UserAuctionModel
+                var insertEntity = new CreateUserAuctionModel
                 {
                     BidCode = CodeHelper.GenerateCode(),
                     CreateDate = DateTime.Now,
@@ -96,9 +111,8 @@ namespace KoiAuction.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var updateEntity = new UserAuctionModel
+                var updateEntity = new UpdateUserAuctionModel
                 {
-                    BidId = bidId,
                     IsWinner = reqObj.IsWinner,
                     Price = reqObj.Price,
                     UserId = reqObj.UserId,
@@ -106,7 +120,7 @@ namespace KoiAuction.API.Controllers
                     AuctionId = reqObj.AuctionId
                 };
 
-                var result = await _userAuctionService.Update(updateEntity);
+                var result = await _userAuctionService.Update(bidId, updateEntity);
                 return Ok(result);
             }
             catch (Exception ex)
