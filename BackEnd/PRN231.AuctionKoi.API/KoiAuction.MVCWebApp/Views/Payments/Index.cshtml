@@ -2,103 +2,226 @@
 
 @{
     ViewData["Title"] = "Payment List";
-    // ViewData["SearchKey"] = "";
-    // ViewData["PaymentAmountFrom"] = 0;
-    // ViewData["PaymentAmountTo"] = int.MaxValue;
-    // ViewData["CreateDateFrom"] = DateTime.MinValue;
-    // ViewData["CreateDateTo"] = DateTime.MaxValue;
-    // ViewData["Status"] = "";
-    // ViewData["CurrentPage"] = 1;
+    var pageCurr = @ViewBag.paginationParameter.PageIndex;
 }
 
-<h1>Payment List</h1>
+<h1 class="text-center my-4">Payment List</h1>
 
-<form method="get">
-    <div>
-        <label for="search-key">Search:</label>
-        <input type="text" name="search-key" value="@ViewData["SearchKey"]" placeholder="Search payments..." />
-    </div>
+<div class="container">
+    <!-- Filter Form -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="search-key" class="form-label">Search:</label>
+                <input type="text" class="form-control" name="search-key" value="@ViewBag.paginationParameter.Search" placeholder="Search payments by Id...">
+            </div>
 
-    <div>
-        <label for="payment-amount-from">Amount From:</label>
-        <input type="number" name="payment-amount-from" value="@ViewData["PaymentAmountFrom"]" />
-    </div>
+            <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <input type="text" class="form-control" name="status" value="@ViewBag.paymentFilters.Status" placeholder="Payment status...">
+            </div>
+        </div>
 
-    <div>
-        <label for="payment-amount-to">Amount To:</label>
-        <input type="number" name="payment-amount-to" value="@ViewData["PaymentAmountTo"]" />
-    </div>
+        <div class="row">
+            <!-- Dual Input for Amount (Slider + Input) -->
+            <div class="col-md-6 mb-3">
+                <label for="payment-amount-range" class="form-label">Amount Range:</label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="amount-from-input" name="payment-amount-from" value="@ViewBag.paymentFilters.PaymentAmountFrom" min="0" max="1000000" oninput="syncAmountFrom(this.value)">
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="amount-to-input" name="payment-amount-to" value="@ViewBag.paymentFilters.PaymentAmountTo" min="0" max="1000000" oninput="syncAmountTo(this.value)">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <span id="amount-from-label">@ViewBag.paymentFilters.PaymentAmountFrom</span> -
+                    <span id="amount-to-label">@ViewBag.paymentFilters.PaymentAmountTo</span>
+                </div>
+                <input type="range" class="form-range" id="amount-from-slider" min="0" max="1000000" value="@ViewBag.paymentFilters.PaymentAmountFrom" oninput="updateAmountFrom(this.value)">
+                <input type="range" class="form-range mt-2" id="amount-to-slider" min="0" max="1000000" value="@ViewBag.paymentFilters.PaymentAmountTo" oninput="updateAmountTo(this.value)">
+            </div>
 
-    <div>
-        <label for="payment-date-from">Date From:</label>
-        <input type="date" name="payment-date-from" value="@ViewData["CreateDateFrom"]" />
-    </div>
+            <!-- Date Range -->
+            <div class="col-md-3 mb-3">
+                <label for="payment-date-from" class="form-label">Date From:</label>
+                <input type="date" class="form-control" name="payment-date-from" value="@ViewBag.paymentFilters.createDateFrom">
+            </div>
 
-    <div>
-        <label for="payment-date-to">Date To:</label>
-        <input type="date" name="payment-date-to" value="@ViewData["CreateDateTo"]" />
-    </div>
+            <div class="col-md-3 mb-3">
+                <label for="payment-date-to" class="form-label">Date To:</label>
+                <input type="date" class="form-control" name="payment-date-to" value="@ViewBag.paymentFilters.createDateTo">
+            </div>
+        </div>
 
-    <div>
-        <label for="status">Status:</label>
-        <input type="text" name="status" value="@ViewData["Status"]" />
-    </div>
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <input type="submit" class="btn btn-primary btn-sm w-100" value="Filter">
+            </div>
+            <div class="col-md-2 offset-md-8 d-flex justify-content-end">
+                <a asp-action="Create" class="btn btn-success">Create New</a>
+            </div>
+        </div>
+    </form>
 
-    <div>
-        <input type="submit" value="Filter" />
-    </div>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-
-            <th>Payment ID</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Transaction Id</th>
-            <th>
-                @Html.ActionLink("OrderCode", "Index", new
-                    {
-                        sortBy = "OrderCode",
-                        direction = ViewBag.PaginationParameter.Direction == "desc" ? "asc" : "desc",
-                        searchKey = ViewData["SearchKey"],
-                        paymentAmountFrom = ViewData["PaymentAmountFrom"],
-                        paymentAmountTo = ViewData["PaymentAmountTo"],
-                        paymentDateFrom = ViewData["CreateDateFrom"],
-                        paymentDateTo = ViewData["CreateDateTo"],
-                        status = ViewData["Status"],
-                        pageIndex = ViewData["CurrentPage"],
-                        pageSize = ViewData["PageSize"]
-                    })
-            </th>
-            </th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var payment in Model.List)
-        {
+    <!-- Payments Table -->
+    <table class="table table-bordered table-hover table-striped text-center">
+        <thead class="thead-dark">
             <tr>
-                <td>@payment.PaymentId</td>
-                <td>@payment.PaymentAmount</td>
-                <td>@payment.PaymentDate</td>
-                <td>@payment.Status</td>
-                <td>@payment.TransactionId</td>
-                <td>@payment.OrderId</td>
+                <th>
+                    @Html.ActionLink("PaymentId", "Index", new
+                        {
+                            sortBy = "PaymentId",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>
+                    @Html.ActionLink("Amount", "Index", new
+                        {
+                            sortBy = "PaymentAmount",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>
+                    @Html.ActionLink("Payment Date", "Index", new
+                        {
+                            sortBy = "Date",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>
+                    @Html.ActionLink("Status", "Index", new
+                        {
+                            sortBy = "Status",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>
+                    @Html.ActionLink("Transaction ID", "Index", new
+                        {
+                            sortBy = "TransactionId",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>
+                    @Html.ActionLink("Order Code", "Index", new
+                        {
+                            sortBy = "OrderCode",
+                            direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                            searchKey = ViewBag.paginationParameter.Search,
+                            paymentAmountFrom = ViewBag.paymentFilters.PaymentAmountFrom,
+                            paymentAmountTo = ViewBag.paymentFilters.PaymentAmountTo,
+                            paymentDateFrom = ViewBag.paymentFilters.createDateFrom,
+                            paymentDateTo = ViewBag.paymentFilters.createDateTo,
+                            status = ViewBag.paymentFilters.Status,
+                            pageIndex = ViewBag.paginationParameter.PageIndex
+                        })
+                </th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var payment in Model.List)
+            {
+                <tr>
+                    <td>@payment.PaymentId</td>
+                    <td>@payment.PaymentAmount</td>
+                    <td>@payment.PaymentDate</td>
+                    <td>@payment.Status</td>
+                    <td>@payment.TransactionId</td>
+                    <td>@payment.OrderId</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@payment.PaymentId">Edit</a>
+                        <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@payment.PaymentId">Details</a>
+                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@payment.PaymentId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-@* <nav>
-    <ul class="pagination">
-        @for (int i = 1; i <= Model.TotalPage; i++)
+    <!-- Pagination -->
+    @if (Model.List != null && Model.List.Any())
+    {
+        var maxPagesToShow = 5;
+        var currentPage = @ViewBag.paginationParameter.PageIndex;
+        var totalPages = Model.TotalPage;
+
+        var startPage = Math.Max(1, currentPage - maxPagesToShow / 2);
+        var endPage = Math.Min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage <= maxPagesToShow - 2)
         {
-            int.TryParse(, out var pageInt);
-            <li class="page-item @(i == ViewData["CurrentPage"] ? "active" : "")">
-                <a class="page-link" href="?page-index=@i&search-key=@ViewData["SearchKey"]&payment-amount-from=@ViewData["PaymentAmountFrom"]&payment-amount-to=@ViewData["PaymentAmountTo"]&payment-date-from=@ViewData["CreateDateFrom"]&payment-date-to=@ViewData["CreateDateTo"]&status=@ViewData["Status"]">Page @i</a>
-            </li>
+            startPage = Math.Max(1, endPage - maxPagesToShow + 1);
         }
-    </ul>
-</nav>  *@
+
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination">
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="?page-index=@i&search-key=@ViewBag.paginationParameter.Search&payment-amount-from=@ViewBag.paymentFilters.PaymentAmountFrom&payment-amount-to=@ViewBag.paymentFilters.PaymentAmountTo&payment-date-from=@ViewBag.paymentFilters.createDateFrom&payment-date-to=@ViewBag.paymentFilters.createDateTo&status=@ViewBag.paymentFilters.Status">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+
+<!-- JavaScript for Syncing Range Slider and Input Values -->
+<script>
+    function updateAmountFrom(value) {
+        document.getElementById('amount-from-label').textContent = value;
+        document.getElementById('amount-from-input').value = value;
+    }
+
+    function updateAmountTo(value) {
+        document.getElementById('amount-to-label').textContent = value;
+        document.getElementById('amount-to-input').value = value;
+    }
+
+    function syncAmountFrom(value) {
+        document.getElementById('amount-from-label').textContent = value;
+        document.getElementById('amount-from-slider').value = value;
+    }
+
+    function syncAmountTo(value) {
+        document.getElementById('amount-to-label').textContent = value;
+        document.getElementById('amount-to-slider').value = value;
+    }
+</script>

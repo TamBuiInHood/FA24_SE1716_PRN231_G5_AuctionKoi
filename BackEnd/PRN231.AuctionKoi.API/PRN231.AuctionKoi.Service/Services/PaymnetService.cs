@@ -91,8 +91,8 @@ namespace KoiAuction.Service.Services
                     {
                         return new BusinessResult(Const.FAIL_CHECK_NUMBER_FILTER_CODE, Const.FAIL_CHECK_NUMBER_FILTER_MSG);
                     }
-                    filter = filter.And(x => x.PaymentAmount >= paymentFilter.PaymentAmountTo &&
-                                x.PaymentAmount <= paymentFilter.PaymentAmountFrom);
+                    filter = filter.And(x => x.PaymentAmount <= paymentFilter.PaymentAmountTo &&
+                                x.PaymentAmount >= paymentFilter.PaymentAmountFrom);
                 }
                 if (!string.IsNullOrEmpty(paymentFilter.Status))
                 {
@@ -101,14 +101,14 @@ namespace KoiAuction.Service.Services
 
                 switch (paginationParameter.SortBy?.Trim().ToLower())
                 {
-                    case "OrderId":
+                    case "orderid":
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                     ? paginationParameter.Direction.ToLower().Equals("desc")
                                    ? x => x.OrderByDescending(x => x.OrderId)
                                    : x => x.OrderBy(x => x.OrderId) : x => x.OrderBy(x => x.OrderId);
                         break;
 
-                    case "PaymentAmount":
+                    case "paymentamount":
 
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
@@ -116,27 +116,27 @@ namespace KoiAuction.Service.Services
                                : x => x.OrderBy(x => x.PaymentAmount) : x => x.OrderBy(x => x.PaymentAmount);
                         break;
 
-                    case "PaymentDate":
+                    case "paymentdate":
 
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
                                ? x => x.OrderByDescending(x => x.PaymentDate)
                                : x => x.OrderBy(x => x.PaymentDate) : x => x.OrderBy(x => x.PaymentDate);
                         break;
-                    case "Status":
+                    case "status":
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
                                ? x => x.OrderByDescending(x => x.Status)
                                : x => x.OrderBy(x => x.Status) : x => x.OrderBy(x => x.Status);
                         break;
 
-                    case "TransactionId":
+                    case "transactionid":
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
                                ? x => x.OrderByDescending(x => x.TransactionId)
                                : x => x.OrderBy(x => x.TransactionId) : x => x.OrderBy(x => x.TransactionId);
                         break;
-                    case "OrderCode":
+                    case "ordercode":
                         orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
                                 ? paginationParameter.Direction.ToLower().Equals("desc")
                                ? x => x.OrderByDescending(x => x.Order.OrderCode)

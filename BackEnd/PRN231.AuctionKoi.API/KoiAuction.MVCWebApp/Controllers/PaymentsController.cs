@@ -1,33 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using KoiAuction.Repository.Entities;
 using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Common;
 using KoiAuction.Service.Base;
 using Newtonsoft.Json;
-using KoiAuction.BussinessModels.Proposal;
-using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
 using PRN231.AuctionKoi.Common.Utils;
 using KoiAuction.BussinessModels.Filters;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
     public class PaymentsController : Controller
     {
 
-        private readonly Fa24Se1716Prn231G5KoiauctionContext _context;
+        double? paymentAmountFrom;
 
-        public PaymentsController(Fa24Se1716Prn231G5KoiauctionContext context)
+        public PaymentsController()
         {
-            _context = context;
         }
 
         // GET: Payments
@@ -40,8 +29,8 @@ namespace KoiAuction.MVCWebApp.Controllers
                 [FromQuery(Name = "payment-date-from")] DateTime? paymentDateFrom,
                 [FromQuery(Name = "payment-date-to")] DateTime? paymentDateTo,
                 [FromQuery(Name = "status")] string? status,
-                [FromQuery] int pageIndex = 1,
-                [FromQuery] int pageSize = 5)
+                [FromQuery(Name = "page-index")] int pageIndex = 1,
+                [FromQuery] int pageSize = 3)
         {
             // Build pagination and filter objects
             var paginationParameter = new PaginationParameter
@@ -52,7 +41,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 Direction =  direction,
                 SortBy = sortBy,
             };
-            ViewBag.PaginationParameter = paginationParameter;
+            ViewBag.paginationParameter = paginationParameter;
 
             var paymentFilters = new PaymentFilters
             {
@@ -152,9 +141,9 @@ namespace KoiAuction.MVCWebApp.Controllers
         }
 
         // GET: Payments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId");
+            ViewData["OrderId"] = new SelectList(await this.GetOrder(), "OrderId", "OrderId");
             return View();
         }
 
@@ -195,7 +184,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
+                ViewData["OrderId"] = new SelectList(await this.GetOrder(), "OrderId", "OrderId", payment.OrderId);
                 return View(payment);
             }
         }
@@ -264,7 +253,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
+                ViewData["OrderId"] = new SelectList(await this.GetOrder(), "OrderId", "OrderId", payment.OrderId);
                 return View(payment);
             }
         }

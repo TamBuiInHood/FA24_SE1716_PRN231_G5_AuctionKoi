@@ -9,7 +9,6 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         void Save();
         Task<int> SaveAsync();
         public PaymentRepository PaymentRepository{ get; }
-        public OrderRepository OrderRepository{ get; }
         public ProposalRepository ProposalRepository{ get; }
         public UserAuctionRepository UserAuctionRepository { get; }
         public UserRepository UserRepository { get; }
