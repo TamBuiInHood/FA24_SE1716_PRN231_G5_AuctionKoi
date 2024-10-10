@@ -61,7 +61,13 @@ namespace PRN231.AuctionKoi.Repository.Repositories
 
         public virtual async Task<TEntity> GetByID(int id)
         {
-            return await dbSet.FindAsync(id)!;
+            //return await dbSet.FindAsync(id)!;
+            var entity = context.Set<TEntity>().Find(id);
+            if (entity != null)
+            {
+                context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity!;
         }
 
         public virtual async Task<TEntity> GetByCondition(Expression<Func<TEntity, bool>> filter , string includeProperties = "")

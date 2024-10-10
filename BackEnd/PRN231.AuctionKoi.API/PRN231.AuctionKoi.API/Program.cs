@@ -134,6 +134,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("Cors");
 
 app.UseWebSockets(webSocketOptions);
 app.UseHttpsRedirection();
