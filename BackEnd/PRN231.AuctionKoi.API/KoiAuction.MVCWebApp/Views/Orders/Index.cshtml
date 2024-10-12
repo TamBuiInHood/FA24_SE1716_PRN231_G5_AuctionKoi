@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var pageIndex = (int)(ViewData["PageIndex"] ?? 1);
+    var pageSize = (int)(ViewData["PageSize"] ?? 10);
 }
 
 <h1>Index</h1>
@@ -9,57 +11,40 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div>
+        <label for="OrderCodeSearch">Order Code:</label>
+        <input type="text" name="OrderCodeSearch" value="@ViewData["OrderCodeSearch"]" />
+
+        <label for="TaxCodeSearch">Tax Code:</label>
+        <input type="text" name="TaxCodeSearch" value="@ViewData["TaxCodeSearch"]" />
+
+        <label for="StatusSearch">Status:</label>
+        <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" />
+
+        <button type="submit">Search</button>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalProduct)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TaxCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeliveryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingMethod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingTrackingCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParticipationFee)
-            </th>
-     @*        <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th> *@
+            <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
+            <th>@Html.DisplayNameFor(model => model.Vat)</th>
+            <th>@Html.DisplayNameFor(model => model.TotalPrice)</th>
+            <th>@Html.DisplayNameFor(model => model.TotalProduct)</th>
+            <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.TaxCode)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingAddress)</th>
+            <th>@Html.DisplayNameFor(model => model.DeliveryDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Note)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingCost)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingMethod)</th>
+            <th>@Html.DisplayNameFor(model => model.Discount)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingTrackingCode)</th>
+            <th>@Html.DisplayNameFor(model => model.ParticipationFee)</th>
             <th></th>
         </tr>
     </thead>
@@ -92,3 +77,23 @@
     </tbody>
 </table>
 
+<div>
+    @if (Model.Any())
+    {
+        <div>
+            @if (pageIndex > 1)
+            {
+                <a asp-action="Index" asp-route-pageIndex="@(pageIndex - 1)" asp-route-orderCodeSearch="@ViewData["OrderCodeSearch"]" asp-route-taxCodeSearch="@ViewData["TaxCodeSearch"]" asp-route-statusSearch="@ViewData["StatusSearch"]">Previous</a>
+            }
+
+            @if (Model.Count() == pageSize)
+            {
+                <a asp-action="Index" asp-route-pageIndex="@(pageIndex + 1)" asp-route-orderCodeSearch="@ViewData["OrderCodeSearch"]" asp-route-taxCodeSearch="@ViewData["TaxCodeSearch"]" asp-route-statusSearch="@ViewData["StatusSearch"]">Next</a>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No data available.</p>
+    }
+</div>

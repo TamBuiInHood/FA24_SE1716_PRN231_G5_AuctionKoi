@@ -47,6 +47,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                             var data = JsonConvert.DeserializeObject<PageEntity<OrderModel>>(result.Data.ToString());
                             return View(data.List.ToList());
                         }
+                        return View(new List<OrderModel>());
                     }
                     return View();
                 }

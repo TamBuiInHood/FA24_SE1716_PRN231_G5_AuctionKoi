@@ -25,7 +25,7 @@ namespace KoiAuction.API.Controllers
 
         // GET: api/Orders
         [HttpGet(APIRoutes.Order.Get, Name = "GetOrderAsync")]
-        public async Task<IActionResult> GetOrder([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int? pageIndex = null, [FromQuery] int? pageSize = null)
+        public async Task<IActionResult> GetOrder([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int? pageIndex , [FromQuery] int? pageSize )
         {
             try
             {

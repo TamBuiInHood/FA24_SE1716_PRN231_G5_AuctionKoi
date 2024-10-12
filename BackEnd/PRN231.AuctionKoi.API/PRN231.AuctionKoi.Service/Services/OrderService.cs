@@ -78,7 +78,8 @@ namespace KoiAuction.Service.Services
                 {
                     orders = orders.Where(o =>
                         (o.OrderCode != null && o.OrderCode.Contains(searchKey)) ||
-                        (o.User.UserName != null && o.User.UserName.Contains(searchKey)));
+                        (o.TaxCode != null && o.TaxCode.Contains(searchKey)) ||
+                        (int.TryParse(searchKey, out int statusKey) && o.Status == statusKey));
                 }
                 if (!string.IsNullOrWhiteSpace(orderBy))
                 {
@@ -154,7 +155,7 @@ namespace KoiAuction.Service.Services
 
 
                 mapEntity.TotalPrice = auPrice * mapEntity.TotalProduct
-                                       + (mapEntity.Vat.Value * totalProductPrice)
+                                       + (mapEntity.Vat.Value * auPrice)
                                        + (mapEntity.ShippingCost ?? 0)
                                        + (mapEntity.ParticipationFee ?? 0)
                                        - (orderModel.Discount ?? 0);
