@@ -133,6 +133,14 @@ builder.Services.AddScoped<IProposalService, ProposalService>();
 builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
 builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IWebSocketService, WebSocketService>();
+
+
+// Config WebSocket
+var webSocketOptions = new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(5),
+};
 
 var app = builder.Build();
 
@@ -142,7 +150,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("Cors");
 
+app.UseWebSockets(webSocketOptions);
 app.UseHttpsRedirection();
 app.UseCors("Cors");
 app.UseAuthorization();

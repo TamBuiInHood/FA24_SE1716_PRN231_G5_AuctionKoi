@@ -1,6 +1,9 @@
-﻿@{
+﻿@using PRN231.AuctionKoi.API.Payloads
+@{
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "DetailProposal";
+    var baseUrl = APIRoutes.Host.ToString() + APIRoutes.Base.ToString();
+    var wsUrl = APIRoutes.WSHost.ToString() + APIRoutes.WS_Url.ToString();
 }
 
 <div class="container">
@@ -287,8 +290,9 @@
                     </section>
 
 
-                    <footer class="card-proposal-section-footer d-flex justify-content-center p-3">
-                        <button class="fs-4 p-3" onclick="placeBid()">Bid: <span id="bid-total">$1,050</span></button>
+                    <footer class="card-proposal-section-footer d-flex flex-column align-items-center p-3">
+                        <div id="text-warning-bid" class="fw-bold fs-3 text-danger" style="display: none">Waiting for your turn</div>
+                        <button id="btn-bid" class="fs-4 p-3" onclick="placeBid()">Bid: <span id="bid-total">$1,050</span></button>
                     </footer>
                 </div>
             </div>
@@ -298,127 +302,7 @@
                     <h1 class="h5 fw-600">Past Bids</h1>
                 </header>
                 <dl class="card-past-bids-list py-2 px-3">
-                    <!-- <div class="my-2 card-past-bids-none">
-                      <div class="p-3 w-100">
-                        <dt class="fw-bold d-flex align-items-center justify-content-between">
-                          No Bids Yet
-                        </dt>
-                        <dd class="fw-semibold">Be the first to bid!</dd>
-                      </div>
-                    </div> -->
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-                    <div class="my-2 card-past-bids-list-item">
-                        <div class="px-3 py-2 w-100">
-                            <dt class="fs-3 fw-bold d-flex align-items-center justify-content-between">
-                                lequangdung232@gmail.com - $1,000
-                            </dt>
-                            <dd class="fw-semibold">9/23/2024, 3:30 AM</dd>
-                        </div>
-                    </div>
-
+                    <div id="loadingMessage" class="errorMessage">Waiting for data...</div>
                 </dl>
             </div>
         </div>
@@ -426,42 +310,10 @@
 </div>
 
 <script>
-    const pauseIcon = document.getElementById("pauseIcon");
-    pauseIcon.classList.add("hidden");
-
-    function toggleVideo(button) {
-        const video = button.querySelector("video");
-        const playIcon = document.getElementById("playIcon");
-
-        if (video.paused) {
-            video.play();
-            playIcon.classList.add("hidden"); // Thêm lớp 'hidden' để ẩn biểu tượng Play
-            pauseIcon.classList.remove("hidden"); // Loại bỏ lớp 'hidden' để hiện biểu tượng Pause
-        } else {
-            video.pause();
-            playIcon.classList.remove("hidden"); // Loại bỏ lớp 'hidden' để hiện biểu tượng Play
-            pauseIcon.classList.add("hidden"); // Thêm lớp 'hidden' để ẩn biểu tượng Pause
-        }
-    }
-
-    // Thêm sự kiện hover cho nút
-    const detailVideoButton = document.querySelector(
-        ".detail-proposal-video"
-    );
-    detailVideoButton.addEventListener("mouseover", function () {
-        const video = this.querySelector("video");
-        if (!video.paused) {
-            // Nếu video đang chạy, hiện biểu tượng Pause
-            pauseIcon.classList.remove("hidden");
-        }
-    });
-    detailVideoButton.addEventListener("mouseout", function () {
-        const video = this.querySelector("video");
-        if (!video.paused) {
-            // Nếu video đang chạy, ẩn biểu tượng Pause
-            pauseIcon.classList.add("hidden");
-        }
-    });
+    baseUrl = '@baseUrl';
+    wsUrl = '@wsUrl'
+    auctionId = '@ViewBag.AuctionId';
+    fishId = '@ViewBag.FishId';
 </script>
 <script>
    

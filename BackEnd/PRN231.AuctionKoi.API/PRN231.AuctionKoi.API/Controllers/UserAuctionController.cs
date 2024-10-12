@@ -42,11 +42,26 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpGet(APIRoutes.UserAuction.GetByID, Name = "GetUserAuctionByIdAsync")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute(Name = "bid-id")] string bidId)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] string bidId)
         {
             try
             {
                 var result = await _userAuctionService.GetByID(bidId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[Authorize(Roles = )]
+        [HttpGet(APIRoutes.UserAuction.GetByAuctionIdAndFishId, Name = "GetByAuctionIdAndFishIdAsync")]
+        public async Task<IActionResult> GetByAuctionIdAndFishIdAsync([FromRoute] string auctionId, [FromRoute] string fishId)
+        {
+            try
+            {
+                var result = await _userAuctionService.GetByAuctionIdAndFishId(auctionId, fishId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -65,14 +80,15 @@ namespace KoiAuction.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var insertEntity = new UserAuctionModel
+                var insertEntity = new CreateUserAuctionModel
                 {
                     BidCode = CodeHelper.GenerateCode(),
                     CreateDate = DateTime.Now,
                     IsWinner = reqObj.IsWinner,
                     Price = reqObj.Price,
                     UserId = reqObj.UserId,
-                    FishId = reqObj.FishId
+                    FishId = reqObj.FishId,
+                    AuctionId = reqObj.AuctionId
                 };
 
                 var result = await _userAuctionService.Insert(insertEntity);
@@ -86,7 +102,7 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpPut(APIRoutes.UserAuction.Update, Name = "UpdateUserAuctionAsync")]
-        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "bid-id")] int bidId,
+        public async Task<IActionResult> UpdateAsync([FromRoute] int bidId,
             [FromBody] UserAuctionRequest reqObj)
         {
             try
@@ -95,16 +111,16 @@ namespace KoiAuction.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var updateEntity = new UserAuctionModel
+                var updateEntity = new UpdateUserAuctionModel
                 {
-                    BidId = bidId,
                     IsWinner = reqObj.IsWinner,
                     Price = reqObj.Price,
                     UserId = reqObj.UserId,
                     FishId = reqObj.FishId,
+                    AuctionId = reqObj.AuctionId
                 };
 
-                var result = await _userAuctionService.Update(updateEntity);
+                var result = await _userAuctionService.Update(bidId, updateEntity);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -115,7 +131,7 @@ namespace KoiAuction.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpDelete(APIRoutes.UserAuction.Delete, Name = "DeleteUserAuctionAsync")]
-        public async Task<IActionResult> DeleteAsync([FromRoute(Name = "bid-id")] int bidId)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int bidId)
         {
             try
             {

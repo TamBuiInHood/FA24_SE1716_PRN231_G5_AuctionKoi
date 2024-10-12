@@ -15,8 +15,9 @@ namespace KoiAuction.Service.ISerivice
     {
         Task<IBusinessResult> Get(PaginationParameter paginationParameter, UserAuctionFilters userAuctionFilters);
         Task<IBusinessResult> GetByID(string id);
-        Task<IBusinessResult> Insert(UserAuctionModel entityinsert);
-        Task<IBusinessResult> Update(UserAuctionModel entityUpdate);
+        Task<IBusinessResult> GetByAuctionIdAndFishId(string? fishId, string? auctionId);
+        Task<IBusinessResult> Insert(CreateUserAuctionModel entityinsert);
+        Task<IBusinessResult> Update(int bidId, UpdateUserAuctionModel entityUpdate);
         Task<IBusinessResult> Delete(int bidId);
     }
 }
