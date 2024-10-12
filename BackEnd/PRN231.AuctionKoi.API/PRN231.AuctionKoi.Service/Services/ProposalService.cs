@@ -218,6 +218,7 @@ namespace KoiAuction.Service.Services
                 var data = _mappper.Map<Proposal>(entityinsert);
                 data.FarmCode = "Farm" + Guid.NewGuid().ToString();
                 data.IsDeleted = false;
+                data.UpdateDate = DateTime.Now;
                 await _unitOfWork.ProposalRepository.Insert(data);
                 var result = await _unitOfWork.SaveAsync();
                 if(result > 0)

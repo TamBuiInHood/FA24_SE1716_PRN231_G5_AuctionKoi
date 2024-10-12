@@ -50,9 +50,43 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="exampleFormControlFarmName" class="form-label">FarmName</label>
+                        <input type="text" class="form-control" id="exampleFormControlFarmName" placeholder="FarmName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="exampleFormControlLocation" placeholder="Location">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlAvatar" class="form-label">Avatar</label>
+                        <input type="text" class="form-control" id="exampleFormControlAvatar" placeholder="Avatar URL">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlCreateDate" class="form-label">CreateDate</label>
+                        <input type="date" class="form-control" id="exampleFormControlCreateDate" placeholder="CreateDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlStatus" class="form-label">Status</label>
+                        <input type="text" class="form-control" id="exampleFormControlStatus" placeholder="Status">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlDescription" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="exampleFormControlDescription" placeholder="Description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlOwner" class="form-label">Owner</label>
+                        <input type="text" class="form-control" id="exampleFormControlOwner" placeholder="Owner">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlDescription" class="form-label">UserFullName</label>
+                        <select class="form-select" id="autoSizingSelect">
+                            <option selected>Choose...</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btSave" type="button" class="btn btn-primary">Save</button>
+                    <button id="btSave" onclick="createProposal()" type="button" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             }
@@ -70,7 +104,7 @@
             alert("Load data progressing ...");
 
             $.ajax({
-                url: 'https://localhost:7094/auction-koi/proposals',
+                url: 'https://localhost:7094/auction-koi/proposals?&page-index=0&page-size=100',
                 type: "GET",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
@@ -101,7 +135,67 @@
                     alert(xhr.statusText);
                 }
             });
+
+            $.ajax({
+                url: 'https://localhost:7094/auction-koi/proposals/user',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    // Xóa option "Choose..." hiện tại
+                    $("#autoSizingSelect").empty();
+
+                    // Duyệt qua response và thêm các option vào select
+                    $.each(result.data, function (index, item) {
+                        // Thêm option vào select, với item.value là giá trị bạn muốn
+                        $("#autoSizingSelect").append(
+                            $('<option>', {
+                                value: item.userId,  // Gắn giá trị vào thuộc tính value
+                                text: item.fullName  // Gắn tên hoặc nội dung vào option
+                            })
+                        );
+                    });
+                },
+                error: function (xhr, error) {
+                    alert(xhr.statusText);
+                }
+            });
         }
+
+
+        $("#btSave").click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: 'https://localhost:7094/auction-koi/proposals/create-proposal',
+                headers: {
+                    'Accept': 'application/json', // Đảm bảo rằng bạn sử dụng 'application/json'
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: JSON.stringify({
+                    farmName: $("#exampleFormControlFarmName").val(),
+                    location: $("#exampleFormControlLocation").val(),
+                    avatarUrl: $("#exampleFormControlAvatar").val(), // Không gửi file mà gửi URL
+                    createDate: $("#exampleFormControlCreateDate").val(),
+                    status: $("#exampleFormControlStatus").val(),
+                    description: $("#exampleFormControlDescription").val(),
+                    owner: $("#exampleFormControlOwner").val(),
+                    userId: $("#autoSizingSelect").val()
+                }),
+                success: function (result) {
+                    if (result.status >= 1) {
+                        $('#proposalModal').modal('hide');
+                        loadData();
+                    }
+                    alert(result.message);
+                },
+                error: function (xhr, error) {
+                    alert(xhr.responseText);
+                    console.log(xhr)
+                }
+            })
+        });
 
         function add() {
             $("#proposalModalContent").html("");
@@ -109,6 +203,8 @@
 
             $('#proposalModal').modal('show');
         }
+
+       
 
     </script>
 }
