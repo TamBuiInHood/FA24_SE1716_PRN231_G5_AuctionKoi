@@ -40,6 +40,8 @@
 
             public const string GetAllOrder = Base + "/payments/orders";
 
+            public const string GetOData = Base + "/payments/get-odata";
+
         }
 
         public static class Proposal

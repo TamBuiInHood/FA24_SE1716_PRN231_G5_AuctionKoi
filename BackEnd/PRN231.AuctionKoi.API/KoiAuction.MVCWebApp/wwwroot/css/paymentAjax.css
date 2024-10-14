@@ -1,0 +1,41 @@
+﻿/* General Modal Styling */
+.modal-content {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.modal-header {
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.btn-close-white {
+    filter: invert(100%);
+}
+
+/* Bank List Table Styling */
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table thead {
+    border-bottom: 2px solid #ddd;
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid #ddd;
+}
+
+.table th {
+    vertical-align: middle;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.text-end {
+    text-align: right;
+}

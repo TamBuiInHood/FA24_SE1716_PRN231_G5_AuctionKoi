@@ -203,7 +203,8 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
             }
-            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, payment);
+            var mapdto = _mapper.Map<PaymentModel>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
 
         }
 
@@ -257,6 +258,17 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+        }
+
+        public async Task<IBusinessResult> getPaymentsOData()
+        {
+            var payment = await _unitOfWork.PaymentRepository.GetAllNoPaging();
+            if (!payment.Any())
+            {
+                return new BusinessResult(status: Const.WARNING_NO_DATA_CODE, message: Const.WARNING_NO_DATA_MSG);
+            }
+            var mapdto = _mapper.Map<IEnumerable<PaymentModel>>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
         }
     }
 }

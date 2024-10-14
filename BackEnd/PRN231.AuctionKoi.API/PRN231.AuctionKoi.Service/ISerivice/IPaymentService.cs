@@ -18,5 +18,6 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> Insert(PaymentModel entityinsert);
         Task<IBusinessResult> Update(PaymentModel entityUpdate);
         Task<IBusinessResult> Delete(int id);
+        Task<IBusinessResult> getPaymentsOData();
     }
 }
