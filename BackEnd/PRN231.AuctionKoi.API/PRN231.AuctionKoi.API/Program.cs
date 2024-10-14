@@ -16,12 +16,26 @@ using KoiAuction.Service.Base;
 using KoiAuction.Repository.Entities;
 using KoiAuction.Repository.IRepositories;
 using KoiAuction.Repository.Repositories;
-
+using KoiAuction.BussinessModels.DetailProposalModel;
+using KoiAuction.BussinessModels.Proposal;
+using KoiAuction.BussinessModels.PaymentModels;
+using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.ModelBuilder;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddOData(opt => opt
+    .AddRouteComponents("odata", GetEdmModel())
+    .Select()
+    .Expand()
+    .Filter()
+    .OrderBy()
+    .Count()
+    .SetMaxTop(100)
+);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<Fa24Se1716Prn231G5KoiauctionContext>(options =>
@@ -100,11 +114,11 @@ var mapper = new MapperConfiguration(mc =>
 builder.Services.AddSingleton(mapper.CreateMapper());
 
 // Register repositories
-builder.Services.AddScoped<IBusinessResult,BusinessResult>();
+builder.Services.AddScoped<IBusinessResult, BusinessResult>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
-builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IProposalRepository, ProposalRepository>();
 builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
@@ -118,7 +132,6 @@ builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
 builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
-
 
 // Config WebSocket
 var webSocketOptions = new WebSocketOptions()
@@ -144,3 +157,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+IEdmModel GetEdmModel()
+{
+    var builder = new ODataConventionModelBuilder();
+    //builder.EntitySet<ProposalModel>("Proposals");
+    //builder.EntitySet<DetailProposalModel>("DetailProposals");
+    builder.EntitySet<PaymentModel>("Payments");
+
+    return builder.GetEdmModel();
+}
