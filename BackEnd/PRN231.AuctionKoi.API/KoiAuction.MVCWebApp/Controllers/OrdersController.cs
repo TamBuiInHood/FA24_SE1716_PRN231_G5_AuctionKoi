@@ -29,14 +29,52 @@ namespace KoiAuction.MVCWebApp.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
+        //    //return View(await auctionKoiOfficialContext.ToListAsync());
+
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders"))
+        //        {
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                var content = await response.Content.ReadAsStringAsync();
+        //                var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+        //                if (result != null && result.Data != null)
+        //                {
+        //                    var data = JsonConvert.DeserializeObject<PageEntity<OrderModel>>(result.Data.ToString());
+        //                    return View(data.List.ToList());
+        //                }
+        //                return View(new List<OrderModel>());
+        //            }
+        //            return View();
+        //        }
+
+        //    }
+
+        //}
+        public async Task<IActionResult> Index(int? pageIndex, int? pageSize, string? OrderCodeSearch, string? TaxCodeSearch, string? StatusSearch)
         {
-            //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
-            //return View(await auctionKoiOfficialContext.ToListAsync());
+
+            ViewData["OrderCodeSearch"] = OrderCodeSearch;
+            ViewData["TaxCodeSearch"] = TaxCodeSearch;
+            ViewData["StatusSearch"] = StatusSearch;
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders"))
+                var uri = $"{Const.APIEndPoint}orders?pageIndex={pageIndex ?? 0}&pageSize={pageSize ?? 10}";
+
+
+                var searchKey = OrderCodeSearch ?? TaxCodeSearch ?? StatusSearch;
+
+                if (!string.IsNullOrEmpty(searchKey))
+                {
+                    uri += $"&searchKey={searchKey}";
+                }
+
+                using (var response = await httpClient.GetAsync(uri))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -45,16 +83,17 @@ namespace KoiAuction.MVCWebApp.Controllers
                         if (result != null && result.Data != null)
                         {
                             var data = JsonConvert.DeserializeObject<PageEntity<OrderModel>>(result.Data.ToString());
+                            ViewData["TotalPages"] = data.TotalPage;
+                            ViewData["CurrentPage"] = pageIndex ?? 1;
                             return View(data.List.ToList());
                         }
                         return View(new List<OrderModel>());
                     }
-                    return View();
+                    return View(new List<OrderModel>());
                 }
-
             }
-
         }
+
 
 
 
