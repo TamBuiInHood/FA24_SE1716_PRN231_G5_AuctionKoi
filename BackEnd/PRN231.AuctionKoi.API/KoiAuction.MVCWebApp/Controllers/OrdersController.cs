@@ -215,7 +215,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", order.UserId);
+                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
                 ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View(order);
             }
