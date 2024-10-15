@@ -22,9 +22,6 @@
                     <th class="card-title text-center">OrderId</th>
                     <th class="card-title text-center">BidId</th>
                     <th class="card-title text-center">Price</th>
-                    <th class="card-title text-center">Bid</th>
-                    <th class="card-title text-center">Order</th>
-                    <th class="card-title text-center">Actions</th>
                 </tr>
             </thead>
             <tbody class="tblOrderDetail">
@@ -64,7 +61,7 @@
 
         function loadOrderDetails() {
             $.ajax({
-                url: 'http://localhost:5155/auction-koi/orderdetails',
+                url: 'https://localhost:7094/auction-koi/orders/orderdetail',
                 type: "GET",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
@@ -76,8 +73,6 @@
                             html += '<td>' + item.orderId + '</td>';
                             html += '<td>' + item.bidId + '</td>';
                             html += '<td>' + item.price + '</td>';
-                            html += '<td>' + (item.bid ? item.bid : 'N/A') + '</td>';
-                            html += '<td>' + (item.order ? item.order : 'N/A') + '</td>';
                             html += '</tr>';
                         });
                     } else {

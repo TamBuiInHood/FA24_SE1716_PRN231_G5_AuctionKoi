@@ -2,7 +2,7 @@
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
-    public class Orderdetail : Controller
+    public class OrderDetail : Controller
     {
         public IActionResult Index()
         {
