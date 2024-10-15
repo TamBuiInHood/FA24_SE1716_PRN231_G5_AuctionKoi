@@ -28,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KoiAuction.BussinessModels\KoiAuction.BussinessModels.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.API\KoiAuction.API.csproj" />
+    <ProjectReference Include="..\PRN231.AuctionKoi.Common\KoiAuction.Common.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Repository\KoiAuction.Repository.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Service\KoiAuction.Service.csproj" />
   </ItemGroup>

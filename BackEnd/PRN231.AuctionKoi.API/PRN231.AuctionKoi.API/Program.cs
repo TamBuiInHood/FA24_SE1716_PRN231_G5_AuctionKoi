@@ -123,7 +123,9 @@ builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-
+builder.Services.AddScoped<IAuctionService, AuctionService>();
+builder.Services.AddScoped<IAutionRepository, AutionRepository>();
+builder.Services.AddScoped<IAuctionTypeRepository, AuctionTypeRepository>();
 // Register servicies
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
