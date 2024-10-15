@@ -6,6 +6,7 @@ using KoiAuction.Common.Enums;
 using KoiAuction.Repository.Entities;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
+using PRN231.AuctionKoi.Common.Utils;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,8 @@ namespace KoiAuction.Service.Services
                 {
                     return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
                 }
+
+               
                 if (!string.IsNullOrWhiteSpace(searchKey))
                 {
                     orders = orders.Where(o =>
@@ -81,6 +84,7 @@ namespace KoiAuction.Service.Services
                         (o.TaxCode != null && o.TaxCode.Contains(searchKey)) ||
                         (int.TryParse(searchKey, out int statusKey) && o.Status == statusKey));
                 }
+
                 if (!string.IsNullOrWhiteSpace(orderBy))
                 {
                     orders = orderBy.ToLower() switch
@@ -90,15 +94,21 @@ namespace KoiAuction.Service.Services
                         _ => orders
                     };
                 }
-                var items = orders.Skip((pageIndex ?? 0) * (pageSize ?? 10))
+
+
+                int currentPageIndex = (pageIndex ?? 1) - 1; 
+                var items = orders.Skip(currentPageIndex * (pageSize ?? 10))
                                   .Take(pageSize ?? 10)
                                   .ToList();
+
                 var orderDtos = _mapper.Map<List<OrderModel>>(items);
+                var totalRecords = orders.Count();
+
                 var pageEntity = new PageEntity<OrderModel>
                 {
                     List = orderDtos,
-                    TotalPage = (int)Math.Ceiling((double)orders.Count() / (pageSize ?? 10)),
-                    TotalRecord = orders.Count()
+                    TotalPage = (int)Math.Ceiling((double)totalRecords / (pageSize ?? 10)),
+                    TotalRecord = totalRecords 
                 };
 
                 return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, pageEntity);
@@ -108,6 +118,8 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+
 
 
 

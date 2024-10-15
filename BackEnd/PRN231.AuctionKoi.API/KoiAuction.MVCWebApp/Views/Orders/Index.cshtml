@@ -77,23 +77,24 @@
     </tbody>
 </table>
 
-<div>
-    @if (Model.Any())
-    {
-        <div>
-            @if (pageIndex > 1)
-            {
-                <a asp-action="Index" asp-route-pageIndex="@(pageIndex - 1)" asp-route-orderCodeSearch="@ViewData["OrderCodeSearch"]" asp-route-taxCodeSearch="@ViewData["TaxCodeSearch"]" asp-route-statusSearch="@ViewData["StatusSearch"]">Previous</a>
-            }
+@{
+    var pagination = ViewBag.paginationParameter;
+}
 
-            @if (Model.Count() == pageSize)
-            {
-                <a asp-action="Index" asp-route-pageIndex="@(pageIndex + 1)" asp-route-orderCodeSearch="@ViewData["OrderCodeSearch"]" asp-route-taxCodeSearch="@ViewData["TaxCodeSearch"]" asp-route-statusSearch="@ViewData["StatusSearch"]">Next</a>
-            }
-        </div>
-    }
-    else
-    {
-        <p>No data available.</p>
-    }
-</div>
+<nav>
+    <ul class="pagination">
+        <!-- Nút Previous -->
+        <li class="@(pagination.PageIndex > 1 ? "" : "disabled")">
+            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex > 1 ? pagination.PageIndex - 1 : 1, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Previous">
+                <span aria-hidden="true">&laquo; Previous</span>
+            </a>
+        </li>
+
+        <!-- Nút Next -->
+        <li class="@(pagination.PageIndex < pagination.TotalPage ? "" : "disabled")">
+            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex < pagination.TotalPage ? pagination.PageIndex + 1 : pagination.TotalPage, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Next">
+                <span aria-hidden="true">Next &raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

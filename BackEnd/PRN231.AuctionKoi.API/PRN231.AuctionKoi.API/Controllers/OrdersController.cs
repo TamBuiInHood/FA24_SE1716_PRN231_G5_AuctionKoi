@@ -11,6 +11,7 @@ using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Responses;
 using PRN231.AuctionKoi.API.Payloads;
 using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
+using PRN231.AuctionKoi.Common.Utils;
 
 namespace KoiAuction.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace KoiAuction.API.Controllers
 
         // GET: api/Orders
         [HttpGet(APIRoutes.Order.Get, Name = "GetOrderAsync")]
-        public async Task<IActionResult> GetOrder([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int? pageIndex , [FromQuery] int? pageSize )
+        public async Task<IActionResult> GetOrder([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int? pageIndex, [FromQuery] int? pageSize)
         {
             try
             {
@@ -42,6 +43,7 @@ namespace KoiAuction.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet(APIRoutes.Order.GetUser, Name = "GetUserAsync")]
         public async Task<IActionResult> GetUser()
         {
