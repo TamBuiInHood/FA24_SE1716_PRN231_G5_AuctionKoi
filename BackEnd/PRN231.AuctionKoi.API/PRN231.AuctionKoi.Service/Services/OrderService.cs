@@ -62,9 +62,7 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
-            
         }
-
         public async Task<IBusinessResult> Get(string? searchKey, string? orderBy, int? pageIndex = null, int? pageSize = null)
         {
             try
