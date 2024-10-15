@@ -62,8 +62,42 @@ namespace KoiAuction.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(APIRoutes.Order.GetUserAution, Name = "GetUserAutionAsync")]
+        public async Task<IActionResult> GetUserAution()
+        {
+            try
+            {
+                var result = await _orderService.GetUserAution();
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("User not found.");
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(APIRoutes.Order.GetOrderDetail, Name = "GetOrderDetailAsync")]
+        public async Task<IActionResult> GetOrderDetail()
+        {
+            try
+            {
+                var result = await _orderService.GetOrderDetail();
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("User not found.");
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(APIRoutes.Order.GetByID, Name = "GetByIdAsync")]
         public async Task<IActionResult> GetByIdAsync([FromRoute(Name = "search-id")] int searchId)
         {

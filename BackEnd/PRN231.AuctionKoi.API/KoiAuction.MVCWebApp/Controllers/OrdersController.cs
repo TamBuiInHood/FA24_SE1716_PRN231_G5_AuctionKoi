@@ -107,6 +107,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
             return View();
         }
 
@@ -148,6 +149,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             else
             {
                 ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View();
             }
         }
@@ -173,6 +175,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 }
             }
             ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
             return View(order);
   
         }
@@ -213,7 +216,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             else
             {
                 ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", order.UserId);
-
+                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View(order);
             }
         }
@@ -310,6 +313,28 @@ namespace KoiAuction.MVCWebApp.Controllers
                         }
                     }
                     return new List<User>();
+                }
+
+            }
+        }
+        public async Task<List<Repository.Entities.UserAuction>> GetUsersAution()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/useraution"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+                        if (result != null && result.Data != null)
+                        {
+                            var data = JsonConvert.DeserializeObject<List<Repository.Entities.UserAuction>>
+                                (result.Data.ToString());
+                            return data;
+                        }
+                    }
+                    return new List<Repository.Entities.UserAuction>();
                 }
 
             }

@@ -36,15 +36,45 @@ namespace KoiAuction.Service.Services
             }
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG,User);
         }
+        public async Task<IBusinessResult> GetUserAution()
+        {
+            var User = await _unitOfWork.UserAuctionRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, "User not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, User);
+        }
+        public async Task<IBusinessResult> GetOrderDetail()
+        {
+            var User = await _unitOfWork.OrderDetailRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, " not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, User);
+        }
         public async Task<IBusinessResult> Delete(int id)
         {
             try
             {
+
                 var order = await _unitOfWork.OrderRepository.GetByID(id);
 
                 if (order == null)
                 {
                     return new BusinessResult(Const.FAIL_DELETE_CODE, "Order not found.");
+                }
+
+                var orderDetails = await _unitOfWork.OrderRepository.GetByOrderId(id);
+                if (orderDetails != null && orderDetails.Any())
+                {
+                    foreach (var detail in orderDetails)
+                    {
+                        _unitOfWork.OrderDetailRepository.Delete(detail); 
+                    }
                 }
 
                 _unitOfWork.OrderRepository.Delete(order);
@@ -80,7 +110,7 @@ namespace KoiAuction.Service.Services
                     orders = orders.Where(o =>
                         (o.OrderCode != null && o.OrderCode.Contains(searchKey)) ||
                         (o.TaxCode != null && o.TaxCode.Contains(searchKey)) ||
-                        (int.TryParse(searchKey, out int statusKey) && o.Status == statusKey));
+                        (o.ShippingTrackingCode != null && o.ShippingTrackingCode.Contains(searchKey)));
                 }
 
                 if (!string.IsNullOrWhiteSpace(orderBy))

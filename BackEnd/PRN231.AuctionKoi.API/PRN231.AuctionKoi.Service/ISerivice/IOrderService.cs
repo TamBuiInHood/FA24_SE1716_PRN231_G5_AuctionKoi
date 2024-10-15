@@ -19,5 +19,7 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> Delete(int id);
 
         Task<IBusinessResult> GetUser();
+        Task<IBusinessResult> GetUserAution();
+        Task<IBusinessResult> GetOrderDetail();
     }
 }

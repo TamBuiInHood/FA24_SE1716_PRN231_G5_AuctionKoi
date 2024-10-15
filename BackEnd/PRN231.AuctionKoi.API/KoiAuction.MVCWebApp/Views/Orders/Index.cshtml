@@ -20,7 +20,7 @@
         <label for="TaxCodeSearch">Tax Code:</label>
         <input type="text" name="TaxCodeSearch" value="@ViewData["TaxCodeSearch"]" />
 
-        <label for="StatusSearch">Status:</label>
+        <label for="StatusSearch">ShippingTrackingCode:</label>
         <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" />
 
         <button type="submit">Search</button>
@@ -57,7 +57,25 @@
                 <td>@Html.DisplayFor(modelItem => item.TotalPrice)</td>
                 <td>@Html.DisplayFor(modelItem => item.TotalProduct)</td>
                 <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        @:Processing
+                    }
+                    else if (item.Status == 2)
+                    {
+                        @:Transporting
+                    }
+                    else if (item.Status == 3)
+                    {
+                        @:Completed
+                    }
+                    else if (item.Status == 4)
+                    {
+                        @:Rejected
+                    }
+                  
+                </td>
                 <td>@Html.DisplayFor(modelItem => item.TaxCode)</td>
                 <td>@Html.DisplayFor(modelItem => item.ShippingAddress)</td>
                 <td>@Html.DisplayFor(modelItem => item.DeliveryDate)</td>

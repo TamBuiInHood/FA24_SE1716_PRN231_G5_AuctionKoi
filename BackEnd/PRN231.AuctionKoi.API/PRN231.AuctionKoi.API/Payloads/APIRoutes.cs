@@ -112,6 +112,8 @@
             public const string Update = Base + "/orders/update/{order-id}";
             public const string Delete = Base + "/orders/{order-id}";
             public const string GetUser = Base + "/orders/user";
+            public const string GetUserAution = Base + "/orders/useraution";
+            public const string GetOrderDetail = Base + "/orders/orderdetail";
         }
 
 
