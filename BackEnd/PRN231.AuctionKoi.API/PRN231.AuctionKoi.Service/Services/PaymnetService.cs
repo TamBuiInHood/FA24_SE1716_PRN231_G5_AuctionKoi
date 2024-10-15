@@ -15,6 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Repository.Entities;
+using KoiAuction.BussinessModels.Filters;
+using KoiAuction.Common.Utils;
 
 
 namespace KoiAuction.Service.Services
@@ -42,58 +44,144 @@ namespace KoiAuction.Service.Services
             return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG, true);
         }
 
-        public async Task<IBusinessResult> Get(string? searchKey, string? orderBy, int pageIndex = PageDefault.PAGE_INDEX, int pageSize = PageDefault.PAGE_SIZE)
+        public async Task<IBusinessResult> Get(PaginationParameter paginationParameter, PaymentFilters paymentFilter)
         {
             try
             {
                 Expression<Func<Payment, bool>> filter = null!;
-                Func<IQueryable<Payment>, IOrderedQueryable<Payment>> sortBy = null!;
-                var validInt = 0;
-                var validDate = DateTime.Now;
-                if (int.TryParse(searchKey, out validInt))
-                {
-                    //filter = x => x.OrderId == validInt || x.TransactionId == validInt;
-                }
-                else if (DateTime.TryParse(searchKey, out validDate))
-                {
-                    filter = x => x.PaymentDate == validDate;
-                }
-                else if (!string.IsNullOrEmpty(searchKey))
-                {
-                    filter = x => x.Status!.ToLower().Contains(searchKey!.ToLower());
-                }
-                switch (orderBy)
-                {
-                    case "PaymentId":
-                        sortBy = x => x.OrderByDescending(a => a.PaymentId);
+                Func<IQueryable<Payment>, IOrderedQueryable<Payment>> orderBy = null!;
 
-                        break;
-                    case "PaymentAmount":
-                        sortBy = x => x.OrderByDescending(a => a.PaymentAmount);
+                if (!(paginationParameter.Search == null || paginationParameter.Search.Equals("")))
+                {
+                    int validInt = 0;
+                    double validDouble = 0;
 
+                    //var checkInt = int.TryParse(paginationParameter.Search, out validInt);
+                    //var checkDouble = double.TryParse(paginationParameter.Search, out validDouble);
+
+                    if (int.TryParse(paginationParameter.Search, out validInt))
+                    {
+                        filter = filter.And(x => x.PaymentId == validInt || x.OrderId == validInt);
+                    }
+                    else if (double.TryParse(paginationParameter.Search, out validDouble))
+                    {
+                        filter = filter.And(x => x.PaymentAmount.HasValue && Math.Abs(x.PaymentAmount.Value - validDouble) < 0.01);
+                    }
+                    else
+                    {
+                        filter = filter.And(x => x.Order.OrderCode!.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Order.ShippingMethod!.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.TransactionId!.ToLower().Contains(paginationParameter.Search.ToLower()));
+                    }
+                }
+
+                if (paymentFilter.createDateFrom.HasValue && paymentFilter.createDateTo.HasValue)
+                {
+                    if (paymentFilter.createDateFrom.Value > paymentFilter.createDateTo.Value)
+                    {
+                        return new BusinessResult(Const.FAIL_CHECK_DATE_FILTER_CODE, Const.FAIL_CHECK_DATE_FILTER_MSG);
+                    }
+                    filter = filter.And(x => x.PaymentDate >= paymentFilter.createDateFrom &&
+                                x.PaymentDate <= paymentFilter.createDateTo);
+                }
+
+                if (paymentFilter.PaymentAmountFrom.HasValue && paymentFilter.PaymentAmountTo.HasValue)
+                {
+                    if (paymentFilter.PaymentAmountFrom.Value > paymentFilter.PaymentAmountTo.Value)
+                    {
+                        return new BusinessResult(Const.FAIL_CHECK_NUMBER_FILTER_CODE, Const.FAIL_CHECK_NUMBER_FILTER_MSG);
+                    }
+                    filter = filter.And(x => x.PaymentAmount <= paymentFilter.PaymentAmountTo &&
+                                x.PaymentAmount >= paymentFilter.PaymentAmountFrom);
+                }
+                if (!string.IsNullOrEmpty(paymentFilter.Status))
+                {
+                    filter = filter.And(x => x.Status!.ToLower().Contains(paymentFilter.Status.ToLower()));
+                }
+
+                switch (paginationParameter.SortBy?.Trim().ToLower())
+                {
+                    case "orderid":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.OrderId)
+                                   : x => x.OrderBy(x => x.OrderId) : x => x.OrderBy(x => x.OrderId);
                         break;
-                    case "PaymentDate":
-                        sortBy = x => x.OrderByDescending(x => x.PaymentDate);
+
+                    case "paymentamount":
+
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.PaymentAmount)
+                               : x => x.OrderBy(x => x.PaymentAmount) : x => x.OrderBy(x => x.PaymentAmount);
                         break;
-                    case "Status":
-                        sortBy = x => x.OrderByDescending(x => x.Status);
+
+                    case "paymentdate":
+
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.PaymentDate)
+                               : x => x.OrderBy(x => x.PaymentDate) : x => x.OrderBy(x => x.PaymentDate);
+                        break;
+                    case "status":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.Status)
+                               : x => x.OrderBy(x => x.Status) : x => x.OrderBy(x => x.Status);
+                        break;
+
+                    case "transactionid":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.TransactionId)
+                               : x => x.OrderBy(x => x.TransactionId) : x => x.OrderBy(x => x.TransactionId);
+                        break;
+                    case "ordercode":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.Order.OrderCode)
+                               : x => x.OrderBy(x => x.Order.OrderCode) : x => x.OrderBy(x => x.Order.OrderCode);
                         break;
                     default:
-                        sortBy = x => x.OrderByDescending(a => a.PaymentId);
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                ? paginationParameter.Direction.ToLower().Equals("desc")
+                               ? x => x.OrderByDescending(x => x.PaymentId)
+                               : x => x.OrderBy(x => x.PaymentId) : x => x.OrderBy(x => x.PaymentId);
                         break;
                 }
 
                 string includeProperties = "Order";
-                var result = await _unitOfWork.PaymentRepository.Get(filter!, sortBy, includeProperties, pageIndex, pageSize);
+                var result = await _unitOfWork.PaymentRepository.Get(filter!, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
                 var pagin = new PageEntity<PaymentModel>();
                 pagin.List = _mapper.Map<IEnumerable<PaymentModel>>(result);
-                pagin.TotalRecord = await _unitOfWork.ProposalRepository.Count();
-                pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, pageSize);
+
+                pagin.TotalRecord = await _unitOfWork.PaymentRepository.Count(filter);
+                pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
                 return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, pagin);
             }
             catch (Exception ex)
             {
                 return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
+
+        public async Task<IBusinessResult> GetAllOrder()
+        {
+            try { 
+            var orders = await _unitOfWork.OrderRepository.GetAllNoPaging();
+                if (orders != null && orders.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders.ToList());
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new List<Order>());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
             }
         }
 
@@ -115,7 +203,8 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
             }
-            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, payment);
+            var mapdto = _mapper.Map<PaymentModel>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
 
         }
 
@@ -146,7 +235,7 @@ namespace KoiAuction.Service.Services
             {
                 entity.PaymentAmount = entityUpdate.PaymentAmount.Value;
             }
-            if (!entityUpdate.Status.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(entityUpdate.Status))
             {
                 entity.Status = entityUpdate.Status;
             }
@@ -154,9 +243,13 @@ namespace KoiAuction.Service.Services
             {
                 entity.PaymentDate = entityUpdate.PaymentDate.Value;
             }
-            if (!entityUpdate.PaymentMethod.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(entityUpdate.PaymentMethod))
             {
                 entity.PaymentMethod = entityUpdate.PaymentMethod;
+            }
+            if (!string.IsNullOrEmpty(entityUpdate.TransactionId))
+            {
+                entity.TransactionId = entityUpdate.TransactionId;
             }
             _unitOfWork.PaymentRepository.Update(entity);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
@@ -165,6 +258,17 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+        }
+
+        public async Task<IBusinessResult> getPaymentsOData()
+        {
+            var payment = await _unitOfWork.PaymentRepository.GetAllNoPaging();
+            if (!payment.Any())
+            {
+                return new BusinessResult(status: Const.WARNING_NO_DATA_CODE, message: Const.WARNING_NO_DATA_MSG);
+            }
+            var mapdto = _mapper.Map<IEnumerable<PaymentModel>>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
         }
     }
 }

@@ -4,6 +4,12 @@ namespace KoiAuction.MVCWebApp.Controllers
 {
     public class ClientsController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public ClientsController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public IActionResult HomePage()
         {
             return View("HomePage/Index");
@@ -30,8 +36,14 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             return View("AuctionDetail/Index");
         }
-        public IActionResult DetailProposal()
+
+        [Route("Clients/DetailProposal/{auctionId}/{fishId}")]
+        public IActionResult DetailProposal(int auctionId, int fishId)
         {
+            string baseUrl = _configuration.GetValue<string>("BaseUrl");
+            ViewBag.BaseUrl = baseUrl;
+            ViewBag.AuctionId = auctionId;
+            ViewBag.FishId = fishId;
             return View("DetailProposal/Index");
         }
     }

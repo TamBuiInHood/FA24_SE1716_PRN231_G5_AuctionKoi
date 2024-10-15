@@ -42,7 +42,7 @@ namespace KoiAuction.Service.Mappings
                 .ReverseMap();
             CreateMap<DetailProposal, CreateDetailProposalModel>().ReverseMap();
 
-            CreateMap<UserAuctionModel, UserAuction>()
+            CreateMap<CreateUserAuctionModel, UserAuction>()
                 .ForMember(dest => dest.Fish, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());

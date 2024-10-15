@@ -1,10 +1,15 @@
 ﻿using KoiAuction.API.Payloads.Requests.PaymentRequest;
+using KoiAuction.BussinessModels.Filters;
+using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.PaymentModels;
+using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Common.Constants;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using PRN231.AuctionKoi.API.Payloads;
+using PRN231.AuctionKoi.Common.Utils;
 
 namespace PRN231.AuctionKoi.API.Controllers
 {
@@ -17,6 +22,18 @@ namespace PRN231.AuctionKoi.API.Controllers
         public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
+        }
+
+        [EnableQuery]
+        [HttpGet(APIRoutes.Paymnet.GetOData, Name = "Get all payment by Odata")]
+        public async Task<IActionResult> GetPaymentByOData(PaginationParameter paginationParameter)
+        {
+            var payments = await _paymentService.getPaymentsOData();
+            if (payments.Data is IEnumerable<PaymentModel> list)
+            {
+                return Ok(list.AsQueryable());
+            }
+            return Ok("No data was found");
         }
 
         //[Authorize(Roles = )]
@@ -36,14 +53,11 @@ namespace PRN231.AuctionKoi.API.Controllers
 
         //[Authorize(Roles = )]
         [HttpGet(APIRoutes.Paymnet.Get, Name = "GetPaymentAsync")]
-        public async Task<IBusinessResult> GetAsync([FromQuery(Name = "order-by")] string? orderBy
-           , [FromQuery(Name = "search-key")] string? searchKey
-           , [FromQuery(Name = "page-index")] int pageIndex = PageDefault.PAGE_INDEX
-           , [FromQuery(Name = "page-size")] int pageSize = PageDefault.PAGE_SIZE)
+        public async Task<IBusinessResult> GetAsync(PaginationParameter paginationParameter, PaymentFilters paymentFilters)
         {
             //try
             //{
-            var result = await _paymentService.Get(searchKey, orderBy, pageIndex, pageSize);
+            var result = await _paymentService.Get(paginationParameter, paymentFilters);
             return result;
             //}
             //catch (Exception ex)
@@ -67,6 +81,20 @@ namespace PRN231.AuctionKoi.API.Controllers
             }
         }
 
+        [HttpGet(APIRoutes.Paymnet.GetAllOrder, Name = "GetAllOrder")]
+        public async Task<IActionResult> GetAllOrderAsync()
+        {
+            try
+            {
+                var result = await _paymentService.GetAllOrder();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //[Authorize(Roles = )]
         [HttpPut(APIRoutes.Paymnet.Update, Name = "UpdatePaymentAsync")]
         public async Task<IActionResult> UpdateAsync([FromRoute(Name = "payment-id")] int PaymentId,
@@ -80,7 +108,7 @@ namespace PRN231.AuctionKoi.API.Controllers
                 updateEntity.PaymentMethod = reqObj.PaymentMethod;
                 updateEntity.PaymentAmount = reqObj.PaymentAmount;
                 updateEntity.TransactionId = reqObj.TransactionId;
-
+                updateEntity.Status = reqObj.Status;
                 var result = await _paymentService.Update(updateEntity);
                 return Ok(result);
             }
@@ -102,7 +130,7 @@ namespace PRN231.AuctionKoi.API.Controllers
                 insertEntity.PaymentAmount = reqObj.PaymentAmount;
                 insertEntity.TransactionId = reqObj.TransactionId;
                 insertEntity.OrderId = reqObj.OrderId;
-
+                insertEntity.Status = reqObj.Status;
                 var result = await _paymentService.Insert(insertEntity);
                 return Ok(result);
             }
