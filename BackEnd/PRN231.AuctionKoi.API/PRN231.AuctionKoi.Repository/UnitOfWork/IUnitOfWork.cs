@@ -20,5 +20,7 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
 
         public AuctionTypeRepository AuctionTypeRepository { get; }
 
+        public CheckingProposalRepository CheckingProposalRepository { get; }
+
     }
 }

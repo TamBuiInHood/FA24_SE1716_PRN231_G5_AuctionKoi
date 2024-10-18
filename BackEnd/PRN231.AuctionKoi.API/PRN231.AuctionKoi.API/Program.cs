@@ -146,6 +146,7 @@ builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<ICheckingProposalRepository, CheckingProposalRepository>();
 //builder.Services.AddScoped<IVnpayService>();
 builder.Services.AddScoped<VnpayService>();
 // Thêm đoạn này vào trong method ConfigureServices
@@ -162,6 +163,7 @@ builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 //builder.Services.AddScoped<IVnpayService, VnpayService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
+builder.Services.AddScoped<ICheckingProposalService, CheckingProposalService>();
 
 
 // Config WebSocket

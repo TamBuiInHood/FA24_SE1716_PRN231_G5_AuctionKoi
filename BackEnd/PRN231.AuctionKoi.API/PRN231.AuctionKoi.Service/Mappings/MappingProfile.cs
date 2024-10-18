@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KoiAuction.BussinessModels.CheckingProposal;
 using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.BussinessModels.Order;
 using KoiAuction.BussinessModels.PaymentModels;
@@ -62,6 +63,12 @@ namespace KoiAuction.Service.Mappings
                  .ForMember(dest => dest.TotalProduct, opt => opt.Ignore())
                  .ForMember(dest => dest.ShippingCost, opt => opt.Ignore());
 
+            //CheckingProposal
+            CreateMap<CheckingProposal, CheckingProposalModel>()
+                .ReverseMap();
+            /*.ForMember(dest => dest.)*/
+            CreateMap<CreateCheckingProposalModel, CheckingProposal>().ReverseMap();
+            CreateMap<UpdateCheckingProposalModel, CheckingProposal>().ReverseMap();
         }
     }
 }

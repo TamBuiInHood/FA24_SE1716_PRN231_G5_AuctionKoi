@@ -1,0 +1,84 @@
+﻿@model KoiAuction.Repository.Entities.CheckingProposal
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>CheckingProposal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CheckingProposalCode" class="control-label"></label>
+                <input asp-for="CheckingProposalCode" class="form-control" />
+                <span asp-validation-for="CheckingProposalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubmissionDate" class="control-label"></label>
+                <input asp-for="SubmissionDate" class="form-control" />
+                <span asp-validation-for="SubmissionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckingDate" class="control-label"></label>
+                <input asp-for="CheckingDate" class="form-control" />
+                <span asp-validation-for="CheckingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExpiredDate" class="control-label"></label>
+                <input asp-for="ExpiredDate" class="form-control" />
+                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <input asp-for="Note" class="form-control" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TermAndCodition" class="control-label"></label>
+                <input asp-for="TermAndCodition" class="form-control" />
+                <span asp-validation-for="TermAndCodition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Attachment" class="control-label"></label>
+                <input asp-for="Attachment" class="form-control" />
+                <span asp-validation-for="Attachment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FishId" class="control-label"></label>
+                <select asp-for="FishId" class="form-control" asp-items="ViewBag.FishId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionFee" class="control-label"></label>
+                <input asp-for="AuctionFee" class="form-control" />
+                <span asp-validation-for="AuctionFee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

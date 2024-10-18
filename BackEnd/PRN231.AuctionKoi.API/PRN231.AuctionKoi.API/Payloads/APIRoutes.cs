@@ -132,6 +132,20 @@
             public const string GetOrderDetail = Base + "/orders/orderdetail";
         }
 
+        public static class CheckingProposal
+        {
+            public const string Get = Base + "/CheckingProposals/";
 
+            public const string GetByID = Base + "/CheckingProposals/{id}";
+
+            public const string Create = Base + "/CheckingProposals/";
+
+            public const string Update = Base + "/CheckingProposals/{id}";
+
+            public const string Delete = Base + "/CheckingProposals/{id}";
+
+            public const string GetFish = Base + "/CheckingProposals/Fish";
+
+        }
     }
 }
