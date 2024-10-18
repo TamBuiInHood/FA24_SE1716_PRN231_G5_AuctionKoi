@@ -40,7 +40,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                                                 [FromQuery(Name = "status")] string? status,
                                                 [FromQuery(Name = "btn_Reset")] string? reset,
                                                 [FromQuery(Name = "btn_Filter")] string? filter,
-                                                int pageIndex = 1, int pageSize = 2, string search = "",
+                                                int pageIndex = 1, int pageSize = 5, string search = "",
                                                 string sortBy = "", string direction = "")
         {
             //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
