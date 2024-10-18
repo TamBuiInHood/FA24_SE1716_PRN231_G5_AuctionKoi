@@ -11,7 +11,6 @@ using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Responses;
 using PRN231.AuctionKoi.API.Payloads;
 using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
-using PRN231.AuctionKoi.Common.Utils;
 
 namespace KoiAuction.API.Controllers
 {
