@@ -153,6 +153,8 @@
                         })
                 </th>
                 <th>Actions</th>
+                <th>Vnpay Pay</th>
+
             </tr>
         </thead>
         <tbody>
@@ -169,6 +171,9 @@
                         <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@payment.PaymentId">Edit</a>
                         <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@payment.PaymentId">Details</a>
                         <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@payment.PaymentId">Delete</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="CraetePaymentLink" asp-route-paymentId="@payment.PaymentId" asp-route-totalPrice="@payment.PaymentAmount">Checkout</a>
                     </td>
                 </tr>
             }

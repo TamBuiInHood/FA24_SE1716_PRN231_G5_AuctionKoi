@@ -123,7 +123,8 @@ builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-
+//builder.Services.AddScoped<IVnpayService>();
+builder.Services.AddScoped<VnpayService>();
 // Register servicies
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
@@ -131,6 +132,7 @@ builder.Services.AddScoped<IProposalService, ProposalService>();
 builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
 builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+//builder.Services.AddScoped<IVnpayService, VnpayService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
 
 // Config WebSocket

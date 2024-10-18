@@ -42,6 +42,10 @@
 
             public const string GetOData = Base + "/payments/get-odata";
 
+            public const string VnPayAction = Base + "/payments/vnpay-action";
+
+            public const string UpdateAfterPayment = Base + "/payments/update-after-payment/{paymentId}";
+
         }
 
         public static class Proposal

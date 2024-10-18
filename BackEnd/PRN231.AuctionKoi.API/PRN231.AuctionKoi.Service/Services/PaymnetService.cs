@@ -18,7 +18,6 @@ using KoiAuction.Repository.Entities;
 using KoiAuction.BussinessModels.Filters;
 using KoiAuction.Common.Utils;
 
-
 namespace KoiAuction.Service.Services
 {
     public class PaymnetService : IPaymentService
@@ -269,6 +268,21 @@ namespace KoiAuction.Service.Services
             }
             var mapdto = _mapper.Map<IEnumerable<PaymentModel>>(payment);
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
+        }
+
+        public async Task<IBusinessResult> UpdateAfterPay(int paymentId)
+        {
+            Expression<Func<Payment, bool>> filter = x => x.PaymentId == paymentId;
+            var entity = await _unitOfWork.PaymentRepository.GetByCondition(filter);
+            entity.Status = "PAID";
+
+            _unitOfWork.PaymentRepository.Update(entity);
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
+            if (result)
+            {
+                return new BusinessResult(Const.SUCCESS_UPDATE_AFTER_PAYMENT_CODE, Const.SUCCESS_UPDATE_AFTER_PAYMENT_MSG);
+            }
+            return new BusinessResult(Const.FAIL_UPDATE_AFTER_PAYMENT_CODE, Const.FAIL_UPDATE_AFTER_PAYMENT_MSG);
         }
     }
 }
