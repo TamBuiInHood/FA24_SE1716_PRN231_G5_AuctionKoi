@@ -1,4 +1,5 @@
 ﻿using KoiAuction.API.Payloads.Requests.AuthenticationRequest;
+using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Services;
 using Microsoft.AspNetCore.Http;
@@ -37,5 +38,22 @@ namespace KoiAuction.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost(APIRoutes.Authentication.Register, Name = "RegisterAsync")]
+        public async Task<IBusinessResult> RegisterAyncs([FromBody] Payloads.Requests.AuthenticationRequest.RegisterRequest registerObj)
+        {
+            
+                var result = await _userService.Register(registerObj.Email, registerObj.Password, registerObj.userRole);
+                return result;
+        }
+
+        [HttpPost(APIRoutes.Authentication.RefreshToken, Name = "Check RefreshToken")]
+        public async Task<IBusinessResult> CheckRefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
+        {
+            var result = await _userService.CheckRefreshToken(refreshTokenRequest.RefreshToken);
+            return result;
+        }
+
+
     }
 }

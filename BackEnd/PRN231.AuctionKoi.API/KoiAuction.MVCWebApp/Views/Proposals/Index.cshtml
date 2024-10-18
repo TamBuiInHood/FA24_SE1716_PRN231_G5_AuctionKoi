@@ -7,15 +7,60 @@
 
 <h1>Proposal</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
 <div>
     <input type="text" id="searchBox" placeholder="Search..." value="@Model.Search"/>
     <button onclick="onSearchChange()" class="btn btn-primary text-white">Search</button>
 </div>
 
+<div class="container">
+    <!-- Filter Form -->
+    <form method="get" class="mb-4 m-5">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status</label>
+                <input type="text" class="form-control" name="status" value="@ViewBag.proposalFilters.Status" placeholder="Status...">
+            </div>
+        </div>
+
+        <div class="row">
+           
+            <div class="col-md-6 mb-3">
+                <label for="farmName" class="form-label">Farm Name</label>
+                <input type="text" class="form-control" name="farm-name" value="@ViewBag.proposalFilters.FarmName" placeholder="Farm Name...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" name="location" value="@ViewBag.proposalFilters.Location" placeholder="Location...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" name="description" value="@ViewBag.proposalFilters.Description" placeholder="Description...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="owner" class="form-label">Owner</label>
+                <input type="text" class="form-control" name="owner" value="@ViewBag.proposalFilters.Owner" placeholder="Owner...">
+            </div>
+
+            <!-- Date Range -->
+            <div class="col-md-3 mb-3">
+                <label for="proposal-create-date" class="form-label">Create Date:</label>
+                <input type="date" class="form-control" name="proposal-create-date" value="@ViewBag.proposalFilters.createDateFrom">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <input type="submit" name="btn_Filter" class="btn btn-primary btn-sm w-100" value="Filter">
+               
+            </div>
+            <div class="col-md-2">
+                <input type="submit" name="btn_Reset" class="btn btn-warning btn-sm w-100" value="Reset">
+            </div>
+            <div class="col-md-2 offset-md-8 d-flex justify-content-end">
+                <a asp-action="Create" class="btn btn-success">Create New</a>
+            </div>
+        </div>
+    </form>
 
 <table class="table">
     <thead>
@@ -118,6 +163,7 @@
         }
     }
 </ul>
+</div>
 <script>
     function onSearchChange() {
         var searchValue = document.getElementById('searchBox').value;

@@ -21,6 +21,7 @@ using KoiAuction.BussinessModels.Proposal;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using KoiAuction.BussinessModels.DetailProposalModel;
+using KoiAuction.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,25 @@ builder.Services.AddSwaggerGen(option =>
 //    };
 //});
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 // Add CORS
 builder.Services.AddCors(p => p.AddPolicy("Cors", policy =>
 {
@@ -142,6 +162,7 @@ var webSocketOptions = new WebSocketOptions()
     KeepAliveInterval = TimeSpan.FromMinutes(5),
 };
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -151,7 +172,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("Cors");
-
+app.UseMiddleware<AuthorizeMiddleware>();
 app.UseWebSockets(webSocketOptions);
 app.UseHttpsRedirection();
 app.UseCors("Cors");

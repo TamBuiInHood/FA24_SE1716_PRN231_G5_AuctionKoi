@@ -15,6 +15,7 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         public DetailProposalRepository DetailProposalRepository { get; }
         public OrderRepository OrderRepository { get; }
         public OrderDetailRepository OrderDetailRepository { get; }
+        public RefreshTokenRepository RefreshTokenRepository { get; }
 
     }
 }

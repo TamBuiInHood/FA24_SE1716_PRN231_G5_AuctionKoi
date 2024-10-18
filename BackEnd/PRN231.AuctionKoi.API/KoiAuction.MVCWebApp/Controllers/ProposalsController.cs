@@ -5,9 +5,12 @@ using System.Net.Http.Json;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using KoiAuction.BussinessModels.Filters;
 using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Common;
+using KoiAuction.Common.Enums;
+using KoiAuction.Common.Utils;
 using KoiAuction.MVCWebApp.Models;
 using KoiAuction.Repository.Entities;
 using KoiAuction.Service.Base;
@@ -28,18 +31,90 @@ namespace KoiAuction.MVCWebApp.Controllers
         //}
 
         // GET: Proposals
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 2, string search = "", string sortBy = "", string direction = "")
+        public async Task<IActionResult> Index(
+                                                [FromQuery(Name = "farm-name")] string? farmName,
+                                                [FromQuery(Name = "description")] string? description,
+                                                [FromQuery(Name = "location")] string? location,
+                                                [FromQuery(Name = "owner")] string? owner,
+                                                [FromQuery(Name = "proposal-create-date")] DateTime? createDateFrom,
+                                                [FromQuery(Name = "status")] string? status,
+                                                [FromQuery(Name = "btn_Reset")] string? reset,
+                                                [FromQuery(Name = "btn_Filter")] string? filter,
+                                                int pageIndex = 1, int pageSize = 2, string search = "",
+                                                string sortBy = "", string direction = "")
         {
             //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
             //return View(await auctionKoiOfficialContext.ToListAsync());
-            string apiUrl = $"proposals?page-index={pageIndex}&page-size={pageSize}&search-key={search}&sort-by={sortBy}&direction={direction}";
+            var proposalFilters = new ProposalFilter
+            {
+                Status = status,
+                createDateFrom = createDateFrom,
+                FarmName = farmName,
+                Description = description,
+                Location = location,
+            };
+            ViewBag.proposalFilters = proposalFilters;
+            if(!string.IsNullOrEmpty(reset) && reset.Equals("Reset"))
+            {
+                pageSize = 2;
+                proposalFilters = null;
+            }
+            if (!string.IsNullOrEmpty(filter) && filter.Equals("Filter"))
+            {
+                pageSize = 100;
+            }
+
+
+            // Dictionary to store query parameters
+            var queryParams = new Dictionary<string, string>
+            {
+                { "page-index", pageIndex.ToString() },
+                { "page-size", pageSize.ToString() }
+            };
+
+            // Add optional parameters dynamically
+            if(proposalFilters != null)
+            {
+                if (!string.IsNullOrEmpty(search))
+                    queryParams["search-key"] = search;
+
+                if (!string.IsNullOrEmpty(sortBy))
+                    queryParams["sort-by"] = sortBy;
+
+                if (!string.IsNullOrEmpty(direction))
+                    queryParams["direction"] = direction;
+
+                if (!string.IsNullOrEmpty(proposalFilters.FarmName))
+                    queryParams["farm-name"] = proposalFilters.FarmName;
+
+                if (!string.IsNullOrEmpty(proposalFilters.Location))
+                    queryParams["location"] = proposalFilters.Location;
+
+                if (!string.IsNullOrEmpty(proposalFilters.Description))
+                    queryParams["description"] = proposalFilters.Description;
+
+                if (!string.IsNullOrEmpty(proposalFilters.Owner))
+                    queryParams["owner"] = proposalFilters.Owner;
+
+                if (proposalFilters.createDateFrom.HasValue)
+                    queryParams["proposal-create-date"] = proposalFilters.createDateFrom.Value.ToString("yyyy-MM-dd");
+
+
+                if (!string.IsNullOrEmpty(proposalFilters.Status))
+                    queryParams["status"] = proposalFilters.Status;
+            }
+
+            // Build the final query string
+            var queryString = string.Join("&", queryParams.Select(param => $"{param.Key}={param.Value}"));
+            var requestUri = $"{Const.APIEndPoint}proposals/filter?{queryString}&sort-by={sortBy}&direction={direction}";
+            //string apiUrl = $"proposals?page-index={pageIndex}&page-size={pageSize}&search-key={search}&sort-by={sortBy}&direction={direction}";
 
             using (var httpClient = new HttpClient(new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
             }))
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + apiUrl))
+                using (var response = await httpClient.GetAsync(requestUri))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -62,7 +137,7 @@ namespace KoiAuction.MVCWebApp.Controllers
 
                             // Pass the full view model to the view
                             return View(paginatedViewModel);
-                           // return View(data.List.ToList());
+                            // return View(data.List.ToList());
                         }
                     }
                     return View();

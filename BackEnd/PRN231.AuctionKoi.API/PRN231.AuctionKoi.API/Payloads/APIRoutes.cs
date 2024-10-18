@@ -21,6 +21,7 @@
             //public const string LoginMobile = Base + "/authentication/login-mobile";
 
             public const string RefreshToken = Base + "/authentication/refreshToken";
+            public const string Register = Base + "/authentication/register";
 
         }
 
@@ -45,6 +46,8 @@
         public static class Proposal
         {
             public const string Get = Base + "/proposals/";
+
+            public const string GetWithFilter = Base + "/proposals/filter";
 
             public const string GetOData = Base + "/proposals/use-odata";
 
