@@ -21,9 +21,12 @@ namespace KoiAuction.WebApp.Controllers
         }
 
         // GET: Auctions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchKey, string? orderBy, int? pageIndex = 1, int? pageSize = 1)
         {
-            var response = await _httpClient.GetAsync($"{Const.APIAutionEndPoint}api/Auction");
+            // Tạo URL yêu cầu tới API với các tham số tìm kiếm, sắp xếp và phân trang
+            var url = $"{Const.APIAutionEndPoint}api/Auction?searchKey={searchKey}&orderBy={orderBy}&pageIndex={pageIndex}&pageSize={pageSize}";
+
+            var response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -31,11 +34,20 @@ namespace KoiAuction.WebApp.Controllers
 
                 if (result?.Data?.List != null)
                 {
-                    return View(result.Data.List); // Pass the list of auctions to the view
+                    ViewBag.PageIndex = pageIndex;
+                    ViewBag.PageSize = pageSize;
+                    ViewBag.TotalRecords = result.Data.TotalRecord;
+                    ViewBag.SearchKey = searchKey;
+                    ViewBag.OrderBy = orderBy;
+
+                    return View(result.Data.List);
                 }
             }
-            return View(new List<Auction>()); // In case of failure, return an empty list
+
+            return View(new List<Auction>());
         }
+
+
 
         // GET: Auctions/Details/5
         public async Task<IActionResult> Details(int? id)

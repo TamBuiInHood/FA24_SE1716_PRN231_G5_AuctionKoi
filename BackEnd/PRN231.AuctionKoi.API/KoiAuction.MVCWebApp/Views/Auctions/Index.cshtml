@@ -9,6 +9,15 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="get" action="@Url.Action("Index")">
+    <div class="form-group">
+        <label for="searchKey">Search</label>
+        <input type="text" name="searchKey" value="@ViewBag.SearchKey" class="form-control" placeholder="Search by Name, Description, or Auction Method">
+    </div>
+     
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
 
 <table class="table">
     <thead>
@@ -49,56 +58,76 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AutionMethod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionCode)
+                    </td>
+                    <td>
+                        @if (item.Type != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Type.TypeName)
+                        }
+                        else
+                        {
+                            <span>No Type</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.AuctionId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.AuctionId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.AuctionId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuctionName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuctionDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-              
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AutionMethod)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuctionCode)
-                </td>
-                
-                <td>
-                    @if (item.Type != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.Type.TypeName)
-                    }
-                    else
-                    {
-                        <span>No Type</span>
-                    }
-                </td>
-
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.AuctionId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.AuctionId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.AuctionId">Delete</a>
-                </td>
+                <td colspan="11" class="text-center">No auctions available</td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Phân trang -->
+@if (ViewBag.TotalRecords > ViewBag.PageSize)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @for (int i = 1; i <= (int)Math.Ceiling((decimal)ViewBag.TotalRecords / ViewBag.PageSize); i++)
+            {
+                <li class="page-item @(ViewBag.PageIndex == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = ViewBag.PageSize, searchKey = ViewBag.SearchKey, orderBy = ViewBag.OrderBy })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

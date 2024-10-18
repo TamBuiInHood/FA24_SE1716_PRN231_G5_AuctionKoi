@@ -78,18 +78,22 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
-
         public async Task<IBusinessResult> GetAllAuctions(string? searchKey, string? orderBy, int? pageIndex = null, int? pageSize = null)
         {
             try
             {
                 var auctions = await _unitOfWork.AuctionRepository.GetAll();
 
+                // Tìm kiếm đồng thời theo 3 cột: AuctionName, Description, và AutionMethod
                 if (!string.IsNullOrEmpty(searchKey))
                 {
-                    auctions = auctions.Where(a => a.AuctionName.Contains(searchKey) || a.AuctionCode.Contains(searchKey));
+                    auctions = auctions.Where(a =>
+                        a.AuctionName.Contains(searchKey) ||
+                        a.Description.Contains(searchKey) ||
+                        a.AuctionCode.Contains(searchKey));
                 }
 
+                // Sắp xếp theo tiêu chí
                 if (!string.IsNullOrEmpty(orderBy))
                 {
                     auctions = orderBy.ToLower() switch
@@ -101,8 +105,13 @@ namespace KoiAuction.Service.Services
                 }
 
                 var totalCount = auctions.Count();
-                var items = auctions.Skip((pageIndex ?? 0) * (pageSize ?? 10))
-                                    .Take(pageSize ?? 10)
+
+                // Điều chỉnh pageIndex và pageSize để thực hiện phân trang
+                int currentPage = (pageIndex ?? 1) < 1 ? 1 : pageIndex.Value;
+                int currentSize = pageSize ?? 10;
+
+                var items = auctions.Skip((currentPage - 1) * currentSize)
+                                    .Take(currentSize)
                                     .ToList();
 
                 return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, new PageEntity<Auction>
@@ -116,6 +125,8 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
+
+
 
         public async Task<IBusinessResult> UpdateAuction(Auction auction)
         {

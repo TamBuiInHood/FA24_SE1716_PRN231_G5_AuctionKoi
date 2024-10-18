@@ -18,7 +18,7 @@ namespace KoiAuction.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IBusinessResult> GetAllAuctions([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int? pageIndex = null, [FromQuery] int? pageSize = null)
+        public async Task<IBusinessResult> GetAllAuctions([FromQuery] string? searchKey, [FromQuery] string? orderBy, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
             return await _auctionService.GetAllAuctions(searchKey, orderBy, pageIndex, pageSize);
         }
