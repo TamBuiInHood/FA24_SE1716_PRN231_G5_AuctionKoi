@@ -186,6 +186,7 @@ IEdmModel GetEdmModel()
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<ProposalModel>("Proposals");
     builder.EntitySet<DetailProposalModel>("DetailProposals");
-
+    builder.EntitySet<PaymentModel>("Payments");
+    
     return builder.GetEdmModel();
 }

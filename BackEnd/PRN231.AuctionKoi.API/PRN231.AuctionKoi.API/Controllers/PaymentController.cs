@@ -1,11 +1,14 @@
 ﻿using KoiAuction.API.Payloads.Requests.PaymentRequest;
 using KoiAuction.BussinessModels.Filters;
+using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.PaymentModels;
+using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.Common.Constants;
 using KoiAuction.Common.Utils;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using PRN231.AuctionKoi.API.Payloads;
 
 namespace PRN231.AuctionKoi.API.Controllers
@@ -19,6 +22,18 @@ namespace PRN231.AuctionKoi.API.Controllers
         public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
+        }
+
+        [EnableQuery]
+        [HttpGet(APIRoutes.Paymnet.GetOData, Name = "Get all payment by Odata")]
+        public async Task<IActionResult> GetPaymentByOData(PaginationParameter paginationParameter)
+        {
+            var payments = await _paymentService.getPaymentsOData();
+            if (payments.Data is IEnumerable<PaymentModel> list)
+            {
+                return Ok(list.AsQueryable());
+            }
+            return Ok("No data was found");
         }
 
         //[Authorize(Roles = )]

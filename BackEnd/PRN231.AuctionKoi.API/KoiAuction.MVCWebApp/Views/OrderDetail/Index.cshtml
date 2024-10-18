@@ -1,0 +1,90 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row">
+    <div class="col-md-10">
+        <h3 class="display-8">Order Details</h3>
+    </div>
+    <div class="col-md-2 text-end">
+        <button type="button" class="btn btn-primary" onclick="addOrderDetail();">
+            Add Order Detail
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">OrderId</th>
+                    <th class="card-title text-center">BidId</th>
+                    <th class="card-title text-center">Price</th>
+                </tr>
+            </thead>
+            <tbody class="tblOrderDetail">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Adding/Editing -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailModalLabel">Order Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="orderDetailModalContent">
+                    <!-- Modal content will be dynamically loaded -->
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadOrderDetails();
+        });
+
+        function loadOrderDetails() {
+            $.ajax({
+                url: 'https://localhost:7094/auction-koi/orders/orderdetail',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    if (result && result.data) {
+                        $.each(result.data, function (key, item) {
+                            html += '<tr>';
+                            html += '<td>' + item.orderId + '</td>';
+                            html += '<td>' + item.bidId + '</td>';
+                            html += '<td>' + item.price + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+                    }
+                    $('.tblOrderDetail').html(html);
+                },
+                error: function (xhr, error) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        }
+
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿using KoiAuction.BussinessModels.Order;
 using KoiAuction.Service.Base;
+using PRN231.AuctionKoi.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,9 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> Insert(CreateOrder orderModel);
         Task<IBusinessResult> Update(int orderId, UpdateOrder orderModel);
         Task<IBusinessResult> Delete(int id);
+
+        Task<IBusinessResult> GetUser();
+        Task<IBusinessResult> GetUserAution();
+        Task<IBusinessResult> GetOrderDetail();
     }
 }
