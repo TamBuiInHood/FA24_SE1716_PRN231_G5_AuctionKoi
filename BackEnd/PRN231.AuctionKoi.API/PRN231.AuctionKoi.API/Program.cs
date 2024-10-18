@@ -23,6 +23,7 @@ using Microsoft.OData.ModelBuilder;
 using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.API.Middlewares;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -145,6 +146,8 @@ builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+//builder.Services.AddScoped<IVnpayService>();
+builder.Services.AddScoped<VnpayService>();
 // Thêm đoạn này vào trong method ConfigureServices
 builder.Services.AddScoped<IAuctionService, AuctionService>();
  
@@ -157,6 +160,7 @@ builder.Services.AddScoped<IProposalService, ProposalService>();
 builder.Services.AddScoped<IUserAuctionService, UserAuctionService>();
 builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+//builder.Services.AddScoped<IVnpayService, VnpayService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
 
 

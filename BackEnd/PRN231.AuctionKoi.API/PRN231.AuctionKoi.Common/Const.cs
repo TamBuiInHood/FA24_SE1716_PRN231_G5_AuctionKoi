@@ -28,6 +28,12 @@ namespace KoiAuction.Common
         public static string SUCCESS_DELETE_MSG = "Delete data success";
         public static int SUCCESS_CHECK_CODE = 1;
         public static string SUCCESS_CHECK_MSG = "Check data is valid";
+        public static int SUCCESS_CREATE_PAYMENT_URL_CODE = 1;
+        public static string SUCCESS_CREATE_PAYMENT_URL_MSG = "Create payment link success";
+        public static int SUCCESS_PAYMENT_EXCUTE_CODE = 1;
+        public static string SUCCESS_PAYMENT_EXCUTE_MSG = "Create payment link success";
+        public static int SUCCESS_UPDATE_AFTER_PAYMENT_CODE = 1;
+        public static string SUCCESS_UPDATE_AFTER_PAYMENT_MSG = "Update data after payment success";
 
 
         #endregion
@@ -47,7 +53,11 @@ namespace KoiAuction.Common
         public static int FAIL_CHECK_DATE_FILTER_CODE = -1;
         public static string FAIL_CHECK_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
         public static int FAIL_CHECK_NUMBER_FILTER_CODE = -1;
-        public static string FAIL_CHECK_NUMBER_FILTER_MSG = "Number 'To' must greater than Number 'From'";
+        public static string FAIL_CHECK_NUMBER_FILTER_MSG = "Number 'To' must greater than Number 'From'"; 
+        public static int FAIL_PAYMENT_EXCUTE_CODE = -1;
+        public static string FAIL_PAYMENT_EXCUTE_MSG = "Payment excute fail";
+        public static int FAIL_UPDATE_AFTER_PAYMENT_CODE = -1;
+        public static string FAIL_UPDATE_AFTER_PAYMENT_MSG = "Update data fail";
         #endregion
 
         #region Warning Code

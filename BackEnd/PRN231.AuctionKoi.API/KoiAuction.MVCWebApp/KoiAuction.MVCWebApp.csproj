@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\client.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\paymentAjax.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\userAuctions.js" />
   </ItemGroup>
 
