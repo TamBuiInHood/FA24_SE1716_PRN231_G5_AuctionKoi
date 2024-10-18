@@ -222,7 +222,6 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
             entity.ToTable("RefreshToken");
 
             entity.Property(e => e.RefreshTokenId)
-                .ValueGeneratedNever()
                 .HasColumnName("RefreshTokenID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");

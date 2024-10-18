@@ -16,9 +16,11 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private UserAuctionRepository _userAuctionRepo;
         private UserRepository _userRepo;
         private DetailProposalRepository _detailProposalRepo;
-
+        private AutionRepository _auctionRepo;
+        private AuctionTypeRepository _auctionTypeRepo;
         private OrderRepository _orderRepo;
         private OrderDetailRepository _orderDetailRepo; 
+        private RefreshTokenRepository _refreshTokenRepo; 
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
@@ -130,6 +132,24 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
             }
         }
 
+        public AutionRepository AuctionRepository
+        {
+            get
+            {
+                return _auctionRepo ??= new AutionRepository(_context);
+            }
+        }
+        public AuctionTypeRepository AuctionTypeRepository
+        {
+            get
+            {
+                if (_auctionTypeRepo == null)
+                {
+                    _auctionTypeRepo = new AuctionTypeRepository(_context);
+                }
+                return _auctionTypeRepo;
+            }
+        }
         public DetailProposalRepository DetailProposalRepository
         {
             get
@@ -139,6 +159,18 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
                     this._detailProposalRepo = new DetailProposalRepository(_context);
                 }
                 return _detailProposalRepo;
+            }
+        }
+
+        public RefreshTokenRepository RefreshTokenRepository
+        {
+            get
+            {
+                if (_refreshTokenRepo == null)
+                {
+                    this._refreshTokenRepo = new RefreshTokenRepository(_context);
+                }
+                return _refreshTokenRepo;
             }
         }
 

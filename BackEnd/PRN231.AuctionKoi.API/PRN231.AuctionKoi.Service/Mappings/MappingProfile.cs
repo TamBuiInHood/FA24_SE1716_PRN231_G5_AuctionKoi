@@ -6,6 +6,7 @@ using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
 using KoiAuction.BussinessModels.UserModels;
 using KoiAuction.Repository.Entities;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace KoiAuction.Service.Mappings
 {
@@ -22,6 +23,8 @@ namespace KoiAuction.Service.Mappings
                 //.ForMember(dest => dest.Order, opt => opt.MapFrom(x => x.Order))
                 .ReverseMap();
             CreateMap<Proposal, CreateProposalModel>().ReverseMap();
+ 
+
 
             CreateMap<UserAuction, UserAuctionModel>()
                .ForMember(dest => dest.FishCode, opt => opt.MapFrom(x => x.Fish.FishCode))

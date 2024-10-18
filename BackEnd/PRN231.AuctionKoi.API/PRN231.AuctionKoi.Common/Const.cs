@@ -8,6 +8,7 @@ namespace KoiAuction.Common
 {
     public static class Const
     {
+        public static string APIAutionEndPoint = "https://localhost:7094/";
         public static string APIEndPoint = "https://localhost:7094/auction-koi/";
         #region Error Codes
 

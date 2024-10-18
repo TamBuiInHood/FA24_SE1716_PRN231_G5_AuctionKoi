@@ -25,15 +25,55 @@ namespace KoiAuction.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mappper;
         }
+        public async Task<IBusinessResult> GetUser()
+        {
+            var User = await _unitOfWork.UserRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, "User not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG,User);
+        }
+        public async Task<IBusinessResult> GetUserAution()
+        {
+            var User = await _unitOfWork.UserAuctionRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, "User not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, User);
+        }
+        public async Task<IBusinessResult> GetOrderDetail()
+        {
+            var User = await _unitOfWork.OrderDetailRepository.Get();
+
+            if (User == null)
+            {
+                return new BusinessResult(Const.FAIL_DELETE_CODE, " not found.");
+            }
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, User);
+        }
         public async Task<IBusinessResult> Delete(int id)
         {
             try
             {
+
                 var order = await _unitOfWork.OrderRepository.GetByID(id);
 
                 if (order == null)
                 {
                     return new BusinessResult(Const.FAIL_DELETE_CODE, "Order not found.");
+                }
+
+                var orderDetails = await _unitOfWork.OrderRepository.GetByOrderId(id);
+                if (orderDetails != null && orderDetails.Any())
+                {
+                    foreach (var detail in orderDetails)
+                    {
+                        _unitOfWork.OrderDetailRepository.Delete(detail); 
+                    }
                 }
 
                 _unitOfWork.OrderRepository.Delete(order);
@@ -51,9 +91,7 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
-            
         }
-
         public async Task<IBusinessResult> Get(string? searchKey, string? orderBy, int? pageIndex = null, int? pageSize = null)
         {
             try
@@ -64,12 +102,16 @@ namespace KoiAuction.Service.Services
                 {
                     return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
                 }
+
+               
                 if (!string.IsNullOrWhiteSpace(searchKey))
                 {
                     orders = orders.Where(o =>
                         (o.OrderCode != null && o.OrderCode.Contains(searchKey)) ||
-                        (o.User.UserName != null && o.User.UserName.Contains(searchKey)));
+                        (o.TaxCode != null && o.TaxCode.Contains(searchKey)) ||
+                        (o.ShippingTrackingCode != null && o.ShippingTrackingCode.Contains(searchKey)));
                 }
+
                 if (!string.IsNullOrWhiteSpace(orderBy))
                 {
                     orders = orderBy.ToLower() switch
@@ -79,15 +121,21 @@ namespace KoiAuction.Service.Services
                         _ => orders
                     };
                 }
-                var items = orders.Skip((pageIndex ?? 0) * (pageSize ?? 10))
+
+
+                int currentPageIndex = (pageIndex ?? 1) - 1; 
+                var items = orders.Skip(currentPageIndex * (pageSize ?? 10))
                                   .Take(pageSize ?? 10)
                                   .ToList();
+
                 var orderDtos = _mapper.Map<List<OrderModel>>(items);
+                var totalRecords = orders.Count();
+
                 var pageEntity = new PageEntity<OrderModel>
                 {
                     List = orderDtos,
-                    TotalPage = (int)Math.Ceiling((double)orders.Count() / (pageSize ?? 10)),
-                    TotalRecord = orders.Count()
+                    TotalPage = (int)Math.Ceiling((double)totalRecords / (pageSize ?? 10)),
+                    TotalRecord = totalRecords 
                 };
 
                 return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, pageEntity);
@@ -97,6 +145,8 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+
 
 
 
@@ -122,6 +172,8 @@ namespace KoiAuction.Service.Services
             }
         }
 
+      
+
         public async Task<IBusinessResult> Insert(CreateOrder orderModel)
         {
             try
@@ -142,7 +194,7 @@ namespace KoiAuction.Service.Services
 
 
                 mapEntity.TotalPrice = auPrice * mapEntity.TotalProduct
-                                       + (mapEntity.Vat.Value * totalProductPrice)
+                                       + (mapEntity.Vat.Value * auPrice)
                                        + (mapEntity.ShippingCost ?? 0)
                                        + (mapEntity.ParticipationFee ?? 0)
                                        - (orderModel.Discount ?? 0);
@@ -225,6 +277,7 @@ namespace KoiAuction.Service.Services
 
             return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
         }
+
 
     }
 }

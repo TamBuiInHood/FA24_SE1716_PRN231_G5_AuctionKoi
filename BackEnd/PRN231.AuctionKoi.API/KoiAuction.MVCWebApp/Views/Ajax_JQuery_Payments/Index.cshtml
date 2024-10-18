@@ -95,7 +95,7 @@
             alert("Load data progressing ...");
 
             $.ajax({
-                url: 'https://localhost:7094/auction-koi/payments',
+                url: 'https://localhost:7094/auction-koi/payments?page-index=1&page-size=30',
                 type: "GET",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",

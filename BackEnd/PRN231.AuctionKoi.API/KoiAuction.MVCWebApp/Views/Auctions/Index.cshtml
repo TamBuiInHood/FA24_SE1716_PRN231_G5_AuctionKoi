@@ -1,0 +1,133 @@
+﻿@model List<KoiAuction.Repository.Entities.Auction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form method="get" action="@Url.Action("Index")">
+    <div class="form-group">
+        <label for="searchKey">Search</label>
+        <input type="text" name="searchKey" value="@ViewBag.SearchKey" class="form-control" placeholder="Search by Name, Description, or Auction Method">
+    </div>
+     
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().AuctionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().AuctionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().EndTime)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.First().Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().AutionMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().AuctionCode)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.First().Type.TypeName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AutionMethod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuctionCode)
+                    </td>
+                    <td>
+                        @if (item.Type != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Type.TypeName)
+                        }
+                        else
+                        {
+                            <span>No Type</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.AuctionId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.AuctionId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.AuctionId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="11" class="text-center">No auctions available</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Phân trang -->
+@if (ViewBag.TotalRecords > ViewBag.PageSize)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @for (int i = 1; i <= (int)Math.Ceiling((decimal)ViewBag.TotalRecords / ViewBag.PageSize); i++)
+            {
+                <li class="page-item @(ViewBag.PageIndex == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = ViewBag.PageSize, searchKey = ViewBag.SearchKey, orderBy = ViewBag.OrderBy })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

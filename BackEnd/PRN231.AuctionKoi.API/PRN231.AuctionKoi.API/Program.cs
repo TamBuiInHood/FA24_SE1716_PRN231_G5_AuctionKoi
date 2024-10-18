@@ -16,15 +16,26 @@ using KoiAuction.Service.Base;
 using KoiAuction.Repository.Entities;
 using KoiAuction.Repository.IRepositories;
 using KoiAuction.Repository.Repositories;
-using KoiAuction.BussinessModels.DetailProposalModel;
-using KoiAuction.BussinessModels.Proposal;
-using KoiAuction.BussinessModels.PaymentModels;
-using Microsoft.OData.Edm;
 using Microsoft.AspNetCore.OData;
+using KoiAuction.BussinessModels.Proposal;
+using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
+using KoiAuction.BussinessModels.DetailProposalModel;
+using KoiAuction.API.Middlewares;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<Fa24Se1716Prn231G5KoiauctionContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+});
 
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddOData(opt => opt
@@ -34,15 +45,8 @@ builder.Services.AddControllers().AddOData(opt => opt
     .Filter()
     .OrderBy()
     .Count()
-    .SetMaxTop(100)
-);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<Fa24Se1716Prn231G5KoiauctionContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    .SetMaxTop(100));
 
-});
 
 
 builder.Services.AddSwaggerGen(option =>
@@ -93,6 +97,25 @@ builder.Services.AddSwaggerGen(option =>
 //    };
 //});
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 // Add CORS
 builder.Services.AddCors(p => p.AddPolicy("Cors", policy =>
 {
@@ -114,17 +137,22 @@ var mapper = new MapperConfiguration(mc =>
 builder.Services.AddSingleton(mapper.CreateMapper());
 
 // Register repositories
-builder.Services.AddScoped<IBusinessResult, BusinessResult>();
+builder.Services.AddScoped<IBusinessResult,BusinessResult>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<IProposalRepository, ProposalRepository>();
+builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
+builder.Services.AddScoped<IProposalRepository,ProposalRepository>();
 builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 //builder.Services.AddScoped<IVnpayService>();
 builder.Services.AddScoped<VnpayService>();
+// Thêm đoạn này vào trong method ConfigureServices
+builder.Services.AddScoped<IAuctionService, AuctionService>();
+ 
+    builder.Services.AddScoped<IAutionRepository, AutionRepository>();
+
 // Register servicies
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPaymentService, PaymnetService>();
@@ -135,11 +163,13 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 //builder.Services.AddScoped<IVnpayService, VnpayService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
 
+
 // Config WebSocket
 var webSocketOptions = new WebSocketOptions()
 {
     KeepAliveInterval = TimeSpan.FromMinutes(5),
 };
+
 
 var app = builder.Build();
 
@@ -150,7 +180,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("Cors");
-
+app.UseMiddleware<AuthorizeMiddleware>();
 app.UseWebSockets(webSocketOptions);
 app.UseHttpsRedirection();
 app.UseCors("Cors");
@@ -162,9 +192,9 @@ app.Run();
 IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
-    //builder.EntitySet<ProposalModel>("Proposals");
-    //builder.EntitySet<DetailProposalModel>("DetailProposals");
-    builder.EntitySet<PaymentModel>("Payments");
-
+    builder.EntitySet<ProposalModel>("Proposals");
+    builder.EntitySet<DetailProposalModel>("DetailProposals");
+    //builder.EntitySet<PaymentModel>("Payments");
+    
     return builder.GetEdmModel();
 }

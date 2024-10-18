@@ -6,13 +6,14 @@ using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.VnpayAccess;
 using KoiAuction.Common.Constants;
+using KoiAuction.Common.Utils;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using PRN231.AuctionKoi.API.Payloads;
-using PRN231.AuctionKoi.Common.Utils;
 using System.Security.Permissions;
 
 namespace KoiAuction.API.Controllers
@@ -30,6 +31,7 @@ namespace KoiAuction.API.Controllers
             _vpnpayService = vnpayService;
         }
 
+        [Authorize(Roles = "Admin")]
         [EnableQuery]
         [HttpGet(APIRoutes.Paymnet.GetOData, Name = "Get all payment by Odata")]
         public async Task<IActionResult> GetPaymentByOData(PaginationParameter paginationParameter)

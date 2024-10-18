@@ -1,9 +1,13 @@
-﻿using KoiAuction.BussinessModels.Proposal;
+﻿using KoiAuction.BussinessModels.Filters;
+using KoiAuction.BussinessModels.Proposal;
+using KoiAuction.Common;
+using KoiAuction.Common.Utils;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using PRN231.AuctionKoi.API.Payloads;
-using PRN231.AuctionKoi.Common.Utils;
 
 namespace KoiAuction.API.Controllers
 {
@@ -21,10 +25,27 @@ namespace KoiAuction.API.Controllers
         }
 
         // GET: api/Proposals
+       
         [HttpGet(APIRoutes.Proposal.Get, Name = "Get All Proposal")]
         public async Task<IBusinessResult> GetProposals(PaginationParameter paginationParameter)
         {
             return await _proposalService.Get(paginationParameter);
+        }
+
+        [HttpGet(APIRoutes.Proposal.GetWithFilter, Name = "Get All Proposal With Filter")]
+        public async Task<IBusinessResult> GetProposalsWithFilter(PaginationParameter paginationParameter, ProposalFilter proposalFilter)
+        {
+            return await _proposalService.GetWithFilter(paginationParameter, proposalFilter);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [EnableQuery]
+        [HttpGet(APIRoutes.Proposal.GetOData, Name = "Get All Proposal by Odata")]
+        public async Task<IActionResult> GetProposalsByOData(PaginationParameter paginationParameter)
+        {
+            var proposals =  await _proposalService.Get(paginationParameter);
+            var queryableData = ODataResultConverter.ConvertToQueryable(proposals);
+            return Ok(queryableData);
         }
 
         // GET: api/Proposals/5
@@ -63,6 +84,12 @@ namespace KoiAuction.API.Controllers
         public async Task<IBusinessResult> GetAllUserProposals()
         {
             return await _proposalService.GetAllUser();
+        }
+
+        [HttpPost(APIRoutes.Proposal.UploadToFirebase, Name = "Upload File to Firebase")]
+        public async Task<IBusinessResult> UploadToFirebase([FromQuery(Name = "proposalId")] int proposalId, IFormFile file)
+        {
+            return await _proposalService.UploadToFirebase(file, proposalId);
         }
     }
 }
