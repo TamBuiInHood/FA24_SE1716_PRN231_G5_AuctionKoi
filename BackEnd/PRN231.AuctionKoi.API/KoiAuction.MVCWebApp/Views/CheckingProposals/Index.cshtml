@@ -1,0 +1,131 @@
+﻿@model IEnumerable<KoiAuction.BussinessModels.CheckingProposal.CheckingProposalModel>
+
+@{
+    ViewData["Title"] = "Index";
+    var pageIndex = (int)(ViewData["PageIndex"] ?? 1);
+    var pageSize = (int)(ViewData["PageSize"] ?? 10);
+}
+<form asp-action="Index" method="get">
+    <div>
+        <label for="CheckingProposalCodeSearch">CheckingProposal Code:</label>
+        <input type="text" name="CheckingProposalCodeSearch" value="@ViewData["CheckingProposalCodeSearch"]" />
+
+        <label for="StatusSearch">Status Search:</label>
+        <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" />
+
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckingProposalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubmissionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiredDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TermAndCodition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attachment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fish.FishName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckingProposalCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubmissionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckingDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpiredDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TermAndCodition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Attachment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuctionFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fish.FishName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CheckingProposalId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CheckingProposalId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CheckingProposalId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var pagination = ViewBag.paginationParameter;
+}
+
+<nav>
+    <ul class="pagination">
+        <!-- Nút Previous -->
+        <li class="@(pagination.PageIndex > 1 ? "" : "disabled")">
+            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex > 1 ? pagination.PageIndex - 1 : 1, pageSize = pagination.PageSize, CheckingProposalCodeSearch = ViewData["CheckingProposalCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Previous">
+                <span aria-hidden="true">&laquo; Previous</span>
+            </a>
+        </li>
+
+        <!-- Nút Next -->
+        <li class="@(pagination.PageIndex < pagination.TotalPage ? "" : "disabled")">
+            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex < pagination.TotalPage ? pagination.PageIndex + 1 : pagination.TotalPage, pageSize = pagination.PageSize, CheckingProposalCodeSearch = ViewData["CheckingProposalCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Next">
+                <span aria-hidden="true">Next &raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

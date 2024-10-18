@@ -41,7 +41,7 @@
 
 function loadAuctions() {
     $.ajax({
-        url: 'https://localhost:7094/api/Auction',  // Ensure the correct API URL
+                url: 'https://localhost:7094/api/Auction?pageIndex=1&pageSize=10', 
         type: "GET",
         contentType: "application/json;charset=utf-8",
         dataType: "json",

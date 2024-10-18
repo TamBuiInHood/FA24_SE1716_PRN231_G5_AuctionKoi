@@ -31,5 +31,7 @@ namespace KoiAuction.BussinessModels.UserModels
         public DateTime CreateDate { get; set; }
 
         public int RoleId { get; set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using KoiAuction.BussinessModels.Filters;
 using KoiAuction.BussinessModels.PaymentModels;
+using KoiAuction.Common.Utils;
 using KoiAuction.Service.Base;
-using PRN231.AuctionKoi.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace KoiAuction.Service.ISerivice
         Task<IBusinessResult> GetAllOrder();
         Task<IBusinessResult> Insert(PaymentModel entityinsert);
         Task<IBusinessResult> Update(PaymentModel entityUpdate);
+        Task<IBusinessResult> UpdateAfterPay(int paymentId);
         Task<IBusinessResult> Delete(int id);
         Task<IBusinessResult> getPaymentsOData();
     }
