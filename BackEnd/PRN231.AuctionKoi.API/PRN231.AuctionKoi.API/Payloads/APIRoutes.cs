@@ -21,6 +21,7 @@
             //public const string LoginMobile = Base + "/authentication/login-mobile";
 
             public const string RefreshToken = Base + "/authentication/refreshToken";
+            public const string Register = Base + "/authentication/register";
 
         }
 
@@ -48,6 +49,10 @@
         {
             public const string Get = Base + "/proposals/";
 
+            public const string GetWithFilter = Base + "/proposals/filter";
+
+            public const string GetOData = Base + "/proposals/use-odata";
+
             public const string Create = Base + "/proposals/create-proposal";
 
             public const string GetByID = Base + "/proposals/{proposal-id}";
@@ -59,6 +64,8 @@
             public const string GetNoPagin = Base + "/proposals/get-no-paging";
 
             public const string GetUser = Base + "/proposals/user";
+
+            public const string UploadToFirebase = Base + "/proposals/upload";
 
         }
 
@@ -87,6 +94,8 @@
         {
             public const string Get = Base + "/detailProposal/";
 
+            public const string GetOData = Base + "/detailProposal/use-odata";
+
             public const string Create = Base + "/detailProposal/create-detail-proposal";
 
             public const string GetByID = Base + "/detailProposal/{detail-proposal-id}";
@@ -102,6 +111,9 @@
             public const string GetListDetailProposalType = Base + "/detailProposal/type";
 
             public const string GetProposal = Base + "/detailProposal/proposal";
+
+            public const string UploadToFirebase = Base + "/detailProposals/upload";
+
 
         }
         public static class Order
