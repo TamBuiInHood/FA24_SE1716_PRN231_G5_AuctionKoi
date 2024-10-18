@@ -148,6 +148,12 @@ namespace KoiAuction.Service.Services
                                    ? x => x.OrderByDescending(x => x.UpdateDate)
                                    : x => x.OrderBy(x => x.UpdateDate) : x => x.OrderBy(x => x.UpdateDate);
                         break;
+                    case "isdeleted":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.IsDeleted)
+                                   : x => x.OrderBy(x => x.IsDeleted) : x => x.OrderBy(x => x.IsDeleted);
+                        break;
                     default:
                         orderBy = x => x.OrderBy(x => x.FarmId);
                         break;
