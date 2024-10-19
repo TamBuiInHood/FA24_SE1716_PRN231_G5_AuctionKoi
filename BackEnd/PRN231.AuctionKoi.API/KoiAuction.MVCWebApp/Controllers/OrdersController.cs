@@ -81,9 +81,15 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             if (id == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
-            
+
+            var users = await this.GetUsers(); 
+            if (users != null && users.Any())
+            {
+                ViewData["UserId"] = new SelectList(users, "UserId", "FullName");
+            }
+
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
@@ -101,8 +107,10 @@ namespace KoiAuction.MVCWebApp.Controllers
                     }
                 }
             }
+
             return NotFound();
         }
+
         // GET: Orders/Create
         public async Task<IActionResult> Create()
         {

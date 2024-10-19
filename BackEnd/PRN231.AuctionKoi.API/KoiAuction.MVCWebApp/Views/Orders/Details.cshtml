@@ -4,120 +4,127 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Order Details</h1>
 
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vat)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vat)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalProduct)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalProduct)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TaxCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TaxCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ShippingAddress)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DeliveryDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DeliveryDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Note)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Note)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingCost)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ShippingCost)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingMethod)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ShippingMethod)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Discount)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Discount)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingTrackingCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ShippingTrackingCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ParticipationFee)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ParticipationFee)
-        </dd>
-        <dt class="col-sm-2">
-            User Name
-        </dt>
-        <dd class="col-sm-10">
-            @{
-                var userList = ViewData["UserId"] as SelectList;
-                var userName = string.Empty;
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h4 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">Order Information</h4>
+    <dl class="row" style="margin-top: 20px;">
 
-                if (userList != null && Model.UserId != null)
-                {
-                    userName = userList.FirstOrDefault(x => x.Value == Model.UserId.ToString())?.Text ?? "User not found";
+        <div class="col-sm-6">
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.OrderCode)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.OrderCode)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.Vat)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Vat)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalPrice)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.TotalProduct)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalProduct)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.OrderDate)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.TaxCode)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TaxCode)
+            </dd>
+        </div>
+
+        <div class="col-sm-6">
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.ShippingAddress)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ShippingAddress)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.DeliveryDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.DeliveryDate)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.Note)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Note)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.ShippingCost)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ShippingCost)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.ShippingMethod)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ShippingMethod)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                @Html.DisplayNameFor(model => model.Discount)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Discount)
+            </dd>
+
+            <dt style="font-weight: bold;">
+                User Name
+            </dt>
+            <dd>
+                @{
+                    var userList = ViewData["UserId"] as SelectList;
+                    var userName = string.Empty;
+
+                    if (userList != null && Model.UserId != null)
+                    {
+                        userName = userList.FirstOrDefault(x => x.Value == Model.UserId.ToString())?.Text ?? "User not found";
+                    }
                 }
-            }
-            @userName
-        </dd>
+                @userName
+            </dd>
+        </div>
+
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div style="text-align: center; margin-top: 30px;">
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.OrderId" style="margin-right: 10px;">Edit</a>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>

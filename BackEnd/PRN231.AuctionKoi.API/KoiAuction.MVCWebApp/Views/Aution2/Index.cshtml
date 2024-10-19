@@ -1,27 +1,28 @@
 ﻿@model IEnumerable<KoiAuction.Repository.Entities.Auction>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Auctions";
 }
 
 <h1>Auctions</h1>
 
- 
+<button id="btnAddNew" class="btn btn-primary">Add New Auction</button>
 
-<div class="row">
+<!-- Table to display auctions -->
+<div class="row mt-3">
     <div class="col-md-12">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-striped table-bordered table-hover">
             <thead>
                 <tr class="card-header">
-                    <th class="card-title text-center">AuctionName</th>
-                    <th class="card-title text-center">AuctionDate</th>
-                    <th class="card-title text-center">StartTime</th>
-                    <th class="card-title text-center">EndTime</th>
+                    <th class="card-title text-center">Auction Name</th>
+                    <th class="card-title text-center">Auction Date</th>
+                    <th class="card-title text-center">Start Time</th>
+                    <th class="card-title text-center">End Time</th>
                     <th class="card-title text-center">Status</th>
                     <th class="card-title text-center">Description</th>
-                    <th class="card-title text-center">CreateDate</th>
-                    <th class="card-title text-center">AutionMethod</th>
-                    <th class="card-title text-center">AuctionCode</th>
+                    <th class="card-title text-center">Create Date</th>
+                    <th class="card-title text-center">Auction Method</th>
+                    <th class="card-title text-center">Auction Code</th>
                     <th class="card-title text-center">Type</th>
                     <th class="card-title text-center">Actions</th>
                 </tr>
@@ -33,47 +34,245 @@
     </div>
 </div>
 
+<!-- Modal for creating/editing auctions -->
+<div id="auctionModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Auction Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="auctionForm">
+                    <input type="hidden" id="auctionId" />
+
+                    <!-- Auction Name -->
+                    <div class="form-group">
+                        <label for="auctionName">Auction Name</label>
+                        <input type="text" id="auctionName" class="form-control" required />
+                    </div>
+
+                    <!-- Auction Date -->
+                    <div class="form-group">
+                        <label for="auctionDate">Auction Date</label>
+                        <input type="date" id="auctionDate" class="form-control" required />
+                    </div>
+
+                    <!-- Start Time -->
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <input type="datetime-local" id="startTime" class="form-control" required />
+                    </div>
+
+                    <!-- End Time -->
+                    <div class="form-group">
+                        <label for="endTime">End Time</label>
+                        <input type="datetime-local" id="endTime" class="form-control" required />
+                    </div>
+
+                    <!-- Auction Method -->
+                    <div class="form-group">
+                        <label for="autionMethod">Auction Method</label>
+                        <input type="text" id="autionMethod" class="form-control" required />
+                    </div>
+
+                    <!-- Auction Code -->
+                    <div class="form-group">
+                        <label for="auctionCode">Auction Code</label>
+                        <input type="text" id="auctionCode" class="form-control" required />
+                    </div>
+
+                    <!-- Auction Type (Dropdown) -->
+                    <div class="form-group">
+                        <label for="typeId">Auction Type</label>
+                        <select id="typeId" class="form-control">
+                            <!-- Options for Auction Type will be loaded dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <input type="text" id="status" class="form-control" required />
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSaveAuction" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script type="text/javascript">
-    $(document).ready(function () {
-    loadAuctions();
-});
+        $(document).ready(function () {
+            loadAuctions();
 
-function loadAuctions() {
-    $.ajax({
-                url: 'https://localhost:7094/api/Auction?pageIndex=1&pageSize=10', 
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            var html = '';
-            // Notice the correction here, accessing the "list" inside the data object
-            $.each(result.data.list, function (key, item) {
-                html += '<tr>';
-                html += '<td>' + item.auctionName + '</td>';
-                html += '<td>' + new Date(item.auctionDate).toLocaleDateString() + '</td>';
-                html += '<td>' + new Date(item.startTime).toLocaleTimeString() + '</td>';
-                html += '<td>' + new Date(item.endTime).toLocaleTimeString() + '</td>';
-                html += '<td>' + item.status + '</td>';
-                html += '<td>' + item.description + '</td>';
-                html += '<td>' + new Date(item.createDate).toLocaleDateString() + '</td>';
-                html += '<td>' + item.autionMethod + '</td>';
-                html += '<td>' + item.auctionCode + '</td>';
-                html += '<td>' + (item.type ? item.type.typeName : 'No Type') + '</td>';
-                html += '<td>';
-                html += '<a href="/Auctions/Edit/' + item.auctionId + '">Edit</a> | ';
-                html += '<a href="/Auctions/Details/' + item.auctionId + '">Details</a> | ';
-                html += '<a href="/Auctions/Delete/' + item.auctionId + '">Delete</a>';
-                html += '</td>';
-                html += '</tr>';
+            // Open modal for creating new auction
+            $('#btnAddNew').click(function () {
+                $('#auctionForm')[0].reset();
+                $('#auctionId').val(''); // Reset auctionId to ensure it's empty for create
+                loadAuctionTypes();  // Load auction types
+                $('#auctionModal').modal('show');
             });
-            $('.tblAuctions').html(html);
-        },
-        error: function (xhr, error) {
-            alert("Error fetching auction data: " + xhr.statusText);
-        }
-    });
-}
 
+            // Save or Update auction
+            $('#btnSaveAuction').click(function () {
+                var auction = {
+                    auctionId: $('#auctionId').val() || 0,  // Get auctionId for edit (if available)
+                    auctionName: $('#auctionName').val(),
+                    auctionDate: $('#auctionDate').val(),
+                    startTime: $('#startTime').val(),
+                    endTime: $('#endTime').val(),
+                    auctionMethod: $('#autionMethod').val(),
+                    auctionCode: $('#auctionCode').val(),
+                    typeId: $('#typeId').val(),
+                    status: $('#status').val(),
+                    description: $('#description').val(),
+                    createDate: new Date().toISOString(), // Add CreateDate
+                };
+
+                // Check if auctionId is empty or null for creating or updating logic
+                if (auction.auctionId === "" || auction.auctionId == 0) {
+                    // Create new auction
+                    $.ajax({
+                        url: 'https://localhost:7094/api/Auction',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(auction),
+                        success: function (result) {
+                            $('#auctionModal').modal('hide');
+                            loadAuctions();
+                        },
+                        error: function (xhr, error) {
+                            alert("Error creating auction: " + xhr.responseText);
+                            console.log(xhr.responseText); // Debugging errors
+                        }
+                    });
+                } else {
+                    // Update existing auction
+                    $.ajax({
+                        url: 'https://localhost:7094/api/Auction/' + auction.auctionId,
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(auction),
+                        success: function (result) {
+                            $('#auctionModal').modal('hide');
+                            loadAuctions();
+                        },
+                        error: function (xhr, error) {
+                            alert("Error updating auction: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Delete auction
+            $(document).on('click', '.btnDelete', function () {
+                var auctionId = $(this).data('id');
+                if (confirm("Are you sure you want to delete this auction?")) {
+                    $.ajax({
+                        url: 'https://localhost:7094/api/Auction/' + auctionId,
+                        type: 'DELETE',
+                        success: function (result) {
+                            loadAuctions();
+                        },
+                        error: function (xhr, error) {
+                            alert("Error deleting auction: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Load auction data for editing
+            $(document).on('click', '.btnEdit', function () {
+                var auctionId = $(this).data('id');
+                $.ajax({
+                    url: 'https://localhost:7094/api/Auction/' + auctionId,
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        $('#auctionId').val(result.data.auctionId);
+                        $('#auctionName').val(result.data.auctionName);
+                        $('#auctionDate').val(new Date(result.data.auctionDate).toISOString().substring(0, 10));
+                        $('#startTime').val(new Date(result.data.startTime).toISOString().substring(0, 16));
+                        $('#endTime').val(new Date(result.data.endTime).toISOString().substring(0, 16));
+                        $('#autionMethod').val(result.data.auctionMethod);
+                        $('#auctionCode').val(result.data.auctionCode);
+                        $('#status').val(result.data.status);
+                        $('#description').val(result.data.description);
+                        $('#typeId').val(result.data.typeId);
+                        $('#auctionModal').modal('show');
+                    },
+                    error: function (xhr, error) {
+                        alert("Error fetching auction: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // Load all auctions
+            function loadAuctions() {
+                $.ajax({
+                    url: 'https://localhost:7094/api/Auction?pageIndex=1&pageSize=10',
+                    type: "GET",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        var html = '';
+                        $.each(result.data.list, function (key, item) {
+                            html += '<tr>';
+                            html += '<td>' + item.auctionName + '</td>';
+                            html += '<td>' + new Date(item.auctionDate).toLocaleDateString() + '</td>';
+                            html += '<td>' + new Date(item.startTime).toLocaleTimeString() + '</td>';
+                            html += '<td>' + new Date(item.endTime).toLocaleTimeString() + '</td>';
+                            html += '<td>' + item.status + '</td>';
+                            html += '<td>' + item.description + '</td>';
+                            html += '<td>' + new Date(item.createDate).toLocaleDateString() + '</td>';
+                            html += '<td>' + item.auctionMethod + '</td>';
+                            html += '<td>' + item.auctionCode + '</td>';
+                            html += '<td>' + (item.type ? item.type.typeName : 'No Type') + '</td>';
+                            html += '<td>';
+                            html += '<button class="btn btn-warning btnEdit" data-id="' + item.auctionId + '">Edit</button> ';
+                            html += '<button class="btn btn-danger btnDelete" data-id="' + item.auctionId + '">Delete</button>';
+                            html += '</td>';
+                            html += '</tr>';
+                        });
+                        $('.tblAuctions').html(html);
+                    },
+                    error: function (xhr, error) {
+                        alert("Error fetching auction data: " + xhr.responseText);
+                    }
+                });
+            }
+
+            // Load auction types (for dropdown)
+            function loadAuctionTypes() {
+                $.ajax({
+                    url: 'https://localhost:7094/api/Auction/types',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        var options = '';
+                        $.each(result.data, function (key, item) {
+                            options += '<option value="' + item.typeId + '">' + item.typeName + '</option>';
+                        });
+                        $('#typeId').html(options);
+                    },
+                    error: function (xhr, error) {
+                        alert("Error fetching auction types: " + xhr.responseText);
+                    }
+                });
+            }
+        });
     </script>
 }
+
