@@ -1,0 +1,74 @@
+﻿@model KoiAuction.BussinessModels.UserAuctionModels.UserAuctionModel
+
+@{
+    ViewData["Title"] = "User Auction Details";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center">@ViewData["Title"]</h1>
+
+    <div class="card mt-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title text-primary mb-3">User Auction Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    @Html.DisplayNameFor(model => model.BidCode)
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.BidCode)
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    @Html.DisplayNameFor(model => model.Price)
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.Price) USD
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    @Html.DisplayNameFor(model => model.CreateDate)
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.CreateDate)
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    @Html.DisplayNameFor(model => model.IsWinner)
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.IsWinner)
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    User
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.UserCode) - @Html.DisplayFor(model => model.FullName) (@Html.DisplayFor(model => model.Mail))
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    Fish
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.FishCode) - @Html.DisplayFor(model => model.FishName) (@Html.DisplayFor(model => model.FishTypeName))
+                </dd>
+
+                <dt class="col-sm-3 font-weight-bold fs-5">
+                    Auction
+                </dt>
+                <dd class="col-sm-9 fs-18">
+                    @Html.DisplayFor(model => model.AuctionCode) (Farm: @Html.DisplayFor(model => model.FarmName))
+                </dd>
+            </dl>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <a class="btn btn-warning btn-sm edit-action" asp-action="Edit" asp-route-id="@Model?.BidId">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a class="btn btn-secondary btn-sm" asp-action="Index">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>

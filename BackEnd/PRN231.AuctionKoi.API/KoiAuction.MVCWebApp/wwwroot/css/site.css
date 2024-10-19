@@ -19,6 +19,7 @@
     --theme-rounded-base: 24px;
     --theme-rounded-sub: 1rem;
 }
+
 html {
     font-size: 14px;
 }
@@ -40,6 +41,10 @@ html {
 
 body {
     margin-bottom: 60px;
+}
+
+.fs-18 {
+    font-size: 18px;
 }
 
 .header-left {
@@ -78,3 +83,131 @@ body {
             border-radius: var(--theme-rounded-base);
             filter: brightness(1.15);
         }
+
+.form-range {
+    width: 96.5%;
+    margin-left: 12px
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+    .styled-table th, .styled-table td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid rgb(var(--color-secondary-500) / 1);
+    }
+
+        .styled-table th a {
+            color: #ffffff;
+            text-decoration: none
+        }
+
+        .styled-table th.active {
+            text-decoration: underline;
+            color: #ffffff;
+        }
+
+    .styled-table thead tr {
+        background-color: rgb(var(--color-secondary-500) / 1);
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid rgb(var(--color-secondary-500) / 1);
+    }
+
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid rgb(var(--color-secondary-500) / 1);
+        }
+
+.edit-action {
+    background-color: rgb(var(--color-secondary-500) / 1);
+    color: #fff;
+    border-color: rgb(var(--color-secondary-500) / 1);
+}
+
+    .edit-action:hover {
+        background-color: rgb(var(--color-secondary-500) / 1);
+        color: #fff;
+        border-color: rgb(var(--color-secondary-500) / 1);
+        opacity: 0.9
+    }
+
+
+.btn-none {
+    background-color: #fff;
+    border: none;
+}
+
+.btn-delete, .btn-edit, .btn-detail, .btn-save {
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(var(--color-secondary-500) / 1);
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.btn-update, .btn-create, .btn-search {
+    display: inline-block;
+    font-weight: 500;
+    background-color: rgb(var(--color-primary-500) / 1);
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn-filter {
+    display: inline-block;
+    font-weight: 500;
+    background-color: rgb(var(--color-secondary-500) / 1);
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+    .btn-filter:hover {
+        color: #fff;
+        background-color: rgb(var(--color-secondary-500) / 1);
+        opacity: 0.7;
+    }
+
+.btn-delete:hover, .btn-edit:hover, .btn-detail:hover {
+    opacity: 0.7;
+    color: rgb(var(--color-secondary-500) / 1);
+}
+
+.btn-cancel {
+    color: red;
+}
+
+    .btn-cancel:hover {
+        color: red;
+        opacity: 0.7
+    }
+
+
+.btn-update:hover, .btn-create:hover, .btn-search:hover {
+    opacity: 0.7;
+    color: #fff;
+}
+
+input[type="date"]:focus,
+input[type="number"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: rgb(var(--color-primary-500) / 1);
+}
+
+.form-control:focus {
+    box-shadow: none
+}

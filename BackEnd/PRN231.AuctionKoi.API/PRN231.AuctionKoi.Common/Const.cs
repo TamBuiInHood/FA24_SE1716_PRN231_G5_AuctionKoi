@@ -72,7 +72,12 @@ namespace KoiAuction.Common
         public static int WARNING_AUCTION_IN_ACTIVE_CODE = 4;
         public static string WARNING_AUCTION_IN_ACTIVE_MSG = "The auction is not active";
         public static int WARNING_INVALID_AUCTION_PRICE_CODE = 4;
-        public static string WARNING_INVALID_AUCTION_PRICE_MSG = "Your bid is below the minimum required.";
+        public const string WARNING_INVALID_AUCTION_PRICE_MSG = "Your bid is below the minimum required price of {0}";
+        public static int WARNING_MISSING_PRICE_FILTER_CODE = 4;
+        public const string WARNING_MISSING_PRICE_FILTER_MSG = "Please enter both values for the price filter (Price From and Price To).";
+        public static int WARNING_MISSING_DATE_FILTER_CODE = 4;
+        public const string WARNING_MISSING_DATE_FILTER_MSG = "Please enter both values for the date filter (Create Date From and Create Date To).";
+
         #endregion
     }
 }

@@ -20,15 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PRN231.AuctionKoi.API\KoiAuction.API.csproj" />
+    <ProjectReference Include="..\PRN231.AuctionKoi.Common\KoiAuction.Common.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Repository\KoiAuction.Repository.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Service\KoiAuction.Service.csproj" />
   </ItemGroup>

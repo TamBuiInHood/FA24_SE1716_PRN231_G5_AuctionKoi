@@ -1,20 +1,291 @@
-﻿<div class="row">
-    <div class="col-md-12">
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr class="card-header">
-                    <th class="card-title text-center">Bank Code</th>
-                    <th class="card-title text-center">Full Name</th>
-                    <th class="card-title text-center">Short Name</th>
-                    <th class="card-title text-center">Address</th>
-                    <th class="card-title text-center">Phone</th>
-                    <th class="card-title text-center">Fax</th>
-                    <th class="card-title text-center">Disable</th>
-                    <th class="card-title text-center"></th>
+﻿@model KoiAuction.BussinessModels.Pagination.PageEntity<KoiAuction.BussinessModels.UserAuctionModels.UserAuctionModel>
+@using System.Linq
+@{
+    ViewData["Title"] = "User Auction List";
+    var pageCurr = @ViewBag.paginationParameter.PageIndex;
+}
+@{
+    var headerMapping = new Dictionary<string, string>
+    {
+        { "Bid ID", "BidId" },
+        { "Bid Code", "BidCode" },
+        { "Price", "Price" },
+        { "Create Date", "CreateDate" },
+        { "Is Winner", "IsWinner" },
+        { "User Code", "UserCode" },
+        // { "Full Name", "FullName" },
+        // { "Email", "Mail" },
+        { "FishCode", "FishCode" },
+        // { "Fish Name", "FishName" },
+        // { "Type", "FishTypeName" },
+        { "AuctionCode", "AuctionCode" },
+        // { "Farm", "FarmName" },
+    };
+}
+
+<h1 class="text-center my-4">User Auction List</h1>
+
+<div class="container">
+    <!-- Filter Form -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="search-key" class="form-label">Search:</label>
+                <input type="text" class="form-control" name="search-key" value="@ViewBag.paginationParameter.Search" placeholder="Search anything...">
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Dual Input for Price Range -->
+            <div class="col-md-6 mb-3">
+                <label for="price-range" class="form-label">Price Range:</label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="amount-from-input" name="filter-price-from" value="@ViewBag.userAuctionFilters.priceFrom" min="0" max="1000000" oninput="syncAmountFrom(this.value)">
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="amount-to-input" name="filter-price-to" value="@ViewBag.userAuctionFilters.priceTo" min="0" max="1000000" oninput="syncAmountTo(this.value)">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-between mt-2">
+                        <span id="amount-from-label">@ViewBag.userAuctionFilters.priceFrom</span> -
+                        <span id="amount-to-label">@ViewBag.userAuctionFilters.priceTo</span>
+                    </div>
+                    <input type="range" class="form-range" id="amount-from-slider" min="0" max="1000000" value="@ViewBag.userAuctionFilters.priceFrom" oninput="updateAmountFrom(this.value)">
+                    <input type="range" class="form-range mt-2" id="amount-to-slider" min="0" max="1000000" value="@ViewBag.userAuctionFilters.priceTo" oninput="updateAmountTo(this.value)">
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="row">
+                    <!-- Date Range -->
+                    <div class="col-md-6 mb-6">
+                        <label for="filter-create-date-from" class="form-label">Date From:</label>
+                        <input type="text" class="form-control text-input-date" id="filter-create-date-from" name="filter-create-date-from" placeholder="dd/mm/yyyy HH:mm:ss" value="@ViewBag.userAuctionFilters.createDateFrom">
+                    </div>
+                    <div class="col-md-6 mb-6">
+                        <label for="filter-create-date-to" class="form-label">Date To:</label>
+                        <input type="text" class="form-control text-input-date" id="filter-create-date-to" name="filter-create-date-to" placeholder="dd/mm/yyyy HH:mm:ss" value="@ViewBag.userAuctionFilters.createDateTo">
+                    </div>
+
+                </div>
+                <div class="row">
+                    <!-- Is Winner Checkbox -->
+                    <div class="col-md-6 mb-6 mt-3">
+                        <label class="form-label">Is Winner:</label>
+                        <div class="d-flex">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="is-winner-true" name="filter-is-winner" value="true" @(ViewBag.userAuctionFilters != null && ViewBag.userAuctionFilters.isWinner == "true" ? "checked" : "")>
+                                <label class="form-check-label" for="is-winner-true">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is-winner-false" name="filter-is-winner" value="false" @(ViewBag.userAuctionFilters != null && ViewBag.userAuctionFilters.isWinner == "false" ? "checked" : "")>
+                                <label class="form-check-label" for="is-winner-false">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <input type="submit" onclick="return validateFormFilter();" class="btn btn-filter w-100" value="Filter">
+            </div>
+            <div class="col-md-2 offset-md-8 d-flex justify-content-end">
+                <a asp-action="Create" class="btn btn-create w-100">Create New</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- User Auctions Table -->
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <!-- Table Headers -->
+                @foreach (var header in headerMapping.Keys)
+                {
+                    <th class="@(headerMapping[header] == ViewBag.paginationParameter.SortBy ? "active" : "")">
+                        @Html.ActionLink(header, "Index", new
+                            {
+                                sortBy = headerMapping[header],
+                                direction = ViewBag.paginationParameter.Direction == "desc" ? "asc" : "desc",
+                                searchKey = ViewBag.paginationParameter.Search,
+                                priceFrom = ViewBag.userAuctionFilters.priceFrom,
+                                priceTo = ViewBag.userAuctionFilters.priceTo,
+                                dateFrom = ViewBag.userAuctionFilters.createDateFrom,
+                                dateTo = ViewBag.userAuctionFilters.createDateTo,
+                                pageIndex = ViewBag.paginationParameter.PageIndex
+                            })
+                    </th>
+                }
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var auction in Model.List)
+            {
+                <tr>
+                    <td>@auction.BidId</td>
+                    <td>@auction.BidCode</td>
+                    <td>@auction.Price</td>
+                    <td>@auction.CreateDate?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@(auction.IsWinner == true ? "Yes" : "No")</td>
+                    <td>@auction.UserCode</td>
+                    @* <td>@auction.FullName</td> *@
+                    @* <td>@auction.Mail</td> *@
+                    <td>@auction.FishCode</td>
+                    @* <td>@auction.FishName</td> *@
+                    @* <td>@auction.FishTypeName</td> *@
+                    <td>@auction.AuctionCode</td>
+                    @* <td>@auction.FarmName</td> *@
+                    <td>
+                        <a class="btn-detail btn-none" asp-action="Details" asp-route-id="@auction.BidId">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a class="btn-edit btn-none" asp-action="Edit" asp-route-id="@auction.BidId">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="btn-delete btn-none" asp-action="Delete" asp-route-id="@auction.BidId">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody class="tblBanks">
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    @if (Model.List != null && Model.List.Any())
+    {
+        var maxPagesToShow = 5;
+        var currentPage = @ViewBag.paginationParameter.PageIndex;
+        var totalPages = Model.TotalPage;
+
+        var startPage = Math.Max(1, currentPage - maxPagesToShow / 2);
+        var endPage = Math.Min(totalPages, startPage + maxPagesToShow - 1);
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                @if (endPage - startPage < maxPagesToShow - 1)
+                {
+                    startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                }
+                @for (var i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page-index="@i"
+                           asp-route-search-key="@ViewBag.paginationParameter.Search"
+                           asp-route-filter-price-from="@ViewBag.userAuctionFilters.priceFrom"
+                           asp-route-filter-price-to="@ViewBag.userAuctionFilters.priceTo"
+                           asp-route-filter-create-date-from="@ViewBag.userAuctionFilters.createDateFrom"
+                           asp-route-filter-create-date-to="@ViewBag.userAuctionFilters.createDateTo"
+                           asp-route-filter-is-winner="@ViewBag.userAuctionFilters.isWinner">@i</a>
+
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 </div>
+
+<script>
+
+    function syncAmountFrom(value) {
+        document.getElementById('amount-from-slider').value = value;
+        document.getElementById('amount-from-label').innerText = value;
+    }
+
+    function updateAmountFrom(value) {
+        document.getElementById('amount-from-input').value = value;
+        document.getElementById('amount-from-label').innerText = value;
+    }
+
+    function syncAmountTo(value) {
+        document.getElementById('amount-to-slider').value = value;
+        document.getElementById('amount-to-label').innerText = value;
+    }
+
+    function updateAmountTo(value) {
+        document.getElementById('amount-to-input').value = value;
+        document.getElementById('amount-to-label').innerText = value;
+    }
+
+
+    function validateAmounts() {
+        const fromValue = parseFloat(document.getElementById('amount-from-input').value);
+        const toValue = parseFloat(document.getElementById('amount-to-input').value);
+
+        if (!fromValue && toValue || fromValue && !toValue) {
+            alert('Please enter both "From" and "To" price values.');
+            return false;
+        }
+
+        if (fromValue >= toValue) {
+            alert('Price "From" value must be less than price "To" value.');
+            return false;
+        }
+        return true;
+    }
+
+    function validateDates() {
+        const dateFrom = document.getElementById('filter-create-date-from').value;
+        const dateTo = document.getElementById('filter-create-date-to').value;
+
+        if (dateFrom && !dateTo || !dateFrom && dateTo) {
+            alert('Please enter both "Date From" and "Date To" values.');
+            return false;
+        }
+        // Chuyển đổi dd/mm/yyyy HH:mm:ss thành yyyy-mm-ddTHH:mm:ss
+        const fromDateParts = dateFrom.split(' ');
+        const fromDate = new Date(fromDateParts[0].split('/').reverse().join('-') + 'T' + fromDateParts[1]);
+
+        const toDateParts = dateTo.split(' ');
+        const toDate = new Date(toDateParts[0].split('/').reverse().join('-') + 'T' + toDateParts[1]);
+
+        // So sánh ngày
+        if (fromDate >= toDate) {
+            alert('The "Date From" must be earlier than "Date To".');
+            return false; // Ngăn chặn việc gửi form
+        }
+        return true; // Cho phép gửi form
+    }
+
+
+    function validateFormFilter() {
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input');
+
+        inputs.forEach(input => {
+            if (!input.value && input.type !== 'checkbox') {
+                input.disabled = true;
+            }
+        });
+
+        const isAmountsValid = validateAmounts();
+        const isDatesValid = validateDates();
+
+        return isAmountsValid && isDatesValid;
+    }
+
+</script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('input[name="filter-create-date-from"], input[name="filter-create-date-to"]').datetimepicker({
+                dateFormat: 'dd/mm/yy',
+                timeFormat: 'HH:mm:ss'
+            });
+
+            $('input[type=checkbox][name=filter-is-winner]').change(function () {
+                // Nếu checkbox này được chọn, bỏ chọn checkbox khác
+                if (this.checked) {
+                    $('input[type=checkbox][name=filter-is-winner]').not(this).prop('checked', false);
+                }
+            });
+        });
+    </script>
+}

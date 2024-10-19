@@ -33,6 +33,8 @@ namespace KoiAuction.BussinessModels.UserAuctionModels
         public string FishName { get; set; } = null!;
 
         public string FishTypeName { get; set; } = null!;
+        public int? MinIncrement { get; set; }
+        public double? FinalPrice { get; set; }
         public int AuctionId { get; set; }
 
         public string AuctionCode { get; set; } = null!;
