@@ -85,7 +85,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             };
             ViewBag.userAuctionFilters = userAuctionFilters;
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
             {
                 // Dictionary to store query parameters
                 var queryParams = new Dictionary<string, string>
@@ -150,7 +150,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: UserAuctions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "userAuctions/" + id))
                 {
@@ -190,7 +193,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             bool saveStatus = false;
             string errorMessage = string.Empty;
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
             {
                 using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "userAuctions/", userAuction))
                 {
@@ -250,7 +253,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             bool saveStatus = false;
             string errorMessage = string.Empty;
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "userAuctions/" + userAuction.BidId, userAuction))
                 {
@@ -288,7 +294,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             UserAuctionModel userAuction = null;
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "userAuctions/" + id))
                 {
@@ -330,7 +336,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             bool saveStatus = false;
             string errorMessage = string.Empty;
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "userAuctions/" + id))
                 {
@@ -373,7 +382,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<List<UserModel>> GetUsers()
         {
             var detailProposals = new List<UserModel>();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "userAuctions/user"))
                 {
@@ -399,7 +408,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<List<DetailProposalModel>> GetDetailProposals()
         {
             var detailProposals = new List<DetailProposalModel>();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "userAuctions/detailProposal"))
                 {
@@ -425,7 +437,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<List<Auction>> GetAuctions()
         {
             var detailProposals = new List<Auction>();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "userAuctions/auction"))
                 {
