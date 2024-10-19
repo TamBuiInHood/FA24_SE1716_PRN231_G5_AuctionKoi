@@ -76,6 +76,8 @@
         public static class UserAuction
         {
             public const string Get = Base + "/userAuctions/";
+            public const string GetOData = Base + "/userAuctions/OData/";
+
 
             public const string GetByID = Base + "/userAuctions/{bidId}";
 
