@@ -266,7 +266,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             var payment = new PaymentModel();
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "/payments" + id))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
