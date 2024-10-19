@@ -29,5 +29,9 @@ namespace KoiAuction.Repository.Repositories
             return await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.OrderId == id);
 
         }
+        public async Task<IEnumerable<OrderDetail>> GetByOrderId(int orderId)
+        {
+            return await _context.OrderDetails.Where(od => od.OrderId == orderId).ToListAsync();
+        }
     }
 }

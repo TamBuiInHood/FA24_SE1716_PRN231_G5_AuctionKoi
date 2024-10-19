@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var pageIndex = (int)(ViewData["PageIndex"] ?? 1);
+    var pageSize = (int)(ViewData["PageSize"] ?? 10);
 }
 
 <h1>Index</h1>
@@ -9,57 +11,40 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div>
+        <label for="OrderCodeSearch">Order Code:</label>
+        <input type="text" name="OrderCodeSearch" value="@ViewData["OrderCodeSearch"]" />
+
+        <label for="TaxCodeSearch">Tax Code:</label>
+        <input type="text" name="TaxCodeSearch" value="@ViewData["TaxCodeSearch"]" />
+
+        <label for="StatusSearch">ShippingTrackingCode:</label>
+        <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" />
+
+        <button type="submit">Search</button>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalProduct)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TaxCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeliveryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingMethod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingTrackingCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParticipationFee)
-            </th>
-     @*        <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th> *@
+            <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
+            <th>@Html.DisplayNameFor(model => model.Vat)</th>
+            <th>@Html.DisplayNameFor(model => model.TotalPrice)</th>
+            <th>@Html.DisplayNameFor(model => model.TotalProduct)</th>
+            <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.TaxCode)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingAddress)</th>
+            <th>@Html.DisplayNameFor(model => model.DeliveryDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Note)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingCost)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingMethod)</th>
+            <th>@Html.DisplayNameFor(model => model.Discount)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingTrackingCode)</th>
+            <th>@Html.DisplayNameFor(model => model.ParticipationFee)</th>
             <th></th>
         </tr>
     </thead>
@@ -72,7 +57,25 @@
                 <td>@Html.DisplayFor(modelItem => item.TotalPrice)</td>
                 <td>@Html.DisplayFor(modelItem => item.TotalProduct)</td>
                 <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        @:Processing
+                    }
+                    else if (item.Status == 2)
+                    {
+                        @:Transporting
+                    }
+                    else if (item.Status == 3)
+                    {
+                        @:Completed
+                    }
+                    else if (item.Status == 4)
+                    {
+                        @:Rejected
+                    }
+
+                </td>
                 <td>@Html.DisplayFor(modelItem => item.TaxCode)</td>
                 <td>@Html.DisplayFor(modelItem => item.ShippingAddress)</td>
                 <td>@Html.DisplayFor(modelItem => item.DeliveryDate)</td>
@@ -91,3 +94,37 @@
         }
     </tbody>
 </table>
+
+@{
+    var pagination = ViewBag.paginationParameter;
+    var orderList = Model; 
+}
+
+@if (orderList == null || !orderList.Any()) 
+{
+    <div class="alert alert-info">
+        Không có dữ liệu để hiển thị.
+    </div>
+}
+else
+{
+    <nav>
+        <ul class="pagination">
+            <!-- Nút Previous -->
+            <li class="@(pagination.PageIndex > 1 ? "" : "disabled")">
+                <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex > 1 ? pagination.PageIndex - 1 : 1, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Previous">
+                    <span aria-hidden="true">&laquo; Previous</span>
+                </a>
+            </li>
+
+            <!-- Thêm logic để hiển thị các số trang ở đây nếu cần -->
+            <!-- Nút Next -->
+            <li class="@(pagination.PageIndex < pagination.TotalPage ? "" : "disabled")">
+                <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex < pagination.TotalPage ? pagination.PageIndex + 1 : pagination.TotalPage, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Next">
+                    <span aria-hidden="true">Next &raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+

@@ -5,8 +5,11 @@ using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Common;
 using KoiAuction.Service.Base;
 using Newtonsoft.Json;
-using PRN231.AuctionKoi.Common.Utils;
 using KoiAuction.BussinessModels.Filters;
+using System.Net.Http;
+using KoiAuction.Repository.Entities;
+using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
+using KoiAuction.Common.Utils;
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
@@ -22,8 +25,8 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: Payments
         public async Task<IActionResult> Index(
                 [FromQuery(Name = "search-key")] string? searchKey,
-                [FromQuery(Name ="direction")] string? direction,
-                [FromQuery(Name ="sortBy")] string? sortBy,
+                [FromQuery(Name = "direction")] string? direction,
+                [FromQuery(Name = "sortBy")] string? sortBy,
                 [FromQuery(Name = "payment-amount-from")] double? paymentAmountFrom,
                 [FromQuery(Name = "payment-amount-to")] double? paymentAmountTo,
                 [FromQuery(Name = "payment-date-from")] DateTime? paymentDateFrom,
@@ -38,7 +41,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 Search = searchKey,
-                Direction =  direction,
+                Direction = direction,
                 SortBy = sortBy,
             };
             ViewBag.paginationParameter = paginationParameter;
@@ -136,7 +139,6 @@ namespace KoiAuction.MVCWebApp.Controllers
                     }
                     return View();
                 }
-
             }
         }
 
@@ -346,6 +348,71 @@ namespace KoiAuction.MVCWebApp.Controllers
                 }
             }
             return orders!;
+        }
+
+        public async Task<IActionResult> CraetePaymentLink(int paymentId, double totalPrice)
+        {
+            string paymentLink = "";
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + $"payments/vnpay-action?paymentId={paymentId}&totalPrice={totalPrice.ToString()}"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                        if (result != null && result.Data != null)
+                        {
+                            paymentLink = result.Data.ToString()!;
+                        }
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(paymentLink))
+            {
+                return Redirect(paymentLink);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public async Task<IActionResult> UpdateAfterPayment(int paymentId)
+        {
+            bool saveStatus = false;
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    //foreach (var queryParam in Request.Query)
+                    //{
+                    //    Console.WriteLine($"{queryParam.Key}: {queryParam.Value}");
+                    //}
+                    var queryParams = Request.QueryString.HasValue ? Request.QueryString.Value : "";
+                    string apiroute = Const.APIEndPoint + "payments/update-after-payment/" + paymentId + queryParams;
+                    using (var response = await httpClient.PutAsync(Const.APIEndPoint + "payments/update-after-payment/" + paymentId +queryParams, new StringContent("")))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Status == Const.SUCCESS_UPDATE_AFTER_PAYMENT_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

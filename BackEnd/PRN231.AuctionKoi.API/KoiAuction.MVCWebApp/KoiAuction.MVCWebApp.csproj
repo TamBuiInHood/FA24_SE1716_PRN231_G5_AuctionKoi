@@ -12,10 +12,12 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\client.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\paymentAjax.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\userAuctions.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\CheckingProposal_Ajax_Jquery\Index.cshtml" />
     <None Include="wwwroot\js\userAuctions.js" />
   </ItemGroup>
 
@@ -28,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KoiAuction.BussinessModels\KoiAuction.BussinessModels.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.API\KoiAuction.API.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Common\KoiAuction.Common.csproj" />
     <ProjectReference Include="..\PRN231.AuctionKoi.Repository\KoiAuction.Repository.csproj" />

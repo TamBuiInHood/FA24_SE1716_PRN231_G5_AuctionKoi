@@ -28,15 +28,28 @@ namespace KoiAuction.MVCWebApp.Controllers
             _context = context;
         }
 
-        // GET: Orders
-        public async Task<IActionResult> Index()
+        //GET: Orders
+        public async Task<IActionResult> Index(int? pageIndex, int? pageSize, string? OrderCodeSearch, string? TaxCodeSearch, string? StatusSearch)
         {
-            //var auctionKoiOfficialContext = _context.Proposals.Include(p => p.User);
-            //return View(await auctionKoiOfficialContext.ToListAsync());
+            var currentPageSize = pageSize ?? 10; 
+
+            ViewData["OrderCodeSearch"] = OrderCodeSearch;
+            ViewData["TaxCodeSearch"] = TaxCodeSearch;
+            ViewData["StatusSearch"] = StatusSearch;
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders"))
+                var uri = $"{Const.APIEndPoint}orders?pageIndex={pageIndex ?? 0}&pageSize={currentPageSize}";
+
+          
+                var searchKey = OrderCodeSearch ?? TaxCodeSearch ?? StatusSearch;
+
+                if (!string.IsNullOrEmpty(searchKey))
+                {
+                    uri += $"&searchKey={searchKey}";
+                }
+
+                using (var response = await httpClient.GetAsync(uri))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -45,14 +58,21 @@ namespace KoiAuction.MVCWebApp.Controllers
                         if (result != null && result.Data != null)
                         {
                             var data = JsonConvert.DeserializeObject<PageEntity<OrderModel>>(result.Data.ToString());
+                            ViewBag.paginationParameter = new
+                            {
+                                PageIndex = pageIndex ?? 1,
+                                TotalPage = data.TotalPage,
+                                TotalRecord = data.TotalRecord,
+                                PageSize = currentPageSize
+                            };
                             return View(data.List.ToList());
                         }
                     }
-                    return View();
+                    return View(new List<OrderModel>());
                 }
-
             }
         }
+
 
 
 
@@ -87,6 +107,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
             return View();
         }
 
@@ -128,6 +149,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             else
             {
                 ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View();
             }
         }
@@ -153,6 +175,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 }
             }
             ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
             return View(order);
   
         }
@@ -162,7 +185,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] OrderModel order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] UpdateOrder order)
         {
             bool saveStatus = false;
 
@@ -170,7 +193,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "orders/update-order", order))
+                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + $"orders/update/{id}", order))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -192,8 +215,8 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", order.UserId);
-
+                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View(order);
             }
         }
@@ -202,19 +225,28 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            var order  = new OrderModel();
+            using (var httpClient = new HttpClient())
             {
-                return NotFound();
-            }
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
 
-            var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+                        if (result != null && result.Data != null)
+                        {
+                            order = JsonConvert.DeserializeObject<OrderModel>(result.Data.ToString());
+                        }
+                    }
+                }
+            }
+            var users = await this.GetUsers();
+            if (users != null && users.Any())
             {
-                return NotFound();
+                ViewData["UserId"] = new SelectList(users, "UserId", "FullName", order.UserId);
             }
-
             return View(order);
         }
 
@@ -223,14 +255,40 @@ namespace KoiAuction.MVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            bool saveStatus = false;
+            if (ModelState.IsValid)
             {
-                _context.Orders.Remove(order);
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "orders/" + id))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+
+                            if (result != null && result.Status == Const.SUCCESS_DELETE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (saveStatus)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View();
+            }
+
         }
 
         private bool OrderExists(int id)
@@ -241,7 +299,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "proposals/user"))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/user"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -255,6 +313,28 @@ namespace KoiAuction.MVCWebApp.Controllers
                         }
                     }
                     return new List<User>();
+                }
+
+            }
+        }
+        public async Task<List<Repository.Entities.UserAuction>> GetUsersAution()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/useraution"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
+                        if (result != null && result.Data != null)
+                        {
+                            var data = JsonConvert.DeserializeObject<List<Repository.Entities.UserAuction>>
+                                (result.Data.ToString());
+                            return data;
+                        }
+                    }
+                    return new List<Repository.Entities.UserAuction>();
                 }
 
             }

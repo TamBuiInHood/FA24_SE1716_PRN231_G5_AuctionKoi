@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KoiAuction.BussinessModels.CheckingProposal;
 using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.BussinessModels.Order;
 using KoiAuction.BussinessModels.PaymentModels;
@@ -6,6 +7,7 @@ using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
 using KoiAuction.BussinessModels.UserModels;
 using KoiAuction.Repository.Entities;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace KoiAuction.Service.Mappings
 {
@@ -22,6 +24,8 @@ namespace KoiAuction.Service.Mappings
                 //.ForMember(dest => dest.Order, opt => opt.MapFrom(x => x.Order))
                 .ReverseMap();
             CreateMap<Proposal, CreateProposalModel>().ReverseMap();
+ 
+
 
             CreateMap<UserAuction, UserAuctionModel>()
                .ForMember(dest => dest.FishCode, opt => opt.MapFrom(x => x.Fish.FishCode))
@@ -61,6 +65,12 @@ namespace KoiAuction.Service.Mappings
                  .ForMember(dest => dest.TotalProduct, opt => opt.Ignore())
                  .ForMember(dest => dest.ShippingCost, opt => opt.Ignore());
 
+            //CheckingProposal
+            CreateMap<CheckingProposal, CheckingProposalModel>()
+                .ReverseMap();
+            /*.ForMember(dest => dest.)*/
+            CreateMap<CreateCheckingProposalModel, CheckingProposal>().ReverseMap();
+            CreateMap<UpdateCheckingProposalModel, CheckingProposal>().ReverseMap();
         }
     }
 }

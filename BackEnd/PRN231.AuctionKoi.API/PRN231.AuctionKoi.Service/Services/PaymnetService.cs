@@ -5,8 +5,6 @@ using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.BussinessModels.Pagination;
 using Microsoft.IdentityModel.Tokens;
-using PRN231.AuctionKoi.Common.Utils;
-using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +15,7 @@ using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.Repository.Entities;
 using KoiAuction.BussinessModels.Filters;
 using KoiAuction.Common.Utils;
-
+using PRN231.AuctionKoi.Repository.UnitOfWork;
 
 namespace KoiAuction.Service.Services
 {
@@ -203,7 +201,8 @@ namespace KoiAuction.Service.Services
             {
                 return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
             }
-            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, payment);
+            var mapdto = _mapper.Map<PaymentModel>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
 
         }
 
@@ -257,6 +256,32 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+        }
+
+        public async Task<IBusinessResult> getPaymentsOData()
+        {
+            var payment = await _unitOfWork.PaymentRepository.GetAllNoPaging();
+            if (!payment.Any())
+            {
+                return new BusinessResult(status: Const.WARNING_NO_DATA_CODE, message: Const.WARNING_NO_DATA_MSG);
+            }
+            var mapdto = _mapper.Map<IEnumerable<PaymentModel>>(payment);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, mapdto);
+        }
+
+        public async Task<IBusinessResult> UpdateAfterPay(int paymentId)
+        {
+            Expression<Func<Payment, bool>> filter = x => x.PaymentId == paymentId;
+            var entity = await _unitOfWork.PaymentRepository.GetByCondition(filter);
+            entity.Status = "PAID";
+
+            _unitOfWork.PaymentRepository.Update(entity);
+            var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
+            if (result)
+            {
+                return new BusinessResult(Const.SUCCESS_UPDATE_AFTER_PAYMENT_CODE, Const.SUCCESS_UPDATE_AFTER_PAYMENT_MSG);
+            }
+            return new BusinessResult(Const.FAIL_UPDATE_AFTER_PAYMENT_CODE, Const.FAIL_UPDATE_AFTER_PAYMENT_MSG);
         }
     }
 }
