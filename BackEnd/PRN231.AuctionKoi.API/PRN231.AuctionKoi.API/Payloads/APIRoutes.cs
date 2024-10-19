@@ -81,6 +81,12 @@
 
             public const string GetByAuctionIdAndFishId = Base + "/userAuctions/{auctionId}/{fishId}";
 
+            public const string GetAuctions = Base + "/userAuctions/auction";
+
+            public const string GetUsers = Base + "/userAuctions/user";
+
+            public const string GetDetailProposals = Base + "/userAuctions/detailProposal";
+
             public const string Create = Base + "/userAuctions/";
 
             public const string Update = Base + "/userAuctions/{bidId}";

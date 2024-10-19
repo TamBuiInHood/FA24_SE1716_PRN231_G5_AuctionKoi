@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using KoiAuction.BussinessModels.DetailProposalModel;
+using KoiAuction.BussinessModels.Filters;
 using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.Proposal;
 using KoiAuction.BussinessModels.UserAuctionModels;
+using KoiAuction.BussinessModels.UserModels;
 using KoiAuction.Common;
 using KoiAuction.Common.Enums;
 using KoiAuction.Common.Utils;
@@ -16,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using PRN231.AuctionKoi.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -65,40 +69,44 @@ namespace KoiAuction.Service.Services
                                   || x.Fish.FishCode!.ToLower().Contains(paginationParameter.Search.ToLower())
                                   || x.Fish.FishName!.ToLower().Contains(paginationParameter.Search.ToLower())
                                   || x.Fish.FishType.FishTypeName!.ToLower().Contains(paginationParameter.Search.ToLower())
+                                  || x.Fish.Auction!.AuctionCode!.ToLower().Contains(paginationParameter.Search.ToLower())
                                   || x.Fish.Auction!.AuctionName!.ToLower().Contains(paginationParameter.Search.ToLower()));
                 }
             }
 
-            if (userAuctionFilters.createDateFrom.HasValue && userAuctionFilters.createDateTo.HasValue)
+            if (userAuctionFilters.priceFrom.HasValue || userAuctionFilters.priceTo.HasValue)
             {
+                if (!userAuctionFilters.priceFrom.HasValue || !userAuctionFilters.priceTo.HasValue)
+                {
+                    return new BusinessResult(Const.WARNING_MISSING_PRICE_FILTER_CODE, Const.WARNING_MISSING_PRICE_FILTER_MSG);
+                }
+
+                if (userAuctionFilters.priceFrom.Value > userAuctionFilters.priceTo.Value)
+                {
+                    return new BusinessResult(Const.FAIL_CHECK_NUMBER_FILTER_CODE, Const.FAIL_CHECK_NUMBER_FILTER_MSG);
+                }
+                filter = filter.And(x => x.Price <= userAuctionFilters.priceTo &&
+                                         x.Price >= userAuctionFilters.priceFrom);
+            }
+
+            if (userAuctionFilters.createDateFrom.HasValue || userAuctionFilters.createDateTo.HasValue)
+            {
+                if (!userAuctionFilters.createDateFrom.HasValue || !userAuctionFilters.createDateTo.HasValue)
+                {
+                    return new BusinessResult(Const.WARNING_MISSING_DATE_FILTER_CODE, Const.WARNING_MISSING_DATE_FILTER_MSG);
+                }
+
                 if (userAuctionFilters.createDateFrom.Value > userAuctionFilters.createDateTo.Value)
                 {
                     return new BusinessResult(Const.WARNING_INVALID_DATE_FILTER_CODE, Const.WARNING_INVALID_DATE_FILTER_MSG);
                 }
                 filter = filter.And(x => x.CreateDate >= userAuctionFilters.createDateFrom &&
-                            x.CreateDate <= userAuctionFilters.createDateTo);
+                                         x.CreateDate <= userAuctionFilters.createDateTo);
             }
 
-            if (userAuctionFilters.fishTypeNames != null && userAuctionFilters.fishTypeNames.Length > 0)
-            {
-                filter = filter.And(x => userAuctionFilters.fishTypeNames.Contains(x.Fish.FishType.FishTypeName));
-            }
+            if (userAuctionFilters.isWinner != null)
+                filter = filter.And(x => x.IsWinner.ToString()!.ToLower() == userAuctionFilters.isWinner.ToLower());
 
-            if (!string.IsNullOrEmpty(userAuctionFilters.auctionCode))
-            {
-                filter = filter.And(x => x.Fish.Auction!.AuctionCode == userAuctionFilters.auctionCode);
-            }
-
-            if (!string.IsNullOrEmpty(userAuctionFilters.userCode))
-            {
-                filter = filter.And(x => x.User.UserCode == userAuctionFilters.userCode);
-            }
-
-            if (!string.IsNullOrEmpty(userAuctionFilters.isWinner))
-            {
-                bool isWinner = userAuctionFilters.isWinner.ToLower() == "true";
-                filter = filter.And(x => x.IsWinner == isWinner);
-            }
             switch (paginationParameter.SortBy?.Trim().ToLower())
             {
                 case "bidcode":
@@ -222,7 +230,7 @@ namespace KoiAuction.Service.Services
                 return new BusinessResult(Const.WARNING_INVALID_ID_CODE, Const.WARNING_INVALID_ID_MSG);
             }
             Func<IQueryable<UserAuction>, IOrderedQueryable<UserAuction>> orderBy = null!;
-            string includeProperties = "User";
+            string includeProperties = "User,Fish";
             orderBy = x => x.OrderByDescending(x => x.CreateDate)
                             .ThenByDescending(x => x.BidId);
             var userAuctionListEntity = await _unitOfWork.UserAuctionRepository.GetAllNoPaging(filter, orderBy, includeProperties);
@@ -233,17 +241,82 @@ namespace KoiAuction.Service.Services
             var userAuctionModel = _mapper.Map<UserAuctionModel[]>(userAuctionListEntity);
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, userAuctionModel);
         }
+        public async Task<IBusinessResult> GetListUser()
+        {
+            try
+            {
+                var listUser = await _unitOfWork.UserRepository.GetAllNoPaging(x => x.RoleId == (int)UserRole.AUCTIONER);
+                if (listUser != null && listUser.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<UserModel[]>(listUser));
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
+
+        public async Task<IBusinessResult> GetListDetailProposal()
+        {
+            try
+            {
+                var listUser = await _unitOfWork.DetailProposalRepository.GetAllNoPaging();
+                if (listUser != null && listUser.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<DetailProposalModel[]>(listUser));
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
+
+        public async Task<IBusinessResult> GetListAuction()
+        {
+            try
+            {
+                var listAuctions = await _unitOfWork.DetailProposalRepository.ListAuctions();
+                if (listAuctions != null && listAuctions.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, listAuctions);
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_READ_MSG, ex.ToString());
+            }
+        }
 
         public async Task<IBusinessResult> Insert(CreateUserAuctionModel entityInsert)
         {
-            //var validationResult = await ValidateAuctionConditions(entityInsert);
-            //if (validationResult.Status != Const.SUCCESS_CHECK_CODE)
-            //{
-            //    return validationResult;
-            //}
+            var validationResult = await ValidateAuctionConditions(entityInsert);
+            if (validationResult.Status != Const.SUCCESS_CHECK_CODE)
+            {
+                return validationResult;
+            }
 
             var mapEntity = _mapper.Map<UserAuction>(entityInsert);
             await _unitOfWork.UserAuctionRepository.Insert(mapEntity);
+            var detailProposal = await _unitOfWork.DetailProposalRepository.GetByCondition(x => x.FishId == entityInsert.FishId && x.AuctionId == entityInsert.AuctionId);
+            detailProposal.FinalPrice = entityInsert.Price;
+            _unitOfWork.DetailProposalRepository.Update(detailProposal);
             var result = await _unitOfWork.SaveAsync() > 0 ? true : false;
             if (result)
             {
@@ -368,15 +441,16 @@ namespace KoiAuction.Service.Services
             }
 
             // check auction and detailProposal is still active
-            if (!isEdit && detailProposalEntity.Auction!.Status != AuctionStatus.Active.ToString() && detailProposalEntity.Status != AuctionStatus.Active.ToString())
+            if (!isEdit && detailProposalEntity.Auction!.Status != AuctionStatus.Active.ToString() && detailProposalEntity.Status != DetailProposalStatus.Active.ToString())
             {
                 return (false, new BusinessResult(Const.WARNING_AUCTION_IN_ACTIVE_CODE, Const.WARNING_AUCTION_IN_ACTIVE_MSG));
             }
 
             // check price must be >= finalPriceCurrent + minPirceBid
-            if (price < detailProposalEntity.FinalPrice + detailProposalEntity.MinIncrement)
+            var minPrice = detailProposalEntity.FinalPrice + detailProposalEntity.MinIncrement;
+            if (price < minPrice)
             {
-                return (false, new BusinessResult(Const.WARNING_INVALID_AUCTION_PRICE_CODE, Const.WARNING_INVALID_AUCTION_PRICE_MSG));
+                return (false, new BusinessResult(Const.WARNING_INVALID_AUCTION_PRICE_CODE, String.Format(Const.WARNING_INVALID_AUCTION_PRICE_MSG, minPrice)));
             }
 
             return (true, null!);
