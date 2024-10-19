@@ -31,6 +31,8 @@ namespace KoiAuction.Service.Mappings
                .ForMember(dest => dest.FishCode, opt => opt.MapFrom(x => x.Fish.FishCode))
                .ForMember(dest => dest.FishName, opt => opt.MapFrom(x => x.Fish.FishName))
                .ForMember(dest => dest.FishTypeName, opt => opt.MapFrom(x => x.Fish.FishType.FishTypeName))
+               .ForMember(dest => dest.MinIncrement, opt => opt.MapFrom(x => x.Fish.MinIncrement))
+               .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(x => x.Fish.FinalPrice))
                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(x => x.Fish.Farm!.FarmName))
                .ForMember(dest => dest.UserCode, opt => opt.MapFrom(x => x.User.UserCode))
                .ForMember(dest => dest.FullName, opt => opt.MapFrom(x => x.User.FullName))

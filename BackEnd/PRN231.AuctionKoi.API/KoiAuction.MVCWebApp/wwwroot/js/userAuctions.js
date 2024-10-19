@@ -1,14 +1,17 @@
 ﻿let ws = null;
-const currentPrice = 1000;
-let stepPrice = 50;
-let quantity = 1;
 const bidButton = document.getElementById('btn-bid');
 const textWarningBid = document.getElementById('text-warning-bid');
 
 
 // Tính tổng giá bid
 function calculateTotal() {
-    const totalPrice = currentPrice + stepPrice * quantity;
+    let minIncrement = document.getElementById('step-price').value;
+    let currentPrice = document.getElementById('current-price').value;
+    let quantity = parseInt(document.getElementById('quantity').value);
+
+    let totalPrice = currentPrice + (quantity * minIncrement);
+
+
     document.getElementById('total-price').value = `$${totalPrice.toLocaleString('en-US')}`;
     document.getElementById('bid-total').innerText = `$${totalPrice.toLocaleString('en-US')}`;
 }
@@ -62,14 +65,33 @@ document.getElementById('quantity').addEventListener('input', (e) => {
     calculateTotal();
 });
 
-// Đặt giá bid
-function placeBid() {
-
-    if (bidButton.disabled) {
-        alert('You have already placed a bid. Please wait for your turn.');
+function updatePriceDisplay(detailProposal) {
+    if (!detailProposal) {
+        console.error('Detail proposal is required');
         return;
     }
-    const bidAmount = currentPrice + stepPrice * quantity;
+
+    const minIncrement = detailProposal.minIncrement;
+    const finalPrice = detailProposal.finalPrice;
+
+    // Cập nhật giá trị vào các phần tử HTML
+    document.getElementById('step-price').value = minIncrement;
+    document.getElementById('current-price').value = finalPrice;
+
+    // Định dạng giá và cập nhật innerText
+    document.getElementById('current-price').innerText = `$${finalPrice.toLocaleString('en-US')}`;
+
+    // Tính tổng
+    calculateTotal();
+}
+
+// Đặt giá bid
+function placeBid() {
+    let minIncrement = document.getElementById('step-price').value;
+    let currentPrice = document.getElementById('current-price').value;
+    let quantity = parseInt(document.getElementById('quantity').value);
+
+    const bidAmount = currentPrice + (quantity * minIncrement);;
     const confirmMessage = `Are you sure you want to place a bid of: $${bidAmount.toLocaleString('en-US')}?`;
     const isConfirmed = confirm(confirmMessage); // Hiển thị hộp thoại xác nhận
 
@@ -112,7 +134,10 @@ function loadDetailProposal() {
         success: function (response) {
             if (response.status === 1) {
                 var detailProposal = response.data;
-                console.log(detailProposal)
+                if (detailProposal.status == isActive) {
+                    document.getElementById('card-bid').style.display = 'block';
+                    updatePriceDisplay(detailProposal);
+                }
 
             }
             // else {
@@ -176,7 +201,7 @@ function renderBids(bids) {
     }
     bids.forEach(function (auction, index) {
         // Kiểm tra nếu đây là phần tử đầu tiên (mới nhất)
-        const itemClass = index === 0 ? 'card-past-bids-list-item' : 'card-past-bids-none';
+        const itemClass = index === 0 ? 'card-past-bids-first' : 'card-past-bids-none';
         var auctionHtml = `
     <div class="my-2 ${itemClass}">
         <div class="px-3 py-2 w-100">
@@ -201,6 +226,7 @@ function connectWebSocket() {
         const message = JSON.parse(event.data);
         if (message.action === 'update') {
             disableBidButton();
+            updatePriceDisplay(message.data[0]);
             renderBids(message.data)
         }
     };
