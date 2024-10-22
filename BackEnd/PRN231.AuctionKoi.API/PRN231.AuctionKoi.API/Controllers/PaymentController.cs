@@ -132,6 +132,10 @@ namespace KoiAuction.API.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var insertEntity = new KoiAuction.BussinessModels.PaymentModels.PaymentModel();
                 insertEntity.PaymentDate = reqObj.PaymentDate;
                 insertEntity.PaymentMethod = reqObj.PaymentMethod;

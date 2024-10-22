@@ -11,17 +11,17 @@ namespace KoiAuction.BussinessModels.PaymentModels
     {
         [Key]
         public int PaymentId { get; set; }
-
+        [Required]
         public double? PaymentAmount { get; set; }
-
+        [Required]
         public DateTime? PaymentDate { get; set; }
-
+        [Required]
         public string? Status { get; set; }
-
+        [Required]
         public string? PaymentMethod { get; set; }
 
         public string TransactionId { get; set; }
-
+        [Required]
         public int OrderId { get; set; }
     }
 }

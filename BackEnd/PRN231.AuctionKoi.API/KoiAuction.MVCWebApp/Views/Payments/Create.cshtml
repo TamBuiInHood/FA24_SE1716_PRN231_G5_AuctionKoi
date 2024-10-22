@@ -17,7 +17,7 @@
 
                 <div class="form-group">
                     <label asp-for="PaymentAmount" class="font-weight-bold"></label>
-                    <input type="number" asp-for="PaymentAmount" class="form-control" />
+                    <input type="number" min="1" asp-for="PaymentAmount" class="form-control" />
                     <span asp-validation-for="PaymentAmount" class="text-danger"></span>
                 </div>
 
