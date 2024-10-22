@@ -133,7 +133,7 @@
                     auctionDate: $('#auctionDate').val(),
                     startTime: $('#startTime').val(),
                     endTime: $('#endTime').val(),
-                    auctionMethod: $('#autionMethod').val(),
+                    autionMethod: $('#autionMethod').val(),
                     auctionCode: $('#auctionCode').val(),
                     typeId: $('#typeId').val(),
                     status: $('#status').val(),
@@ -206,7 +206,7 @@
                         $('#auctionDate').val(new Date(result.data.auctionDate).toISOString().substring(0, 10));
                         $('#startTime').val(new Date(result.data.startTime).toISOString().substring(0, 16));
                         $('#endTime').val(new Date(result.data.endTime).toISOString().substring(0, 16));
-                        $('#autionMethod').val(result.data.auctionMethod);
+                        $('#autionMethod').val(result.data.autionMethod);
                         $('#auctionCode').val(result.data.auctionCode);
                         $('#status').val(result.data.status);
                         $('#description').val(result.data.description);
@@ -237,7 +237,7 @@
                             html += '<td>' + item.status + '</td>';
                             html += '<td>' + item.description + '</td>';
                             html += '<td>' + new Date(item.createDate).toLocaleDateString() + '</td>';
-                            html += '<td>' + item.auctionMethod + '</td>';
+                            html += '<td>' + item.autionMethod + '</td>';
                             html += '<td>' + item.auctionCode + '</td>';
                             html += '<td>' + (item.type ? item.type.typeName : 'No Type') + '</td>';
                             html += '<td>';

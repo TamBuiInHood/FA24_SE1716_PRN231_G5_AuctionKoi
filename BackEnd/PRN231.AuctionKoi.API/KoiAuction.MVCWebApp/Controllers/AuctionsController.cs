@@ -123,7 +123,8 @@ namespace KoiAuction.WebApp.Controllers
         {
             if (id != auction.AuctionId)
             {
-                return NotFound();
+
+                id = auction.AuctionId;
             }
 
             if (!ModelState.IsValid)
