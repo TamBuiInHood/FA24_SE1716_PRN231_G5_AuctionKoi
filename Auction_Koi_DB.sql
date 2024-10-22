@@ -300,8 +300,8 @@ CREATE TABLE [dbo].[UserAuction](
 GO
 SET IDENTITY_INSERT [dbo].[Auctions] ON 
 
-INSERT [dbo].[Auctions] ([AuctionId], [AuctionName], [AuctionDate], [StartTime], [EndTime], [Status], [Description], [CreateDate], [AutionMethod], [AuctionCode], [TypeID]) VALUES (1, N'Phiên đấu giá cá vàng', CAST(N'2024-09-25T00:00:00.000' AS DateTime), CAST(N'2024-09-25T09:00:00.000' AS DateTime), CAST(N'2024-09-25T10:00:00.000' AS DateTime), N'Đã kết thúc', N'Đấu giá cho cá vàng đẹp nhất.', CAST(N'2024-10-07T10:52:15.740' AS DateTime), 1, N'AUCTION001', 1)
-INSERT [dbo].[Auctions] ([AuctionId], [AuctionName], [AuctionDate], [StartTime], [EndTime], [Status], [Description], [CreateDate], [AutionMethod], [AuctionCode], [TypeID]) VALUES (2, N'Phiên đấu giá cá rồng', CAST(N'2024-09-26T00:00:00.000' AS DateTime), CAST(N'2024-09-26T14:00:00.000' AS DateTime), CAST(N'2024-09-26T15:00:00.000' AS DateTime), N'Đã kết thúc', N'Đấu giá cho cá rồng quý hiếm.', CAST(N'2024-10-07T10:52:15.740' AS DateTime), 1, N'AUCTION002', 1)
+INSERT [dbo].[Auctions] ([AuctionId], [AuctionName], [AuctionDate], [StartTime], [EndTime], [Status], [Description], [CreateDate], [AutionMethod], [AuctionCode], [TypeID]) VALUES (1, N'Phiên đấu giá cá vàng', CAST(N'2024-09-25T00:00:00.000' AS DateTime), CAST(N'2024-09-25T09:00:00.000' AS DateTime), CAST(N'2024-09-25T10:00:00.000' AS DateTime), N'Completed', N'Đấu giá cho cá vàng đẹp nhất.', CAST(N'2024-10-07T10:52:15.740' AS DateTime), 1, N'AUCTION001', 1)
+INSERT [dbo].[Auctions] ([AuctionId], [AuctionName], [AuctionDate], [StartTime], [EndTime], [Status], [Description], [CreateDate], [AutionMethod], [AuctionCode], [TypeID]) VALUES (2, N'Phiên đấu giá cá rồng', CAST(N'2024-09-26T00:00:00.000' AS DateTime), CAST(N'2024-09-26T14:00:00.000' AS DateTime), CAST(N'2024-09-26T15:00:00.000' AS DateTime), N'Active', N'Đấu giá cho cá rồng quý hiếm.', CAST(N'2024-10-07T10:52:15.740' AS DateTime), 1, N'AUCTION002', 1)
 SET IDENTITY_INSERT [dbo].[Auctions] OFF
 GO
 SET IDENTITY_INSERT [dbo].[AuctionType] ON 
@@ -314,8 +314,8 @@ SET IDENTITY_INSERT [dbo].[AuctionType] OFF
 GO
 SET IDENTITY_INSERT [dbo].[DetailProposal] ON 
 
-INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (1, N'FISH001', N'Cá Vàng', N'Male', 2, 15.5, 0.3, 5, N'PENDING', CAST(N'2023-01-01' AS Date), CAST(N'2024-09-01' AS Date), N'Cá vàng khỏe mạnh, dễ nuôi', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Vàng', 20000, 1200000, 500, 1, 1, 1, 1, 50000)
-INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (2, N'FISH002', N'Cá Rồng', N'Female', 5, 70, 5.2, 4, N'PENDING', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá rồng quý hiếm, đã được bán đấu giá', N'https://example.com/arowana.jpg', N'https://example.com/arowana.mp4', 20, N'Xanh lục', 300000, 1500000, 60, 1, 2, 2, 2, 50000)
+INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (1, N'FISH001', N'Cá Vàng', N'Male', 2, 15.5, 0.3, 5, N'Completed', CAST(N'2023-01-01' AS Date), CAST(N'2024-09-01' AS Date), N'Cá vàng khỏe mạnh, dễ nuôi', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Vàng', 100, 500, 20, 60, 1, 1, 1, 1, 50000)
+INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (2, N'FISH002', N'Cá Rồng', N'Female', 5, 70, 5.2, 4, N'Active', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá rồng quý hiếm, đã được bán đấu giá', N'https://example.com/arowana.jpg', N'https://example.com/arowana.mp4', 20, N'Xanh lục', 100, 300, 20, 200000, 1, 2, 2, 2, 50000)
 INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (8, N'FISH003', N'Cá Koi VietNam', NULL, 2, 20.5, 0.2, 2, N'PENDING', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá Koi quý hiếm, đã được bán đấu giá', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Xanh lam', 20000, 1200000, 500, 1, 1, 2, 1, 20000)
 SET IDENTITY_INSERT [dbo].[DetailProposal] OFF
 GO
@@ -384,7 +384,7 @@ INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (6, N'customer4', N'US004', N'Tôn Thị F', CAST(N'1994-06-30T00:00:00.000' AS DateTime), N'303 Đường OPQ, Đà Nẵng', N'customer4@company.com', N'0909667890', N'https://example.com/avatar6.png', N'YeE2JKedsIRzqg6yRuJXIw==', CAST(N'2024-10-07T10:52:15.737' AS DateTime), 3)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (7, N'customer5', N'US005', N'Lê Văn G', CAST(N'1991-11-11T00:00:00.000' AS DateTime), N'404 Đường RST, TP.HCM', N'customer5@company.com', N'0909778901', N'https://example.com/avatar7.png', N'YeE2JKedsIRzqg6yRuJXIw==', CAST(N'2024-10-07T10:52:15.737' AS DateTime), 3)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (8, N'customer6', N'US006', N'Nguyễn Thị H', CAST(N'1993-04-20T00:00:00.000' AS DateTime), N'505 Đường UVW, Hà Nội', N'customer6@company.com', N'0909887654', N'https://example.com/avatar8.png', N'YeE2JKedsIRzqg6yRuJXIw==', CAST(N'2024-10-07T10:52:15.737' AS DateTime), 3)
-INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (9, N'customer7', N'US007', N'Trần Văn K', CAST(N'1992-08-15T00:00:00.000' AS DateTime), N'606 Đường XYZ, TP.HCM', N'lequangdung232@gmail.com', N'0909998765', N'https://example.com/avatar9.png', N'YeE2JKedsIRzqg6yRuJXIw==', CAST(N'2024-10-07T10:52:15.737' AS DateTime), 3)
+INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (9, N'customer7', N'US007', N'Lê Quang Dũng', CAST(N'1992-08-15T00:00:00.000' AS DateTime), N'606 Đường XYZ, TP.HCM', N'lequangdung232@gmail.com', N'0909998765', N'https://example.com/avatar9.png', N'YeE2JKedsIRzqg6yRuJXIw==', CAST(N'2024-10-07T10:52:15.737' AS DateTime), 3)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (23, NULL, NULL, N'user@example.com', NULL, NULL, N'user@example.com', NULL, NULL, N'Gtfg/kLx7aXHmDNKRyZDIg==', CAST(N'2024-10-17T13:29:42.900' AS DateTime), 1)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (24, NULL, NULL, N'test@example.com', NULL, NULL, N'test@example.com', NULL, NULL, N'Gtfg/kLx7aXHmDNKRyZDIg==', CAST(N'2024-10-17T13:30:19.837' AS DateTime), 2)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (25, NULL, NULL, N'test2@example.com', NULL, NULL, N'test2@example.com', NULL, NULL, N'Gtfg/kLx7aXHmDNKRyZDIg==', CAST(N'2024-10-18T09:40:25.267' AS DateTime), 2)
@@ -392,19 +392,24 @@ SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 SET IDENTITY_INSERT [dbo].[UserAuction] ON 
 
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (1, N'BID0001', 200000, CAST(N'2024-09-25T09:05:00.000' AS DateTime), 0, 3, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (2, N'BID0002', 300000, CAST(N'2024-09-25T09:10:00.000' AS DateTime), 0, 4, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (3, N'BID0003', 500000, CAST(N'2024-09-25T09:15:00.000' AS DateTime), 0, 5, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (4, N'BID0004', 600000, CAST(N'2024-09-25T09:25:00.000' AS DateTime), 0, 6, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (5, N'BID0005', 900000, CAST(N'2024-09-25T09:35:00.000' AS DateTime), 0, 3, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (6, N'BID0006', 1100000, CAST(N'2024-09-25T09:40:00.000' AS DateTime), 0, 5, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (7, N'BID0007', 1200000, CAST(N'2024-09-25T10:00:00.000' AS DateTime), 1, 3, 1)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (8, N'BID0008', 300000, CAST(N'2024-09-26T14:30:00.000' AS DateTime), 0, 2, 2)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (9, N'BID0009', 500000, CAST(N'2024-09-26T14:35:00.000' AS DateTime), 0, 3, 2)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (10, N'BID0010', 700000, CAST(N'2024-09-26T14:40:00.000' AS DateTime), 0, 7, 2)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (11, N'BID0011', 900000, CAST(N'2024-09-26T14:42:00.000' AS DateTime), 0, 2, 2)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (12, N'BID0012', 1100000, CAST(N'2024-09-26T14:45:00.000' AS DateTime), 0, 5, 2)
-INSERT [dbo].[UserAuction] ([BidID], [BidCode], [Price], [CreateDate], [IsWinner], [UserID], [FishId]) VALUES (13, N'BID0013', 1300000, CAST(N'2024-09-26T14:50:00.000' AS DateTime), 0, 6, 1)
+--- Chèn dữ liệu vào bảng UserAuction
+INSERT INTO [dbo].[UserAuction] (BidCode, Price, CreateDate, IsWinner, UserID, FishId)
+VALUES 
+(N'BID0001', 120, '2024-09-25 09:05:00', 0, 3, 1),  -- Người dùng 3 đặt giá cho Cá Vàng
+(N'BID0002', 140, '2024-09-25 09:10:00', 0, 4, 1),  -- Người dùng 4 đặt giá cho Cá Vàng
+(N'BID0003', 180, '2024-09-25 09:15:00', 0, 5, 1),  -- Người dùng 5 đặt giá cho Cá Vàng
+(N'BID0004', 220, '2024-09-25 09:25:00', 0, 6, 1),  -- Người dùng 6 đặt giá cho Cá Vàng
+(N'BID0005', 300, '2024-09-25 09:35:00', 0, 3, 1),  -- Người dùng 3 đặt giá cho Cá Vàng
+(N'BID0006', 400, '2024-09-25 09:40:00', 0, 5, 1),  -- Người dùng 5 đặt giá cho Cá Vàng
+(N'BID0007', 500, '2024-09-25 10:00:00', 1, 3, 1),  -- Người dùng 3 đặt giá cho Cá Vàng và thắng
+------------------------------------------------------------------------------------
+(N'BID0008', 120, '2024-09-26 14:30:00', 0, 2, 2), -- Người dùng 2 đặt giá cho Cá Rồng
+(N'BID0009', 150, '2024-09-26 14:35:00', 0, 3, 2), -- Người dùng 3 đặt giá cho Cá Rồng
+(N'BID0010', 190, '2024-09-26 14:40:00', 0, 7, 2),  -- Người dùng 7 đặt giá cho Cá Rồng
+(N'BID0011', 220, '2024-09-26 14:42:00', 0, 2, 2),  -- Người dùng 2 đặt giá cho Cá Rồng
+(N'BID0012', 240, '2024-09-26 14:45:00', 0, 5, 2),  -- Người dùng 5 đặt giá cho Cá Rồng
+(N'BID0013', 270, '2024-09-26 14:50:00', 0, 6, 1),  -- Người dùng 6 đặt giá cho Cá Vàng
+(N'BID0014', 300, '2024-09-26 15:00:00', 1, 7, 2);  -- Người dùng 7 đặt giá cho Cá Rồng 
 SET IDENTITY_INSERT [dbo].[UserAuction] OFF
 
 GO
