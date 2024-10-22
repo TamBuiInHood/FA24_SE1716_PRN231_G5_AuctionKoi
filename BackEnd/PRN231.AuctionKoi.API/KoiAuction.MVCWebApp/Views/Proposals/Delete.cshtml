@@ -34,7 +34,7 @@
             @Html.DisplayNameFor(model => model.AvatarUrl)
         </dt>
         <dd class = "col-sm-10">
-            <img src="@Model.AvatarUrl" alt="hinhanh" />
+            <img src="@Model.AvatarUrl" alt="hinhanh" style="width: 100px; height: 100px " />
             @* @Html.DisplayFor(model => model.AvatarUrl) *@
         </dd>
         <dt class = "col-sm-2">
@@ -82,7 +82,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="FarmId" />
+        <input type="hidden" name="id" asp-for="FarmId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

@@ -2,6 +2,7 @@
 using KoiAuction.API.Payloads.Requests.UserAuctionRequest;
 using KoiAuction.BussinessModels.PaymentModels;
 using KoiAuction.BussinessModels.UserAuctionModels;
+using KoiAuction.Common;
 using KoiAuction.Common.Constants;
 using KoiAuction.Common.Utils;
 using KoiAuction.Common.Utils.Filters;
@@ -10,6 +11,7 @@ using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Newtonsoft.Json;
 using PRN231.AuctionKoi.API.Payloads;
 using System.Net.WebSockets;
@@ -18,6 +20,7 @@ using System.Text;
 namespace KoiAuction.API.Controllers
 {
     //[Route("api/[controller]")]
+
     [ApiController]
     public class UserAuctionController : ControllerBase
     {
@@ -43,6 +46,16 @@ namespace KoiAuction.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        //[Authorize(Roles = )]
+        [EnableQuery]
+        [HttpGet(APIRoutes.UserAuction.GetOData, Name = "GetAllODataAsync")]
+        public async Task<IActionResult> GetAllODataAsync(PaginationParameter paginationParameter, UserAuctionFilters userAuctionFilters)
+        {
+            var userAuctions = await _userAuctionService.Get(paginationParameter, userAuctionFilters);
+            var queryableData = ODataResultConverter<UserAuctionModel>.ConvertToQueryable(userAuctions);
+            return Ok(queryableData);
         }
 
         //[Authorize(Roles = )]

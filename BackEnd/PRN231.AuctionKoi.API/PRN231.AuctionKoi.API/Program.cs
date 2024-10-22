@@ -22,6 +22,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.API.Middlewares;
+using KoiAuction.BussinessModels.UserAuctionModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -196,7 +197,8 @@ IEdmModel GetEdmModel()
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<ProposalModel>("Proposals");
     builder.EntitySet<DetailProposalModel>("DetailProposals");
+    builder.EntitySet<UserAuctionModel>("UserAuction");
     //builder.EntitySet<PaymentModel>("Payments");
-    
+
     return builder.GetEdmModel();
 }

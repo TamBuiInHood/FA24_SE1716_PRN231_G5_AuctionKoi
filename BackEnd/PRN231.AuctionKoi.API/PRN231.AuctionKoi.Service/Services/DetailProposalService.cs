@@ -70,27 +70,25 @@ namespace KoiAuction.Service.Services
                     var checkInt = int.TryParse(paginationParameter.Search, out validInt);
                     var checkDouble = double.TryParse(paginationParameter.Search, out validDouble);
                     var validDate = DateOnly.MinValue;
-                    if (checkInt)
+                    if (checkDouble)
                     {
                         filter = x => x.FishId == validInt
                                     || x.Age == validInt
                                     || x.Rating == validInt
                                     || x.TimeSpan == validInt
                                     || x.Index == validInt
-                                    || x.MinIncrement == validInt;
+                                    || x.MinIncrement == validInt
+                                    || x.InitialPrice == validDouble
+                                    || x.FinalPrice == validDouble
+                                    || x.Length == validDouble
+                                    || x.AuctionFee == validDouble
+                                    || x.Weight == validDouble;
+                        
                     }
                     else if(DateOnly.TryParse(paginationParameter.Search, out validDate))
                     {
                         filter = x => x.CreateDate == validDate
                                       || x.UpdateDate == validDate;
-                    }
-                    else if (checkDouble)
-                    {
-                        filter = x => x.InitialPrice == validDouble
-                                      || x.FinalPrice == validDouble
-                                      || x.Length == validDouble
-                                      || x.AuctionFee == validDouble
-                                      || x.Weight == validDouble;
                     }
                     else
                     {

@@ -71,7 +71,10 @@ namespace KoiAuction.Service.Services
                 userModel.AccessToken = GenerateAccessToken(userEntity);
                 userModel.RefreshToken = GenerateRefreshToken(userEntity);
                 getRefreshToken.RefreshTokenValue = userModel.RefreshToken;
+                getRefreshToken.ExpiredAt = GetExpireDateFromToken(userModel.RefreshToken);
+                getRefreshToken.CreatedAt = DateTime.Now;
                 _unitOfWork.RefreshTokenRepository.Update(getRefreshToken);
+                
             }
             else
             {

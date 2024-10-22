@@ -32,9 +32,10 @@
                     @Html.DisplayNameFor(model => model.Status)
                 </dt>
                 <dd class="col-sm-9">
-                    <span class="badge @(Model.Status == "Completed" ? "badge-success" : "badge-warning")">
-                        @Html.DisplayFor(model => model.Status)
-                    </span>
+                    @* <span class="badge @(Model.Status == "Completed" ? "badge-success" : "badge-warning")">
+                       
+                    </span> *@
+                    @Html.DisplayFor(model => model.Status)
                 </dd>
 
                 <dt class="col-sm-3 font-weight-bold">
@@ -62,7 +63,7 @@
 
         <div class="card-footer d-flex justify-content-between">
             <form asp-action="Delete">
-                <input type="hidden" asp-for="PaymentId" />
+                <input type="hidden" name="id" asp-for="PaymentId" />
                 <button type="submit" onclick="confirm('Are you want to delete this payment')" class="btn btn-danger btn-sm">
                     <i class="fas fa-trash-alt"></i> Delete
                 </button>

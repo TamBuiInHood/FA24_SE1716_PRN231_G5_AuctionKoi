@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace KoiAuction.BussinessModels.UserAuctionModels
 {
     public class UserAuctionModel
     {
+        [Key]
         public int BidId { get; set; }
 
         public string? BidCode { get; set; }

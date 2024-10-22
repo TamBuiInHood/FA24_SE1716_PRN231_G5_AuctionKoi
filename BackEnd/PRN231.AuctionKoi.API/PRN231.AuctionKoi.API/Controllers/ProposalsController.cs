@@ -44,7 +44,7 @@ namespace KoiAuction.API.Controllers
         public async Task<IActionResult> GetProposalsByOData(PaginationParameter paginationParameter)
         {
             var proposals =  await _proposalService.Get(paginationParameter);
-            var queryableData = ODataResultConverter.ConvertToQueryable(proposals);
+            var queryableData = ODataResultConverter<ProposalModel>.ConvertToQueryable(proposals);
             return Ok(queryableData);
         }
 

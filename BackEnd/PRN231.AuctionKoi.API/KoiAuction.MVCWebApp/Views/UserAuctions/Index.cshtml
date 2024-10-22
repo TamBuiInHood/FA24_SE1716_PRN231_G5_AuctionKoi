@@ -62,11 +62,14 @@
                     <!-- Date Range -->
                     <div class="col-md-6 mb-6">
                         <label for="filter-create-date-from" class="form-label">Date From:</label>
-                        <input type="text" class="form-control text-input-date" id="filter-create-date-from" name="filter-create-date-from" placeholder="dd/mm/yyyy HH:mm:ss" value="@ViewBag.userAuctionFilters.createDateFrom">
+                        <input type="text" class="form-control text-input-date" id="filter-create-date-from" name="filter-create-date-from" placeholder="dd/mm/yyyy HH:mm:ss"
+                               value="@(ViewBag.userAuctionFilters.createDateFrom?.ToString("dd/MM/yyyy HH:mm:ss") ?? "")">
                     </div>
                     <div class="col-md-6 mb-6">
                         <label for="filter-create-date-to" class="form-label">Date To:</label>
-                        <input type="text" class="form-control text-input-date" id="filter-create-date-to" name="filter-create-date-to" placeholder="dd/mm/yyyy HH:mm:ss" value="@ViewBag.userAuctionFilters.createDateTo">
+                        <input type="text" class="form-control text-input-date" id="filter-create-date-to" name="filter-create-date-to" placeholder="dd/mm/yyyy HH:mm:ss"
+                               value="@(ViewBag.userAuctionFilters.createDateTo?.ToString("dd/MM/yyyy HH:mm:ss") ?? "")">
+
                     </div>
 
                 </div>
@@ -181,8 +184,8 @@
                            asp-route-search-key="@ViewBag.paginationParameter.Search"
                            asp-route-filter-price-from="@ViewBag.userAuctionFilters.priceFrom"
                            asp-route-filter-price-to="@ViewBag.userAuctionFilters.priceTo"
-                           asp-route-filter-create-date-from="@ViewBag.userAuctionFilters.createDateFrom"
-                           asp-route-filter-create-date-to="@ViewBag.userAuctionFilters.createDateTo"
+                           asp-route-filter-create-date-from="@(ViewBag.userAuctionFilters.createDateFrom?.ToString("dd/MM/yyyy HH:mm:ss") ?? "")"
+                           asp-route-filter-create-date-to="@(ViewBag.userAuctionFilters.createDateTo?.ToString("dd/MM/yyyy HH:mm:ss") ?? "")"
                            asp-route-filter-is-winner="@ViewBag.userAuctionFilters.isWinner">@i</a>
 
                     </li>
