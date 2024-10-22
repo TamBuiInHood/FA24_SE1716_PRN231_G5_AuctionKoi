@@ -76,10 +76,18 @@
         public static class UserAuction
         {
             public const string Get = Base + "/userAuctions/";
+            public const string GetOData = Base + "/userAuctions/OData/";
+
 
             public const string GetByID = Base + "/userAuctions/{bidId}";
 
             public const string GetByAuctionIdAndFishId = Base + "/userAuctions/{auctionId}/{fishId}";
+
+            public const string GetAuctions = Base + "/userAuctions/auction";
+
+            public const string GetUsers = Base + "/userAuctions/user";
+
+            public const string GetDetailProposals = Base + "/userAuctions/detailProposal";
 
             public const string Create = Base + "/userAuctions/";
 
@@ -132,6 +140,20 @@
             public const string GetOrderDetail = Base + "/orders/orderdetail";
         }
 
+        public static class CheckingProposal
+        {
+            public const string Get = Base + "/CheckingProposals/";
 
+            public const string GetByID = Base + "/CheckingProposals/{id}";
+
+            public const string Create = Base + "/CheckingProposals/";
+
+            public const string Update = Base + "/CheckingProposals/{id}";
+
+            public const string Delete = Base + "/CheckingProposals/{id}";
+
+            public const string GetFish = Base + "/CheckingProposals/Fish";
+
+        }
     }
 }

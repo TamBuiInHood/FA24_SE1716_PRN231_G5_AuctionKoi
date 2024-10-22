@@ -87,7 +87,7 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
         {
             entity.ToTable("CheckingProposal");
 
-            entity.Property(e => e.CheckingProposalId).ValueGeneratedNever();
+            entity.Property(e => e.CheckingProposalId).ValueGeneratedOnAdd();
             entity.Property(e => e.Attachment).HasColumnType("text");
             entity.Property(e => e.CheckingDate).HasColumnType("datetime");
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");

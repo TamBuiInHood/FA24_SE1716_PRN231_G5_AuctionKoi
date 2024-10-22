@@ -1,9 +1,11 @@
-﻿@using PRN231.AuctionKoi.API.Payloads
+﻿@using KoiAuction.Common.Enums
+@using PRN231.AuctionKoi.API.Payloads
 @{
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
     ViewData["Title"] = "DetailProposal";
     var baseUrl = APIRoutes.Host.ToString() + APIRoutes.Base.ToString();
     var wsUrl = APIRoutes.WSHost.ToString() + APIRoutes.WS_Url.ToString();
+    var isActive = DetailProposalStatus.Active.ToString();
 }
 
 <div class="container">
@@ -238,12 +240,12 @@
                 </div>
             </div>
 
-            <div class="card-proposal mt-4">
+            <div id="card-bid" class="card-proposal mt-4" style="display: none">
                 <div>
                     <header class="card-proposal-header">
                         <div class="w-100 d-flex justify-content-between align-items-center flex-warp">
                             <h1 class="h5 fw-600 mb-1">Current Price</h1>
-                            <span id="fishInitialPrice" class="proposal-tag fs-3 px-4 fw-600 d-flex align-items-center justify-content-center">
+                            <span id="current-price" class="proposal-tag fs-3 px-4 fw-600 d-flex align-items-center justify-content-center">
                                 $1,000
                             </span>
                         </div>
@@ -309,140 +311,13 @@
     </div>
 </div>
 
-<script>
-    baseUrl = '@baseUrl';
-    wsUrl = '@wsUrl'
-    auctionId = '@ViewBag.AuctionId';
-    fishId = '@ViewBag.FishId';
-</script>
-<script>
-   
-
-    function calculateTotal() {
-        // Truy vấn thẻ bằng id
-        let priceText = document.getElementById("fishInitialPrice").textContent;
-
-        // Loại bỏ ký hiệu '$' và dấu phẩy ','
-        let priceNumber = priceText.replace('$', '').replace(',', '');
-
-        // Chuyển sang kiểu số
-        let currentPrice = parseFloat(priceNumber);
-        let stepPrice = document.getElementById('step-price').value;
-        let quantity = document.getElementById('quantity').value;
-        const totalPrice = currentPrice + stepPrice * quantity;
-        document.getElementById('total-price').value = `$${totalPrice}`;
-        document.getElementById('bid-total').innerText = `$${totalPrice}`;
-    }
-
-    function increaseQuantity() {
-        const qtyInput = document.getElementById('quantity');
-        qtyInput.value = parseInt(qtyInput.value) + 1;
-        quantity = parseInt(qtyInput.value);
-        calculateTotal();
-    }
-
-    function decreaseQuantity() {
-        const qtyInput = document.getElementById('quantity');
-        if (parseInt(qtyInput.value) > 1) {
-            qtyInput.value = parseInt(qtyInput.value) - 1;
-            quantity = parseInt(qtyInput.value);
-            calculateTotal();
-        }
-    }
-
-    // Hàm để loại bỏ các ký tự không phải số
-    function validateNumberInput(e) {
-        const inputElement = e.target;
-        inputElement.value = inputElement.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không phải số
-        // Nếu ký tự đầu tiên là 0, xóa nó
-        if (inputElement.value.startsWith('0')) {
-            inputElement.value = inputElement.value.replace(/^0+/, '');
-        }
-    }
-
-    document.getElementById('step-price').addEventListener('input', (e) => {
-        validateNumberInput(e);
-        stepPrice = parseInt(e.target.value) || 1;
-        calculateTotal();
-    });
-
-    document.getElementById('quantity').addEventListener('input', (e) => {
-        validateNumberInput(e);
-        quantity = parseInt(e.target.value) || 1;
-        calculateTotal();
-    });
-
-    // Place bid
-    function placeBid() {
-        alert(`Bạn đã đặt giá: $${currentPrice + stepPrice * quantity}`);
-    }
-</script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            loadData();
-
-        });
-        // Lấy toàn bộ URL hiện tại
-        const url = window.location.href;
-        
-
-        // Tạo một đối tượng URL để dễ dàng thao tác
-        const params = new URL(url).searchParams;
-        console.log("Params", params);
-        // const id = params.get('id');
-        const id = 1;
-
-        function loadData() {
-            $.ajax({
-                url: `https://localhost:7094/auction-koi/detailProposal/${id}`,
-                type: "GET",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    var data = result.data;
-                    $('#fishName').text(data.fishName);
-                    $('#fishImage').attr('src', data.imageUrl);
-                    $('#fishVideo').attr('src', data.videoUrl);
-                    $('#fishGender').text(data.gender);
-                    $('#fishLength').text(data.length);
-                    $('#fishAge').text(data.age);
-                    $('#fishFarmName').text(data.farmName);
-                    $('#fishInitialPrice').text(data.initialPrice);
-                    $('#step-price').val(data.minIncrement);
-                    $('#total-price').val(data.initialPrice);
-                    generateRatingStars(data.rating);
-                },
-                error: function (xhr, error) {
-                    alert(xhr.statusText);
-                }
-            });
-        }
-
-    // Hàm tạo các biểu tượng sao
-    function generateRatingStars(rating) {
-        // Lấy container chứa các biểu tượng sao
-        const ratingContainer = document.getElementById('ratingContainer');
-
-        // Xóa các sao cũ (nếu có) để tránh lặp lại khi tạo mới
-        ratingContainer.innerHTML = '';
-
-        // Lặp qua số lượng rating và tạo ra các biểu tượng sao
-        for (let i = 0; i < rating; i++) {
-            // Tạo phần tử span chứa biểu tượng sao
-            const starSpan = document.createElement('span');
-            starSpan.classList.add('rating-icon');
-
-            // Tạo phần tử SVG cho biểu tượng sao
-            const starSVG = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2rem" height="2rem" viewBox="0 0 24 24">
-                                   <path fill="currentColor" d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z"></path>
-                                 </svg>`;
-
-            // Thêm biểu tượng SVG vào span
-            starSpan.innerHTML = starSVG;
-
-            // Thêm span vào container
-            ratingContainer.appendChild(starSpan);
-        }
-    }
-
+@section Scripts {
+    <script src="~/js/userAuctions.js"></script>
+    <script>
+        baseUrl = '@baseUrl';
+        wsUrl = '@wsUrl';
+        auctionId = '@ViewBag.AuctionId';
+        fishId = '@ViewBag.FishId';
+        isActive = '@isActive';
     </script>
+}

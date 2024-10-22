@@ -1,6 +1,7 @@
 ﻿using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.BussinessModels.Pagination;
 using KoiAuction.BussinessModels.Proposal;
+using KoiAuction.BussinessModels.UserAuctionModels;
 using KoiAuction.Service.Base;
 using System;
 using System.Collections.Generic;
@@ -10,20 +11,11 @@ using System.Threading.Tasks;
 
 namespace KoiAuction.Common
 {
-    public class ODataResultConverter
+    public class ODataResultConverter<T>
     {
-        public static IQueryable<ProposalModel> ConvertToQueryable(IBusinessResult businessResult)
+        public static IQueryable<T> ConvertToQueryable(IBusinessResult businessResult)
         {
-            if (businessResult.Data is PageEntity<ProposalModel> list)
-            {
-                return list.List.AsQueryable();
-            }
-
-            throw new InvalidOperationException("Invalid business result type");
-        }
-        public static IQueryable<DetailProposalModel> ConvertDetailProposalToQueryable(IBusinessResult businessResult)
-        {
-            if (businessResult.Data is PageEntity<DetailProposalModel> list)
+            if (businessResult.Data is PageEntity<T> list)
             {
                 return list.List.AsQueryable();
             }

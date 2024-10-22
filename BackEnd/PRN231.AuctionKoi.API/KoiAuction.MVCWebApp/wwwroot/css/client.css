@@ -803,11 +803,11 @@ button[type="submit"] {
     border-radius: var(--theme-rounded-base);
 }
 
-.card-past-bids-list-item {
+.card-past-bids-first {
     background-color: rgb(74, 222, 128);
     color: #fff;
     border-radius: var(--theme-rounded-base);
-    animation: bounce 2s ease; /* Thay đổi thời gian thành 1 giây */
+    animation: bounce 2s ease;
 }
 
 /* Định nghĩa keyframes cho bounce effect */

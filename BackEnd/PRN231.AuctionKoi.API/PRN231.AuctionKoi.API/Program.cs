@@ -22,6 +22,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using KoiAuction.BussinessModels.DetailProposalModel;
 using KoiAuction.API.Middlewares;
+using KoiAuction.BussinessModels.UserAuctionModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -146,6 +147,7 @@ builder.Services.AddScoped<IUserAuctionRepository, UserAuctionRepository>();
 builder.Services.AddScoped<IDetailProposalRepository, DetailProposalRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<ICheckingProposalRepository, CheckingProposalRepository>();
 //builder.Services.AddScoped<IVnpayService>();
 builder.Services.AddScoped<VnpayService>();
 // Thêm đoạn này vào trong method ConfigureServices
@@ -162,6 +164,7 @@ builder.Services.AddScoped<IDetailProposalService, DetailProposalService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 //builder.Services.AddScoped<IVnpayService, VnpayService>();
 builder.Services.AddScoped<IWebSocketService, WebSocketService>();
+builder.Services.AddScoped<ICheckingProposalService, CheckingProposalService>();
 
 
 // Config WebSocket
@@ -194,7 +197,8 @@ IEdmModel GetEdmModel()
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<ProposalModel>("Proposals");
     builder.EntitySet<DetailProposalModel>("DetailProposals");
+    builder.EntitySet<UserAuctionModel>("UserAuction");
     //builder.EntitySet<PaymentModel>("Payments");
-    
+
     return builder.GetEdmModel();
 }

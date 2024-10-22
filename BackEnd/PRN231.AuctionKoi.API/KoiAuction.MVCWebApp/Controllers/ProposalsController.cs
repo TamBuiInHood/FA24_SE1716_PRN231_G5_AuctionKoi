@@ -56,7 +56,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             ViewBag.proposalFilters = proposalFilters;
             if(!string.IsNullOrEmpty(reset) && reset.Equals("Reset"))
             {
-                pageSize = 2;
+                pageSize = 5;
                 proposalFilters = null;
             }
             if (!string.IsNullOrEmpty(filter) && filter.Equals("Filter"))

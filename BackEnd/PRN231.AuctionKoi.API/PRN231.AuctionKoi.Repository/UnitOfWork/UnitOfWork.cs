@@ -20,7 +20,8 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
         private AuctionTypeRepository _auctionTypeRepo;
         private OrderRepository _orderRepo;
         private OrderDetailRepository _orderDetailRepo; 
-        private RefreshTokenRepository _refreshTokenRepo; 
+        private RefreshTokenRepository _refreshTokenRepo;
+        private CheckingProposalRepository _checkingProposalRepo;
         //private GenericRepository<Category> _categoryRepo;
 
         public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context, IConfiguration configuration)
@@ -174,6 +175,17 @@ namespace PRN231.AuctionKoi.Repository.UnitOfWork
             }
         }
 
+        public CheckingProposalRepository CheckingProposalRepository
+        {
+            get
+            {
+                if (_checkingProposalRepo == null)
+                {
+                    this._checkingProposalRepo = new CheckingProposalRepository(_context);
+                }
+                return _checkingProposalRepo;
+            }
+        }
         //GenericRepository<Category> IUnitOfWork.CategoryRepository
         //{
         //    get

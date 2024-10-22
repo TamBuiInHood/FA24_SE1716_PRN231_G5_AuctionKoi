@@ -2,7 +2,7 @@
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
-    public class UserAuctionController : Controller
+    public class CheckingProposal_Ajax_JqueryController : Controller
     {
         public IActionResult Index()
         {

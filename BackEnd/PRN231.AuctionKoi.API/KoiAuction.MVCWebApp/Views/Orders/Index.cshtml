@@ -6,58 +6,58 @@
     var pageSize = (int)(ViewData["PageSize"] ?? 10);
 }
 
-<h1>Index</h1>
+<h1 style="font-family: Arial, sans-serif; color: #333;">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Create New</a>
 </p>
 
-<form asp-action="Index" method="get">
-    <div>
+<form asp-action="Index" method="get" style="margin-bottom: 20px;">
+    <div style="display: flex; gap: 10px;">
         <label for="OrderCodeSearch">Order Code:</label>
-        <input type="text" name="OrderCodeSearch" value="@ViewData["OrderCodeSearch"]" />
+        <input type="text" name="OrderCodeSearch" value="@ViewData["OrderCodeSearch"]" style="padding: 5px;" />
 
         <label for="TaxCodeSearch">Tax Code:</label>
-        <input type="text" name="TaxCodeSearch" value="@ViewData["TaxCodeSearch"]" />
+        <input type="text" name="TaxCodeSearch" value="@ViewData["TaxCodeSearch"]" style="padding: 5px;" />
 
         <label for="StatusSearch">ShippingTrackingCode:</label>
-        <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" />
+        <input type="text" name="StatusSearch" value="@ViewData["StatusSearch"]" style="padding: 5px;" />
 
-        <button type="submit">Search</button>
+        <button type="submit" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; cursor: pointer;">Search</button>
     </div>
 </form>
 
-<table class="table">
+<table class="table" style="width: 100%; border-collapse: collapse;">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
-            <th>@Html.DisplayNameFor(model => model.Vat)</th>
-            <th>@Html.DisplayNameFor(model => model.TotalPrice)</th>
-            <th>@Html.DisplayNameFor(model => model.TotalProduct)</th>
-            <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
-            <th>@Html.DisplayNameFor(model => model.Status)</th>
-            <th>@Html.DisplayNameFor(model => model.TaxCode)</th>
-            <th>@Html.DisplayNameFor(model => model.ShippingAddress)</th>
-            <th>@Html.DisplayNameFor(model => model.DeliveryDate)</th>
-            <th>@Html.DisplayNameFor(model => model.Note)</th>
-            <th>@Html.DisplayNameFor(model => model.ShippingCost)</th>
-            <th>@Html.DisplayNameFor(model => model.ShippingMethod)</th>
-            <th>@Html.DisplayNameFor(model => model.Discount)</th>
-            <th>@Html.DisplayNameFor(model => model.ShippingTrackingCode)</th>
-            <th>@Html.DisplayNameFor(model => model.ParticipationFee)</th>
-            <th></th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.OrderCode)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.Vat)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.TotalPrice)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.TotalProduct)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.OrderDate)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.Status)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.TaxCode)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.ShippingAddress)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.DeliveryDate)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.Note)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.ShippingCost)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.ShippingMethod)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.Discount)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.ShippingTrackingCode)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayNameFor(model => model.ParticipationFee)</th>
+            <th style="border: 1px solid #ddd; padding: 8px;"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.OrderCode)</td>
-                <td>@Html.DisplayFor(modelItem => item.Vat)</td>
-                <td>@Html.DisplayFor(modelItem => item.TotalPrice)</td>
-                <td>@Html.DisplayFor(modelItem => item.TotalProduct)</td>
-                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                <td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.Vat)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.TotalPrice)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.TotalProduct)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">
                     @if (item.Status == 1)
                     {
                         @:Processing
@@ -74,21 +74,20 @@
                     {
                         @:Rejected
                     }
-
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.TaxCode)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShippingAddress)</td>
-                <td>@Html.DisplayFor(modelItem => item.DeliveryDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.Note)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShippingCost)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShippingMethod)</td>
-                <td>@Html.DisplayFor(modelItem => item.Discount)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShippingTrackingCode)</td>
-                <td>@Html.DisplayFor(modelItem => item.ParticipationFee)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.TaxCode)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingAddress)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.DeliveryDate)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.Note)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingCost)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingMethod)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.Discount)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingTrackingCode)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ParticipationFee)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">
+                    <a asp-action="Edit" asp-route-id="@item.OrderId" style="color: #007bff; text-decoration: none;">Edit</a> 
+                    <a asp-action="Details" asp-route-id="@item.OrderId" style="color: #007bff; text-decoration: none;">Details</a> 
+                    <a asp-action="Delete" asp-route-id="@item.OrderId" style="color: #dc3545; text-decoration: none;">Delete</a>
                 </td>
             </tr>
         }
@@ -97,22 +96,35 @@
 
 @{
     var pagination = ViewBag.paginationParameter;
+    var orderList = Model; 
 }
 
-<nav>
-    <ul class="pagination">
-        <!-- Nút Previous -->
-        <li class="@(pagination.PageIndex > 1 ? "" : "disabled")">
-            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex > 1 ? pagination.PageIndex - 1 : 1, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-            </a>
-        </li>
+@if (orderList == null || !orderList.Any()) 
+{
+    <li class="text-center">
+        <span>Không có dữ liệu để hiển thị.</span>
+    </li>
 
-        <!-- Nút Next -->
-        <li class="@(pagination.PageIndex < pagination.TotalPage ? "" : "disabled")">
-            <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex < pagination.TotalPage ? pagination.PageIndex + 1 : pagination.TotalPage, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+}
+else
+{
+    <nav>
+        <ul class="pagination">
+            <!-- Nút Previous -->
+            <li class="@(pagination.PageIndex > 1 ? "" : "disabled")">
+                <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex > 1 ? pagination.PageIndex - 1 : 1, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Previous">
+                    <span aria-hidden="true">&laquo; Previous</span>
+                </a>
+            </li>
+
+            <!-- Thêm logic để hiển thị các số trang ở đây nếu cần -->
+            <!-- Nút Next -->
+            <li class="@(pagination.PageIndex < pagination.TotalPage ? "" : "disabled")">
+                <a href="@Url.Action("Index", new { pageIndex = pagination.PageIndex < pagination.TotalPage ? pagination.PageIndex + 1 : pagination.TotalPage, pageSize = pagination.PageSize, OrderCodeSearch = ViewData["OrderCodeSearch"], TaxCodeSearch = ViewData["TaxCodeSearch"], StatusSearch = ViewData["StatusSearch"] })" aria-label="Next">
+                    <span aria-hidden="true">Next &raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+

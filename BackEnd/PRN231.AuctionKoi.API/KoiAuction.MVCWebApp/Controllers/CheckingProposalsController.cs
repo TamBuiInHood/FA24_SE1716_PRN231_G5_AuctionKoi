@@ -6,43 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KoiAuction.Repository.Entities;
-using KoiAuction.Common;
-using Newtonsoft.Json;
-using KoiAuction.Service.Base;
-using KoiAuction.BussinessModels.Order;
+using KoiAuction.BussinessModels.CheckingProposal;
 using KoiAuction.BussinessModels.Pagination;
-using Azure;
-using KoiAuction.Service.Responses;
-using KoiAuction.BussinessModels.Proposal;
-using KoiAuction.BussinessModels.DetailProposalModel;
-using static PRN231.AuctionKoi.API.Payloads.APIRoutes;
+using KoiAuction.Common;
+using KoiAuction.Service.Base;
+using Newtonsoft.Json;
 
 namespace KoiAuction.MVCWebApp.Controllers
 {
-    public class OrdersController : Controller
+    public class CheckingProposalsController : Controller
     {
-        private readonly Fa24Se1716Prn231G5KoiauctionContext _context;
+        /*private readonly Fa24Se1716Prn231G5KoiauctionContext _context;*/
 
-        public OrdersController(Fa24Se1716Prn231G5KoiauctionContext context)
+        public CheckingProposalsController(/*Fa24Se1716Prn231G5KoiauctionContext context*/)
         {
-            _context = context;
+            /*_context = context;*/
         }
 
-        //GET: Orders
-        public async Task<IActionResult> Index(int? pageIndex, int? pageSize, string? OrderCodeSearch, string? TaxCodeSearch, string? StatusSearch)
+        // GET: CheckingProposals
+        public async Task<IActionResult> Index(int? pageIndex, int? pageSize, string? CheckingProposalCodeSearch, string? StatusSearch)
         {
-            var currentPageSize = pageSize ?? 10; 
+            var currentPageSize = pageSize ?? 10;
 
-            ViewData["OrderCodeSearch"] = OrderCodeSearch;
-            ViewData["TaxCodeSearch"] = TaxCodeSearch;
+            ViewData["CheckingProposalCodeSearch"] = CheckingProposalCodeSearch;
             ViewData["StatusSearch"] = StatusSearch;
 
             using (var httpClient = new HttpClient())
             {
-                var uri = $"{Const.APIEndPoint}orders?pageIndex={pageIndex ?? 0}&pageSize={currentPageSize}";
+                var uri = $"{Const.APIEndPoint}CheckingProposals?pageIndex={pageIndex ?? 0}&pageSize={currentPageSize}";
 
-          
-                var searchKey = OrderCodeSearch ?? TaxCodeSearch ?? StatusSearch;
+                var searchKey = CheckingProposalCodeSearch ?? StatusSearch;
 
                 if (!string.IsNullOrEmpty(searchKey))
                 {
@@ -57,7 +50,8 @@ namespace KoiAuction.MVCWebApp.Controllers
                         var result = JsonConvert.DeserializeObject<BusinessResult>(content);
                         if (result != null && result.Data != null)
                         {
-                            var data = JsonConvert.DeserializeObject<PageEntity<OrderModel>>(result.Data.ToString());
+                            var data = JsonConvert.DeserializeObject<PageEntity<CheckingProposalModel>>
+                                (result.Data.ToString());
                             ViewBag.paginationParameter = new
                             {
                                 PageIndex = pageIndex ?? 1,
@@ -68,71 +62,64 @@ namespace KoiAuction.MVCWebApp.Controllers
                             return View(data.List.ToList());
                         }
                     }
-                    return View(new List<OrderModel>());
+                    return View();
                 }
+
             }
         }
 
-
-
-
-        // GET: Orders/Details/5
+        // GET: CheckingProposals/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var users = await this.GetUsers(); 
-            if (users != null && users.Any())
-            {
-                ViewData["UserId"] = new SelectList(users, "UserId", "FullName");
-            }
-
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "CheckingProposals/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
                         var result = JsonConvert.DeserializeObject<BusinessResult>(content);
-
                         if (result != null && result.Data != null)
                         {
-                            var data = JsonConvert.DeserializeObject<OrderModel>(result.Data.ToString());
+                            var data = JsonConvert.DeserializeObject<CheckingProposalModel>
+                                (result.Data.ToString());
                             return View(data);
                         }
                     }
+                    return View();
                 }
-            }
 
-            return NotFound();
+            }
         }
 
-        // GET: Orders/Create
+        // GET: CheckingProposals/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
-            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
+            ViewData["FishId"] = new SelectList(await this.GetFish(), "FishId", "FishName");
             return View();
         }
 
-        // POST: Orders/Create
+        // POST: CheckingProposals/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BidId,UserId,ShippingAddress,Note,TaxCode,ShippingCost,ShippingMethod,Discount,ParticipationFee")] CreateOrder order)
+        public async Task<IActionResult> Create([Bind("CheckingProposalId,CheckingProposalCode,ImageUrl,SubmissionDate,CheckingDate,ExpiredDate,Note,TermAndCodition,Attachment,Status,FishId,AuctionFee")] CheckingProposalModel checkingProposal)
         {
             bool saveStatus = false;
-
+            if (checkingProposal.CheckingDate <= checkingProposal.SubmissionDate)
+            {
+                ModelState.AddModelError("CheckingDate", "CheckingDate must be greater than SubmissionDate.");
+            }
+            if (checkingProposal.ExpiredDate <= checkingProposal.CheckingDate)
+            {
+                ModelState.AddModelError("ExpiredDate", "ExpiredDate must be greater than CheckingDate.");
+            }
             if (ModelState.IsValid)
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "orders/create-order", order))
+                    using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "CheckingProposals", checkingProposal))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -156,19 +143,19 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
-                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
+                ViewData["FishId"] = new SelectList(await this.GetFish(), "FishId", "FishName");
                 return View();
             }
+
         }
 
-        // GET: Orders/Edit/5
+        // GET: CheckingProposals/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var order  = new UpdateOrder();
+            var checkingProposal = new CheckingProposalModel();
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "CheckingProposals/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -177,31 +164,28 @@ namespace KoiAuction.MVCWebApp.Controllers
 
                         if (result != null && result.Data != null)
                         {
-                            order = JsonConvert.DeserializeObject<UpdateOrder>(result.Data.ToString());
+                            checkingProposal = JsonConvert.DeserializeObject<CheckingProposalModel>(result.Data.ToString());
                         }
                     }
                 }
             }
-            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
-            ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
-            return View(order);
-  
+            ViewData["FishId"] = new SelectList(await this.GetFish(), "FishId", "FishName", checkingProposal.FishId);
+            return View(checkingProposal);
         }
 
-        // POST: Orders/Edit/5
+        // POST: CheckingProposals/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] UpdateOrder order)
+        public async Task<IActionResult> Edit(int id, [Bind("CheckingProposalId,CheckingProposalCode,ImageUrl,SubmissionDate,CheckingDate,ExpiredDate,Note,TermAndCodition,Attachment,Status,FishId,AuctionFee")] Repository.Entities.CheckingProposal checkingProposal)
         {
             bool saveStatus = false;
-
             if (ModelState.IsValid)
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + $"orders/update/{id}", order))
+                    using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "CheckingProposals/" + checkingProposal.CheckingProposalId, checkingProposal))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -211,6 +195,10 @@ namespace KoiAuction.MVCWebApp.Controllers
                             if (result != null && result.Status == Const.SUCCESS_UPDATE_CODE)
                             {
                                 saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
                             }
                         }
                     }
@@ -223,20 +211,19 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
-                ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
-                return View(order);
+                ViewData["FishId"] = new SelectList(await this.GetFish(), "FishId", "FishName", checkingProposal.FishId);
+                return View(checkingProposal);
             }
+
         }
 
-
-        // GET: Orders/Delete/5
+        // GET: CheckingProposals/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            var order  = new OrderModel();
+            var checkingProposal = new CheckingProposalModel();
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "CheckingProposals/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -245,20 +232,18 @@ namespace KoiAuction.MVCWebApp.Controllers
 
                         if (result != null && result.Data != null)
                         {
-                            order = JsonConvert.DeserializeObject<OrderModel>(result.Data.ToString());
+                            checkingProposal = JsonConvert.DeserializeObject<CheckingProposalModel>(result.Data.ToString());
                         }
                     }
                 }
             }
-            var users = await this.GetUsers();
-            if (users != null && users.Any())
-            {
-                ViewData["UserId"] = new SelectList(users, "UserId", "FullName", order.UserId);
-            }
-            return View(order);
+            /*ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "UserFullName", proposal.UserId);
+            return View(proposal);*/
+            ViewData["FishId"] = new SelectList(await this.GetFish(), "FishId", "FishName", checkingProposal.FishId);
+            return View(checkingProposal);
         }
 
-        // POST: Orders/Delete/5
+        // POST: CheckingProposals/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -268,7 +253,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "orders/" + id))
+                    using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "CheckingProposals/" + id))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -296,18 +281,13 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 return View();
             }
-
         }
 
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.OrderId == id);
-        }
-        public async Task<List<User>> GetUsers()
+        public async Task<List<DetailProposal>> GetFish()
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/user"))
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "CheckingProposals/Fish"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -315,37 +295,20 @@ namespace KoiAuction.MVCWebApp.Controllers
                         var result = JsonConvert.DeserializeObject<BusinessResult>(content);
                         if (result != null && result.Data != null)
                         {
-                            var data = JsonConvert.DeserializeObject<List<User>>
+                            var data = JsonConvert.DeserializeObject<List<DetailProposal>>
                                 (result.Data.ToString());
                             return data;
                         }
                     }
-                    return new List<User>();
+                    return new List<DetailProposal>();
                 }
 
             }
         }
-        public async Task<List<Repository.Entities.UserAuction>> GetUsersAution()
+
+        /*private bool CheckingProposalExists(int id)
         {
-            using (var httpClient = new HttpClient())
-            {
-                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/useraution"))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<BusinessResult>(content);
-                        if (result != null && result.Data != null)
-                        {
-                            var data = JsonConvert.DeserializeObject<List<Repository.Entities.UserAuction>>
-                                (result.Data.ToString());
-                            return data;
-                        }
-                    }
-                    return new List<Repository.Entities.UserAuction>();
-                }
-
-            }
-        }
+            return _context.CheckingProposals.Any(e => e.CheckingProposalId == id);
+        }*/
     }
 }

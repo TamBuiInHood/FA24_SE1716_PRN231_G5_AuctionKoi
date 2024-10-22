@@ -56,7 +56,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             };
             ViewBag.paymentFilters = paymentFilters;
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 // Dictionary to store query parameters
                 var queryParams = new Dictionary<string, string>
@@ -122,7 +125,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: Payments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/" + id))
                 {
@@ -159,7 +165,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             bool saveStatus = false;
             if (ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+                }))
                 {
                     using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "payments/", payment))
                     {
@@ -195,7 +204,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var payment = new PaymentModel();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/" + id))
                 {
@@ -227,7 +239,7 @@ namespace KoiAuction.MVCWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
                 {
                     using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "payments/" + payment.PaymentId, payment))
                     {
@@ -264,8 +276,13 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var payment = new PaymentModel();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler
             {
+
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            }))
+            {
+
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/" + id))
                 {
                     if (response.IsSuccessStatusCode)
@@ -291,7 +308,10 @@ namespace KoiAuction.MVCWebApp.Controllers
             bool saveStatus = false;
             if (ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient((new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+                })))
                 {
                     using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "payments/" + id))
                     {
@@ -326,7 +346,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<List<OrderInPaymentModel>> GetOrder()
         {
             var orders = new List<OrderInPaymentModel>();
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
             {
                 // endpoint nay dang sai
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/orders"))
@@ -353,7 +373,10 @@ namespace KoiAuction.MVCWebApp.Controllers
         public async Task<IActionResult> CraetePaymentLink(int paymentId, double totalPrice)
         {
             string paymentLink = "";
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient((new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
+            })))
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + $"payments/vnpay-action?paymentId={paymentId}&totalPrice={totalPrice.ToString()}"))
                 {
@@ -385,7 +408,7 @@ namespace KoiAuction.MVCWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true }))
                 {
                     //foreach (var queryParam in Request.Query)
                     //{

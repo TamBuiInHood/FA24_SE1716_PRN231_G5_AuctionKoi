@@ -263,23 +263,23 @@ namespace KoiAuction.Service.Services
 
                 if (proposalFilter.FarmName != null && proposalFilter.FarmName.Length > 0)
                 {
-                    filter = filter.And(x => proposalFilter.FarmName.ToLower().Equals(x.FarmName.ToLower()));
+                    filter = filter.And(x => proposalFilter.FarmName.ToLower().Contains(x.FarmName.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Description))
                 {
-                    filter = filter.And(x => x.Description == proposalFilter.Description);
+                    filter = filter.And(x => x.Description.ToLower().Equals(proposalFilter.Description.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Location))
                 {
-                    filter = filter.And(x => x.Location == proposalFilter.Location);
+                    filter = filter.And(x => x.Location.ToLower().Equals(proposalFilter.Location.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Status))
                 {
 
-                    filter = filter.And(x => x.Status == proposalFilter.Status);
+                    filter = filter.And(x => x.Status.ToLower().Contains(proposalFilter.Status.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(proposalFilter.Owner))
                 {
