@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace KoiAuction.Repository.Entities;
 
@@ -42,16 +41,6 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
 
     public virtual DbSet<UserAuction> UserAuctions { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Auction>(entity =>
@@ -87,7 +76,6 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
         {
             entity.ToTable("CheckingProposal");
 
-            entity.Property(e => e.CheckingProposalId).ValueGeneratedOnAdd();
             entity.Property(e => e.Attachment).HasColumnType("text");
             entity.Property(e => e.CheckingDate).HasColumnType("datetime");
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
@@ -109,7 +97,7 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
 
             entity.Property(e => e.Color).HasMaxLength(256);
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
-            entity.Property(e => e.FishCode).HasMaxLength(36);
+            entity.Property(e => e.FishCode).HasMaxLength(100);
             entity.Property(e => e.FishName).HasMaxLength(100);
             entity.Property(e => e.Gender).HasMaxLength(20);
             entity.Property(e => e.ImageUrl)
@@ -189,8 +177,9 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PaymentDate).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasMaxLength(1);
-            entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(100)
+                .HasColumnName("TransactionID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
@@ -221,15 +210,12 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
         {
             entity.ToTable("RefreshToken");
 
-            entity.Property(e => e.RefreshTokenId)
-                .HasColumnName("RefreshTokenID");
+            entity.Property(e => e.RefreshTokenId).HasColumnName("RefreshTokenID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
-            entity.Property(e => e.JwtId)
-                .HasMaxLength(150)
-                .HasColumnName("JwtID");
-            entity.Property(e => e.RefreshTokenCode).HasMaxLength(36);
-            entity.Property(e => e.RefreshTokenValue).HasMaxLength(255);
+            entity.Property(e => e.JwtId).HasColumnName("JwtID");
+            entity.Property(e => e.RefreshTokenCode).HasMaxLength(500);
+            entity.Property(e => e.RefreshTokenValue).HasMaxLength(500);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)

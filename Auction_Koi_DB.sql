@@ -1,4 +1,4 @@
-﻿CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION]
+CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION]
 GO
 USE [FA24_SE1716_PRN231_G5_KOIAUCTION]
 GO
@@ -45,6 +45,7 @@ CREATE TABLE [dbo].[AuctionType](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[CheckingProposal]    Script Date: 10/19/2024 11:27:26 AM ******/
 /****** Object:  Table [dbo].[CheckingProposal]    Script Date: 10/19/2024 11:27:26 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -222,8 +223,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[RefreshToken](
 	[RefreshTokenID] [int] IDENTITY(1,1) NOT NULL,
-	[RefreshTokenCode] [nvarchar](max) NOT NULL,
-	[RefreshTokenValue] [nvarchar](max) NOT NULL,
+	[RefreshTokenCode] [nvarchar](500) NOT NULL,
+	[RefreshTokenValue] [nvarchar](500) NOT NULL,
 	[UserID] [int] NOT NULL,
 	[JwtID] [nvarchar](max) NOT NULL,
 	[IsUsed] [bit] NULL,
@@ -502,4 +503,3 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [dbo].[UserAuction] CHECK CONSTRAINT [FK__UserAucti__UserI__4F7CD00D]
 GO
-
