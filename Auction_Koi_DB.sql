@@ -223,8 +223,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[RefreshToken](
 	[RefreshTokenID] [int] IDENTITY(1,1) NOT NULL,
-	[RefreshTokenCode] [nvarchar](max) NOT NULL,
-	[RefreshTokenValue] [nvarchar](max) NOT NULL,
+	[RefreshTokenCode] [nvarchar](500) NOT NULL,
+	[RefreshTokenValue] [nvarchar](500) NOT NULL,
 	[UserID] [int] NOT NULL,
 	[JwtID] [nvarchar](max) NOT NULL,
 	[IsUsed] [bit] NULL,

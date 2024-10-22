@@ -76,7 +76,6 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
         {
             entity.ToTable("CheckingProposal");
 
-            entity.Property(e => e.CheckingProposalId).ValueGeneratedNever();
             entity.Property(e => e.Attachment).HasColumnType("text");
             entity.Property(e => e.CheckingDate).HasColumnType("datetime");
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
@@ -178,7 +177,6 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PaymentDate).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasMaxLength(1);
             entity.Property(e => e.TransactionId)
                 .HasMaxLength(100)
                 .HasColumnName("TransactionID");
@@ -212,14 +210,10 @@ public partial class Fa24Se1716Prn231G5KoiauctionContext : DbContext
         {
             entity.ToTable("RefreshToken");
 
-            entity.Property(e => e.RefreshTokenId)
-                .ValueGeneratedNever()
-                .HasColumnName("RefreshTokenID");
+            entity.Property(e => e.RefreshTokenId).HasColumnName("RefreshTokenID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
-            entity.Property(e => e.JwtId)
-                .HasMaxLength(150)
-                .HasColumnName("JwtID");
+            entity.Property(e => e.JwtId).HasColumnName("JwtID");
             entity.Property(e => e.RefreshTokenCode).HasMaxLength(500);
             entity.Property(e => e.RefreshTokenValue).HasMaxLength(500);
             entity.Property(e => e.UserId).HasColumnName("UserID");
