@@ -263,27 +263,27 @@ namespace KoiAuction.Service.Services
 
                 if (proposalFilter.FarmName != null && proposalFilter.FarmName.Length > 0)
                 {
-                    filter = filter.And(x => proposalFilter.FarmName.ToLower().Equals(x.FarmName.ToLower()));
+                    filter = filter.And(x => x.FarmName.ToLower().Contains(proposalFilter.FarmName.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Description))
                 {
-                    filter = filter.And(x => x.Description == proposalFilter.Description);
+                    filter = filter.And(x => x.Description.ToLower().Contains(proposalFilter.Description.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Location))
                 {
-                    filter = filter.And(x => x.Location == proposalFilter.Location);
+                    filter = filter.And(x => x.Location.ToLower().Contains(proposalFilter.Location.ToLower()));
                 }
 
                 if (!string.IsNullOrEmpty(proposalFilter.Status))
                 {
 
-                    filter = filter.And(x => x.Status == proposalFilter.Status);
+                    filter = filter.And(x => x.Status.ToLower().Contains(proposalFilter.Status.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(proposalFilter.Owner))
                 {
-                    filter = filter.And(x => proposalFilter.Owner.ToLower().Equals(x.Owner.ToLower()));
+                    filter = filter.And(x => x.Owner.ToLower().Contains(proposalFilter.Owner.ToLower()));
                 }
                 switch (paginationParameter.SortBy)
                 {

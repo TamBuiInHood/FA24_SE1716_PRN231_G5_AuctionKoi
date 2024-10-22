@@ -20,7 +20,24 @@ namespace PRN231.AuctionKoi.Repository.Repositories
 
         public async Task<bool> DeleteProposal(int id)
         {
-           var getAllDetailProposal = context.DetailProposals.Where(x => x.FarmId == id).ToList();  
+            var getAllDetailProposal = context.DetailProposals.Where(x => x.FarmId == id).ToList();
+            var getAllUserAuction = new List<UserAuction>();
+            var getAllCheckingPorposal = new List<CheckingProposal>();
+            foreach (var item in getAllDetailProposal)
+            {
+                getAllUserAuction = context.UserAuctions.Where(x => x.FishId == item.FishId).ToList();
+                foreach(var item2 in getAllUserAuction)
+                {
+                    var getAllOrderDetail = context.OrderDetails.Where(x => x.BidId == item2.BidId);
+                    _context.OrderDetails.RemoveRange(getAllOrderDetail);
+                    await _context.SaveChangesAsync();
+                }
+                getAllCheckingPorposal = context.CheckingProposals.Where(x => x.FishId == item.FishId).ToList();
+                _context.UserAuctions.RemoveRange(getAllUserAuction);
+                _context.CheckingProposals.RemoveRange(getAllCheckingPorposal);
+            }
+
+         
            _context.DetailProposals.RemoveRange(getAllDetailProposal);
            await _context.SaveChangesAsync();
            
