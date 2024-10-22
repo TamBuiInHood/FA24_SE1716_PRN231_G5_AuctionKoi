@@ -80,7 +80,18 @@
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.DeliveryDate)</td>
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.Note)</td>
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingCost)</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingMethod)</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">
+                    @if (item.ShippingMethod == "1")
+                    {
+                        @:Bình thường
+                    }
+                    else if (item.ShippingMethod == "2")
+                    {
+                        @:Nhanh
+                    }
+                 
+                </td>
+
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.Discount)</td>
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ShippingTrackingCode)</td>
                 <td style="border: 1px solid #ddd; padding: 8px;">@Html.DisplayFor(modelItem => item.ParticipationFee)</td>

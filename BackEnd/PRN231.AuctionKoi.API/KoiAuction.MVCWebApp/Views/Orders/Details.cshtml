@@ -94,7 +94,15 @@
                 @Html.DisplayNameFor(model => model.ShippingMethod)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.ShippingMethod)
+                @if (Model.ShippingMethod == "1")
+                {
+                @:Bình thường
+                }
+              else if (Model.ShippingMethod == "2")
+                {
+                @:Nhanh
+                }   
+ 
             </dd>
 
             <dt style="font-weight: bold;">
