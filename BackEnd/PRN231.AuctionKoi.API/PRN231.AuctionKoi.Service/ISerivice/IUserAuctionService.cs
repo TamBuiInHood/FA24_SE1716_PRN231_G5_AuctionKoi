@@ -14,6 +14,7 @@ namespace KoiAuction.Service.ISerivice
     public interface IUserAuctionService
     {
         Task<IBusinessResult> Get(PaginationParameter paginationParameter, UserAuctionFilters userAuctionFilters);
+        Task<IBusinessResult> GetNoPaging();
         Task<IBusinessResult> GetByID(string id);
         Task<IBusinessResult> GetByAuctionIdAndFishId(string? fishId, string? auctionId);
         Task<IBusinessResult> GetListUser();

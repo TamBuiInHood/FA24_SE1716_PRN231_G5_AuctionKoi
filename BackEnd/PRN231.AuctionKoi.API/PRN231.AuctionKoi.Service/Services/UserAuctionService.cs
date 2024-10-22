@@ -194,6 +194,20 @@ namespace KoiAuction.Service.Services
             return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, pagin);
         }
 
+        public async Task<IBusinessResult> GetNoPaging()
+        {
+            Expression<Func<UserAuction, bool>> filter = null!;
+            Func<IQueryable<UserAuction>, IOrderedQueryable<UserAuction>> orderBy = null!;
+            string includeProperties = "User,Fish,Fish.FishType,Fish.Farm,Fish.Auction";
+            var userAuctionEntity = await _unitOfWork.UserAuctionRepository.GetAllNoPaging(filter, orderBy, includeProperties);
+            if (userAuctionEntity == null)
+            {
+                return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+            }
+            var userAuctionModel = _mapper.Map<UserAuctionModel[]>(userAuctionEntity);
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, userAuctionModel);
+        }
+
         public async Task<IBusinessResult> GetByID(string? id)
         {
             var validId = 0;

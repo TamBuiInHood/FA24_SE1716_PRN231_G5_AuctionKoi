@@ -22,5 +22,15 @@ namespace KoiAuction.Common
 
             throw new InvalidOperationException("Invalid business result type");
         }
+
+        public static IQueryable<T> ConvertToNoPaginQueryable(IBusinessResult businessResult)
+        {
+            if (businessResult.Data is IEnumerable<T> data)
+            {
+                return data.AsQueryable();
+            }
+
+            throw new InvalidOperationException("Invalid business result type");
+        }
     }
 }

@@ -9,6 +9,7 @@ using KoiAuction.Common.Utils.Filters;
 using KoiAuction.Service.Base;
 using KoiAuction.Service.ISerivice;
 using KoiAuction.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -48,13 +49,14 @@ namespace KoiAuction.API.Controllers
             }
         }
 
-        //[Authorize(Roles = )]
+        [Authorize(Roles = "Admin")]
+        
         [EnableQuery]
         [HttpGet(APIRoutes.UserAuction.GetOData, Name = "GetAllODataAsync")]
-        public async Task<IActionResult> GetAllODataAsync(PaginationParameter paginationParameter, UserAuctionFilters userAuctionFilters)
+        public async Task<IActionResult> GetAllODataAsync()
         {
-            var userAuctions = await _userAuctionService.Get(paginationParameter, userAuctionFilters);
-            var queryableData = ODataResultConverter<UserAuctionModel>.ConvertToQueryable(userAuctions);
+            var userAuctions = await _userAuctionService.GetNoPaging();
+            var queryableData = ODataResultConverter<UserAuctionModel>.ConvertToNoPaginQueryable(userAuctions);
             return Ok(queryableData);
         }
 

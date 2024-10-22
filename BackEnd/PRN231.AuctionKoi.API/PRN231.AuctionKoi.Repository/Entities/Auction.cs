@@ -15,7 +15,6 @@ public partial class Auction
 
     public DateTime? EndTime { get; set; }
 
-
     public string? Status { get; set; }
 
     public string? Description { get; set; }
@@ -26,11 +25,9 @@ public partial class Auction
 
     public string? AuctionCode { get; set; }
 
-  
-
     public int TypeId { get; set; }
 
     public virtual ICollection<DetailProposal> DetailProposals { get; set; } = new List<DetailProposal>();
 
-    public virtual AuctionType? Type { get; set; }
+    public virtual AuctionType Type { get; set; } = null!;
 }

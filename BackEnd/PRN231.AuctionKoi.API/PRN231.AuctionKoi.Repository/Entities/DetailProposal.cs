@@ -33,16 +33,17 @@ public partial class DetailProposal
 
     public string? VideoUrl { get; set; }
 
+    public int? TimeSpan { get; set; }
+
     public string? Color { get; set; }
 
     public double? InitialPrice { get; set; }
 
     public double? FinalPrice { get; set; }
 
-    public int? Index { get; set; }
-    public int? TimeSpan { get; set; }
     public int? MinIncrement { get; set; }
 
+    public int? Index { get; set; }
 
     public int FishTypeId { get; set; }
 
