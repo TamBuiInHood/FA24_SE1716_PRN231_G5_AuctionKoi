@@ -31,7 +31,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         //GET: Orders
         public async Task<IActionResult> Index(int? pageIndex, int? pageSize, string? OrderCodeSearch, string? TaxCodeSearch, string? StatusSearch)
         {
-            var currentPageSize = pageSize ?? 10; 
+            var currentPageSize = pageSize ?? 10;
 
             ViewData["OrderCodeSearch"] = OrderCodeSearch;
             ViewData["TaxCodeSearch"] = TaxCodeSearch;
@@ -41,7 +41,7 @@ namespace KoiAuction.MVCWebApp.Controllers
             {
                 var uri = $"{Const.APIEndPoint}orders?pageIndex={pageIndex ?? 0}&pageSize={currentPageSize}";
 
-          
+
                 var searchKey = OrderCodeSearch ?? TaxCodeSearch ?? StatusSearch;
 
                 if (!string.IsNullOrEmpty(searchKey))
@@ -84,7 +84,7 @@ namespace KoiAuction.MVCWebApp.Controllers
                 return NotFound();
             }
 
-            var users = await this.GetUsers(); 
+            var users = await this.GetUsers();
             if (users != null && users.Any())
             {
                 ViewData["UserId"] = new SelectList(users, "UserId", "FullName");
@@ -165,7 +165,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var order  = new UpdateOrder();
+            var order = new UpdateOrder();
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
@@ -182,10 +182,10 @@ namespace KoiAuction.MVCWebApp.Controllers
                     }
                 }
             }
-            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+            ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", order.UserId);
             ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
             return View(order);
-  
+
         }
 
         // POST: Orders/Edit/5
@@ -193,9 +193,13 @@ namespace KoiAuction.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] UpdateOrder order)
+        public async Task<IActionResult> Edit([Bind("OrderId,OrderCode,Vat,TotalPrice,TotalProduct,OrderDate,Status,TaxCode,ShippingAddress,UserId,DeliveryDate,Note,ShippingCost,ShippingMethod,Discount,ShippingTrackingCode,ParticipationFee")] UpdateOrder order)
         {
             bool saveStatus = false;
+
+            int id = order.OrderId;
+
+            Console.WriteLine($"OrderId: {id}");
 
             if (ModelState.IsValid)
             {
@@ -223,17 +227,18 @@ namespace KoiAuction.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName");
+                ViewData["UserId"] = new SelectList(await this.GetUsers(), "UserId", "FullName", order.UserId);
                 ViewData["BidId"] = new SelectList(await this.GetUsersAution(), "BidId", "BidCode");
                 return View(order);
             }
         }
 
 
+
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            var order  = new OrderModel();
+            var order = new OrderModel();
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "orders/" + id))
@@ -261,7 +266,7 @@ namespace KoiAuction.MVCWebApp.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed( int id)
         {
             bool saveStatus = false;
             if (ModelState.IsValid)
