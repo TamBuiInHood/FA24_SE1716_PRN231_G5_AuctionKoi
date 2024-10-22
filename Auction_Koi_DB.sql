@@ -1,7 +1,6 @@
-﻿GO
-CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION5]
+﻿CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION]
 GO
-USE [FA24_SE1716_PRN231_G5_KOIAUCTION5]
+USE [FA24_SE1716_PRN231_G5_KOIAUCTION]
 GO
 /****** Object:  Table [dbo].[Auctions]    Script Date: 10/19/2024 11:27:26 AM ******/
 SET ANSI_NULLS ON
@@ -314,8 +313,8 @@ SET IDENTITY_INSERT [dbo].[AuctionType] OFF
 GO
 SET IDENTITY_INSERT [dbo].[DetailProposal] ON 
 
-INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (1, N'FISH001', N'Cá Vàng', N'Male', 2, 15.5, 0.3, 5, N'Completed', CAST(N'2023-01-01' AS Date), CAST(N'2024-09-01' AS Date), N'Cá vàng khỏe mạnh, dễ nuôi', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Vàng', 100, 500, 20, 60, 1, 1, 1, 1, 50000)
-INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (2, N'FISH002', N'Cá Rồng', N'Female', 5, 70, 5.2, 4, N'Active', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá rồng quý hiếm, đã được bán đấu giá', N'https://example.com/arowana.jpg', N'https://example.com/arowana.mp4', 20, N'Xanh lục', 100, 300, 20, 200000, 1, 2, 2, 2, 50000)
+INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (1, N'FISH001', N'Cá Vàng', N'Male', 2, 15.5, 0.3, 5, N'Completed', CAST(N'2023-01-01' AS Date), CAST(N'2024-09-01' AS Date), N'Cá vàng khỏe mạnh, dễ nuôi', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Vàng', 100, 500, 20, 1, 1, 1, 1, 50000)
+INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (2, N'FISH002', N'Cá Rồng', N'Female', 5, 70, 5.2, 4, N'Active', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá rồng quý hiếm, đã được bán đấu giá', N'https://example.com/arowana.jpg', N'https://example.com/arowana.mp4', 20, N'Xanh lục', 100, 300, 20, 1, 2, 2, 2, 50000)
 INSERT [dbo].[DetailProposal] ([FishId], [FishCode], [FishName], [Gender], [Age], [Length], [Weight], [Rating], [Status], [CreateDate], [UpdateDate], [Description], [ImageURL], [VideoURL], [TimeSpan], [Color], [InitialPrice], [FinalPrice], [MinIncrement], [Index], [FishTypeId], [FarmID], [AuctionId], [AuctionFee]) VALUES (8, N'FISH003', N'Cá Koi VietNam', NULL, 2, 20.5, 0.2, 2, N'PENDING', CAST(N'2022-06-15' AS Date), CAST(N'2024-09-01' AS Date), N'Cá Koi quý hiếm, đã được bán đấu giá', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/photos/Goshiki%20auction.png', N'https://mjjlqhnswgbzvxfujauo.supabase.co/storage/v1/object/public/auctions/65%20Big%20Auction/videos/Goshiki.mp4?t=2024-09-17T16%3A16%3A09.761Z', 20, N'Xanh lam', 20000, 1200000, 500, 1, 1, 2, 1, 20000)
 SET IDENTITY_INSERT [dbo].[DetailProposal] OFF
 GO
@@ -325,18 +324,8 @@ INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin
 INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin], [Diet], [AvarageLifeTime], [ReproductionMethod], [GeoraphicalDistribution], [SpawningSeason], [AverageSize]) VALUES (2, N'Cá Rồng', N'Scleropages formosus', N'Châu Á', N'Thịt', N'20-25 năm', N'Nuôi con trong miệng', N'Châu Á', N'Mùa hè', 90)
 INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin], [Diet], [AvarageLifeTime], [ReproductionMethod], [GeoraphicalDistribution], [SpawningSeason], [AverageSize]) VALUES (3, N'Cá Betta', N'Betta splendens', N'Đông Nam Á', N'Côn trùng', N'2-3 năm', N'Đẻ trứng', N'Châu Á', N'Mùa mưa', 7)
 SET IDENTITY_INSERT [dbo].[FishType] OFF
-
 GO
-SET IDENTITY_INSERT [dbo].[Payment] ON 
 
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (11, 57777, CAST(N'2024-10-12T00:00:00.000' AS DateTime), N'1', N'123456', N'3', 6)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (12, 52222, CAST(N'2024-10-08T00:00:00.000' AS DateTime), N'2', N'EFCFA', N'2', 1)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (13, 51111, CAST(N'2024-10-07T00:00:00.000' AS DateTime), N'2', N'GFAS', N'123', 6)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (15, 1253123, CAST(N'2024-10-14T15:07:10.753' AS DateTime), N'1', N'BCBANK', N'1', 6)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (16, 50000, CAST(N'2024-10-18T20:18:58.023' AS DateTime), N'1', N'VNPay', N'987654321', 1)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (17, 14102003, CAST(N'2024-10-18T20:19:39.810' AS DateTime), N'1', N'BCBANK', N'1', 6)
-INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (18, 14102003, CAST(N'2024-10-18T20:20:35.073' AS DateTime), N'1', N'BCBANK', N'1', 1)
-SET IDENTITY_INSERT [dbo].[Payment] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Proposal] ON 
 
@@ -384,9 +373,8 @@ INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (24, NULL, NULL, N'test@example.com', NULL, NULL, N'test@example.com', NULL, NULL, N'Gtfg/kLx7aXHmDNKRyZDIg==', CAST(N'2024-10-17T13:30:19.837' AS DateTime), 2)
 INSERT [dbo].[User] ([UserID], [UserName], [UserCode], [FullName], [Birthday], [Address], [Mail], [PhoneNumber], [AvavarUrl], [Password], [CreateDate], [RoleID]) VALUES (25, NULL, NULL, N'test2@example.com', NULL, NULL, N'test2@example.com', NULL, NULL, N'Gtfg/kLx7aXHmDNKRyZDIg==', CAST(N'2024-10-18T09:40:25.267' AS DateTime), 2)
 SET IDENTITY_INSERT [dbo].[User] OFF
-GO
-SET IDENTITY_INSERT [dbo].[UserAuction] ON 
 
+GO
 --- Chèn dữ liệu vào bảng UserAuction
 INSERT INTO [dbo].[UserAuction] (BidCode, Price, CreateDate, IsWinner, UserID, FishId)
 VALUES 
@@ -405,16 +393,7 @@ VALUES
 (N'BID0012', 240, '2024-09-26 14:45:00', 0, 5, 2),  -- Người dùng 5 đặt giá cho Cá Rồng
 (N'BID0013', 270, '2024-09-26 14:50:00', 0, 6, 1),  -- Người dùng 6 đặt giá cho Cá Vàng
 (N'BID0014', 300, '2024-09-26 15:00:00', 1, 7, 2);  -- Người dùng 7 đặt giá cho Cá Rồng 
-SET IDENTITY_INSERT [dbo].[UserAuction] OFF
-
 GO
-SET IDENTITY_INSERT [dbo].[CheckingProposal] ON 
-
-INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (1, N'CP001', N'?i?u kho?n 1', CAST(N'2024-01-05T00:00:00.000' AS DateTime), CAST(N'2024-01-10T00:00:00.000' AS DateTime), CAST(N'2024-01-20T00:00:00.000' AS DateTime), N'Ki?m tra ch?t l??ng cá vàng', N'?i?u kho?n 1', N'file1.pdf', N'Approved', 2, 2000000)
-INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (2, N'CP002', N'https://example.com/arowana.jpg', CAST(N'2024-02-15T00:00:00.000' AS DateTime), CAST(N'2024-02-20T00:00:00.000' AS DateTime), CAST(N'2024-03-01T00:00:00.000' AS DateTime), N'Cá r?ng c?n ki?m tra s?c kh?e', N'?i?u kho?n 2', N'file2.pdf', N'Approved', 2, 50000)
-INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (3, N'CP003', N'https://example.com/goldfish.jpg', CAST(N'2024-03-10T00:00:00.000' AS DateTime), CAST(N'2024-03-15T00:00:00.000' AS DateTime), CAST(N'2024-03-25T00:00:00.000' AS DateTime), N'Ki?m tra ?i?u ki?n sinh s?n', N'?i?u kho?n 3', N'file3.pdf', N'Rejected', 1, 50000)
-INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (4, N'CP004', N'?i?u kho?n 4', CAST(N'2024-04-01T00:00:00.000' AS DateTime), CAST(N'2024-04-05T00:00:00.000' AS DateTime), CAST(N'2024-04-15T00:00:00.000' AS DateTime), N'Cá r?ng ?ã ???c ki?m tra thành công', N'?i?u kho?n 4', N'file4.pdf', N'Pending', 2, 700000)
-SET IDENTITY_INSERT [dbo].[CheckingProposal] OFF
 
 GO
 SET IDENTITY_INSERT [dbo].[Order] ON 
@@ -429,6 +408,27 @@ INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (300000, 2, 2)
 INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (500000, 4, 3)
 GO
 
+GO
+SET IDENTITY_INSERT [dbo].[Payment] ON 
+
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (11, 57777, CAST(N'2024-10-12T00:00:00.000' AS DateTime), N'1', N'123456', N'3', 1)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (12, 52222, CAST(N'2024-10-08T00:00:00.000' AS DateTime), N'2', N'EFCFA', N'2', 2)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (13, 51111, CAST(N'2024-10-07T00:00:00.000' AS DateTime), N'2', N'GFAS', N'123', 4)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (15, 1253123, CAST(N'2024-10-14T15:07:10.753' AS DateTime), N'1', N'BCBANK', N'1', 1)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (16, 50000, CAST(N'2024-10-18T20:18:58.023' AS DateTime), N'1', N'VNPay', N'987654321', 1)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (17, 14102003, CAST(N'2024-10-18T20:19:39.810' AS DateTime), N'1', N'BCBANK', N'1', 2)
+INSERT [dbo].[Payment] ([PaymentId], [PaymentAmount], [PaymentDate], [Status], [PaymentMethod], [TransactionID], [OrderID]) VALUES (18, 14102003, CAST(N'2024-10-18T20:20:35.073' AS DateTime), N'1', N'BCBANK', N'1', 4)
+SET IDENTITY_INSERT [dbo].[Payment] OFF
+GO
+
+GO
+SET IDENTITY_INSERT [dbo].[CheckingProposal] ON 
+
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (1, N'CP001', N'?i?u kho?n 1', CAST(N'2024-01-05T00:00:00.000' AS DateTime), CAST(N'2024-01-10T00:00:00.000' AS DateTime), CAST(N'2024-01-20T00:00:00.000' AS DateTime), N'Ki?m tra ch?t l??ng cá vàng', N'?i?u kho?n 1', N'file1.pdf', N'Approved', 2, 2000000)
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (2, N'CP002', N'https://example.com/arowana.jpg', CAST(N'2024-02-15T00:00:00.000' AS DateTime), CAST(N'2024-02-20T00:00:00.000' AS DateTime), CAST(N'2024-03-01T00:00:00.000' AS DateTime), N'Cá r?ng c?n ki?m tra s?c kh?e', N'?i?u kho?n 2', N'file2.pdf', N'Approved', 2, 50000)
+
+SET IDENTITY_INSERT [dbo].[CheckingProposal] OFF
+GO
 
 GO
 
@@ -502,3 +502,4 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [dbo].[UserAuction] CHECK CONSTRAINT [FK__UserAucti__UserI__4F7CD00D]
 GO
+
