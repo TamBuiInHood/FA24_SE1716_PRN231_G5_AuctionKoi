@@ -1,7 +1,7 @@
 ﻿GO
-CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION]
+CREATE DATABASE [FA24_SE1716_PRN231_G5_KOIAUCTION5]
 GO
-USE [FA24_SE1716_PRN231_G5_KOIAUCTION]
+USE [FA24_SE1716_PRN231_G5_KOIAUCTION5]
 GO
 /****** Object:  Table [dbo].[Auctions]    Script Date: 10/19/2024 11:27:26 AM ******/
 SET ANSI_NULLS ON
@@ -52,7 +52,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[CheckingProposal](
-	[CheckingProposalId] [int] NOT NULL,
+	[CheckingProposalId] [int] IDENTITY(1,1) NOT NULL,
 	[CheckingProposalCode] [nvarchar](max) NULL,
 	[ImageURL] [text] NULL,
 	[SubmissionDate] [datetime] NULL,
@@ -325,12 +325,7 @@ INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin
 INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin], [Diet], [AvarageLifeTime], [ReproductionMethod], [GeoraphicalDistribution], [SpawningSeason], [AverageSize]) VALUES (2, N'Cá Rồng', N'Scleropages formosus', N'Châu Á', N'Thịt', N'20-25 năm', N'Nuôi con trong miệng', N'Châu Á', N'Mùa hè', 90)
 INSERT [dbo].[FishType] ([FishTypeId], [FishTypeName], [ScientificName], [Origin], [Diet], [AvarageLifeTime], [ReproductionMethod], [GeoraphicalDistribution], [SpawningSeason], [AverageSize]) VALUES (3, N'Cá Betta', N'Betta splendens', N'Đông Nam Á', N'Côn trùng', N'2-3 năm', N'Đẻ trứng', N'Châu Á', N'Mùa mưa', 7)
 SET IDENTITY_INSERT [dbo].[FishType] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Order] ON 
 
-INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (1, N'12345678', 10, 50000, 3, CAST(N'2024-09-30T10:00:00.000' AS DateTime), 1, N'5000', N'200', 1, CAST(N'2024-09-30T10:00:00.000' AS DateTime), N'bxvxcbcvx', 200, N'GHTK', 10, N'sdfhasldfkhsdflkjfads', 100)
-INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (6, N'1234567', 10, 555555, 3, CAST(N'2024-10-07T10:00:00.000' AS DateTime), 2, N'abc', N'sdfgsdfgdfg', 1, CAST(N'2024-10-07T10:00:00.000' AS DateTime), N'shfdhgdfgh', 200, N'GHTK', 9, N'sdfgsgsdgsdgf', 100)
-SET IDENTITY_INSERT [dbo].[Order] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Payment] ON 
 
@@ -413,16 +408,28 @@ VALUES
 SET IDENTITY_INSERT [dbo].[UserAuction] OFF
 
 GO
+SET IDENTITY_INSERT [dbo].[CheckingProposal] ON 
+
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (1, N'CP001', N'?i?u kho?n 1', CAST(N'2024-01-05T00:00:00.000' AS DateTime), CAST(N'2024-01-10T00:00:00.000' AS DateTime), CAST(N'2024-01-20T00:00:00.000' AS DateTime), N'Ki?m tra ch?t l??ng cá vàng', N'?i?u kho?n 1', N'file1.pdf', N'Approved', 2, 2000000)
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (2, N'CP002', N'https://example.com/arowana.jpg', CAST(N'2024-02-15T00:00:00.000' AS DateTime), CAST(N'2024-02-20T00:00:00.000' AS DateTime), CAST(N'2024-03-01T00:00:00.000' AS DateTime), N'Cá r?ng c?n ki?m tra s?c kh?e', N'?i?u kho?n 2', N'file2.pdf', N'Approved', 2, 50000)
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (3, N'CP003', N'https://example.com/goldfish.jpg', CAST(N'2024-03-10T00:00:00.000' AS DateTime), CAST(N'2024-03-15T00:00:00.000' AS DateTime), CAST(N'2024-03-25T00:00:00.000' AS DateTime), N'Ki?m tra ?i?u ki?n sinh s?n', N'?i?u kho?n 3', N'file3.pdf', N'Rejected', 1, 50000)
+INSERT [dbo].[CheckingProposal] ([CheckingProposalId], [CheckingProposalCode], [ImageURL], [SubmissionDate], [CheckingDate], [ExpiredDate], [Note], [TermAndCodition], [Attachment], [Status], [FishId], [AuctionFee]) VALUES (4, N'CP004', N'?i?u kho?n 4', CAST(N'2024-04-01T00:00:00.000' AS DateTime), CAST(N'2024-04-05T00:00:00.000' AS DateTime), CAST(N'2024-04-15T00:00:00.000' AS DateTime), N'Cá r?ng ?ã ???c ki?m tra thành công', N'?i?u kho?n 4', N'file4.pdf', N'Pending', 2, 700000)
+SET IDENTITY_INSERT [dbo].[CheckingProposal] OFF
+
+GO
 SET IDENTITY_INSERT [dbo].[Order] ON 
 
-INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (3, N'0c8c4b73-cd53-4b78-8421-92f1f7bf84a4', 0.1, 330108, 1, CAST(N'2024-10-12T10:22:51.153' AS DateTime), 3, N'serr22', N'string', 2, NULL, N'string', 20, N'nhanh', 22, N'd293298f-04a6-4df1-950b-0d1075ec2b50', 110)
-INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (2, N'6a30cdce-d273-40f6-80a4-9cfce63d600f', 0.1, 550080, 1, CAST(N'2024-10-12T10:30:03.620' AS DateTime), 1, N'aaa34', N'aa', 1, NULL, N'giao nhanh', NULL, NULL, 20, N'0369777c-583e-4e8a-afa6-bbefcdaeb31c', 100)
-INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (5, N'de258e3e-9b9b-4fc0-a3bc-634cf299717e', 0.1, 1650000, 1, CAST(N'2024-10-19T10:05:59.510' AS DateTime), 1, N'sss333', N'aaaaa', 3, NULL, NULL, NULL, N'1', 20, N'3b3e38cb-bc46-49ec-837a-27fc1eb2b3bb', 20)
+INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (1, N'7513f7af-dac6-4e7b-9204-333cd1ad5eeb', 0.1, 220040, 1, CAST(N'2024-10-22T18:46:35.257' AS DateTime), 1, N'heee', N'string', 3, CAST(N'2024-10-22T12:13:44.430' AS DateTime), N'string', 40, N'1', 20, N'ddf59ad5-430b-4fa7-a8ab-7c1291952967', 20)
+INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (2, N'30b0d599-b5b3-4075-b249-8d6486e431cf', 0.1, 330040, 1, CAST(N'2024-10-22T20:21:25.243' AS DateTime), 1, N'se3232', N'bbb', 4, CAST(N'2024-10-12T20:39:00.000' AS DateTime), N'giao nhanh', 10, N'2', 20, N'ee355b72-870c-42df-9d30-af4288534e91', 50)
+INSERT [dbo].[Order] ([OrderID], [OrderCode], [VAT], [TotalPrice], [TotalProduct], [OrderDate], [Status], [TaxCode], [ShippingAddress], [UserID], [DeliveryDate], [Note], [ShippingCost], [ShippingMethod], [Discount], [ShippingTrackingCode], [ParticipationFee]) VALUES (4, N'03f9ffd3-8c1c-4b4f-b1e2-c377b337a8e9', 0.1, 550030, 1, CAST(N'2024-10-22T20:38:24.653' AS DateTime), 1, N'sg2sds', N'baaa', 5, CAST(N'2024-10-24T20:41:00.000' AS DateTime), NULL, 20, N'1', 20, N'809fde07-1905-467c-8ae5-9e21011bf5cf', 30)
 SET IDENTITY_INSERT [dbo].[Order] OFF
 GO
+INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (200000, 1, 1)
 INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (300000, 2, 2)
-INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (500000, 3, 3)
-INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (1500000, 5, 6)
+INSERT [dbo].[OrderDetail] ([Price], [OrderID], [BidID]) VALUES (500000, 4, 3)
+GO
+
+
 GO
 
 ALTER TABLE [dbo].[Auctions]  WITH CHECK ADD  CONSTRAINT [FK__Auctions__TypeID__44FF419A] FOREIGN KEY([TypeID])
