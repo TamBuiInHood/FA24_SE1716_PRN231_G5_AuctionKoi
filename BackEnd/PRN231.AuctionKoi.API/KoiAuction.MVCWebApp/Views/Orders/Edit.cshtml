@@ -12,7 +12,8 @@
     <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="OrderId" />
+            <input type="hidden" name="OrderId" value="@Model.OrderId" />
+
 
             <div class="row">
                 <!-- First column -->
@@ -83,7 +84,7 @@
 
                     <div class="form-group">
                         <label asp-for="UserId" class="control-label">UserName</label>
-                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId" disabled></select>
+                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId" readonly></select>
                         <span asp-validation-for="UserId" class="text-danger"></span>
                     </div>
 
@@ -107,7 +108,10 @@
 
                     <div class="form-group">
                         <label asp-for="ShippingMethod" class="control-label"></label>
-                        <input asp-for="ShippingMethod" class="form-control" />
+                        <select asp-for="ShippingMethod" class="form-control">
+                            <option value="1">Bình thường</option>
+                            <option value="2">Nhanh</option>
+                        </select>
                         <span asp-validation-for="ShippingMethod" class="text-danger"></span>
                     </div>
 
