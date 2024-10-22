@@ -28,7 +28,7 @@ namespace PRN231.AuctionKoi.Repository.Repositories
                 getAllUserAuction = context.UserAuctions.Where(x => x.FishId == item.FishId).ToList();
                 foreach(var item2 in getAllUserAuction)
                 {
-                    var getAllOrderDetail = context.OrderDetails.Where(x => x.BidId == item2.BidId);
+                    var getAllOrderDetail = context.OrderDetails.Where(x => x.BidId == item2.BidId).ToList();
                     _context.OrderDetails.RemoveRange(getAllOrderDetail);
                     await _context.SaveChangesAsync();
                 }
