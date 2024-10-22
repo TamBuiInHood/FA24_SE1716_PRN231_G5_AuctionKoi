@@ -278,9 +278,11 @@ namespace KoiAuction.MVCWebApp.Controllers
             var payment = new PaymentModel();
             using (var httpClient = new HttpClient(new HttpClientHandler
             {
+
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // Bypass SSL validation (for testing)
             }))
             {
+
                 using (var response = await httpClient.GetAsync(Const.APIEndPoint + "payments/" + id))
                 {
                     if (response.IsSuccessStatusCode)
